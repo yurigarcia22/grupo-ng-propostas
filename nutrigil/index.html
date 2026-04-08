@@ -435,6 +435,96 @@
   .oport-card .titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--green); margin-bottom: 8px; }
   .oport-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
   .oport-card p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* =================== MOBILE RESPONSIVO =================== */
+  @media (max-width: 768px) {
+
+    /* Scroll normal em mobile */
+    body { overflow-y: auto; height: auto; }
+    #slides { height: auto; position: relative; }
+
+    /* Slides empilhados, sem posicao absoluta */
+    .slide {
+      position: relative;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: all !important;
+      padding: 40px 20px 80px;
+      height: auto;
+      min-height: 100svh;
+      display: none;
+      align-items: flex-start;
+    }
+    .slide.active { display: flex; }
+
+    /* Navegacao fixada no bottom */
+    #dots { bottom: 16px; }
+    .nav-btn { bottom: 12px; }
+    #btn-prev { right: 100px; }
+    #btn-next { right: 52px; }
+    #counter { bottom: 18px; right: 16px; }
+
+    /* COVER */
+    .cover h1 { font-size: 42px; letter-spacing: -1.5px; }
+    .cover .subtitle { font-size: 15px; }
+    .cover-tags { gap: 8px; }
+    .ctag { font-size: 11px; padding: 6px 12px; }
+
+    /* TITULOS */
+    .slide-title { font-size: 30px; letter-spacing: -0.5px; }
+    .slide-desc  { font-size: 15px; margin-bottom: 24px; }
+    .section-label { font-size: 10px; }
+
+    /* GRIDS: colapsar tudo para 1 coluna */
+    .cards-3,
+    .cards-4,
+    .cards-2 { grid-template-columns: 1fr; }
+
+    /* DOIS COLUNAS: empilhar */
+    .two-col { grid-template-columns: 1fr; gap: 20px; }
+
+    /* STAT ROW */
+    .stat-row { flex-direction: column; gap: 12px; }
+    .big-stat .number { font-size: 48px; }
+
+    /* PILAR */
+    .pilar-hero { padding: 20px; }
+    .pilar-hero .num { font-size: 48px; }
+    .pilar-hero h2 { font-size: 20px; }
+    .pilar-hero p  { font-size: 14px; }
+
+    /* DOR */
+    .dor-big { padding: 20px; }
+    .dor-big .dor-icon { font-size: 32px; }
+    .dor-big h2 { font-size: 20px; }
+    .dor-big p  { font-size: 14px; }
+
+    /* MODULOS */
+    .cards.cards-3 .modulo-card { min-width: 0; }
+
+    /* CLOSE */
+    .close-slide h2 { font-size: 36px; }
+    .close-slide p  { font-size: 16px; }
+
+    /* CARDS */
+    .card { padding: 18px 20px; }
+    .card .card-num { font-size: 36px; }
+
+    /* LIST ITEMS */
+    .list-item { padding: 14px 16px; }
+
+    /* QUOTE */
+    .quote-block p { font-size: 14px; }
+
+    /* SLIDE INNER */
+    .slide-inner { max-width: 100%; }
+  }
+
+  @media (max-width: 400px) {
+    .cover h1 { font-size: 34px; }
+    .slide-title { font-size: 26px; }
+    .pilar-hero .num { font-size: 40px; }
+  }
 </style>
 </head>
 <body>
