@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta Nutrigil — Grupo NG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --green:   #22c55e;
+    --teal:    #14b8a6;
+    --lime:    #84cc16;
+    --amber:   #f59e0b;
+    --dark:    #0D1117;
+    --dark2:   #161B22;
+    --dark3:   #21262D;
+    --border:  #30363D;
+    --text:    #E6EDF3;
+    --muted:   #8B949E;
+    --white:   #FFFFFF;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* PROGRESS BAR */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* COUNTER */
+  #counter {
+    position: fixed;
+    bottom: 24px; right: 32px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  /* NAV */
+  .nav-btn {
+    position: fixed;
+    bottom: 20px;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .nav-btn:hover { background: var(--green); border-color: var(--green); color: #0D1117; }
+  #btn-prev { right: 120px; }
+  #btn-next { right: 68px; }
+
+  /* DOTS */
+  #dots {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--green); width: 20px; border-radius: 3px; }
+
+  /* SLIDES */
+  #slides { width: 100%; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+    padding: 60px 80px;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .slide-inner { max-width: 1100px; width: 100%; }
+
+  /* =================== COVER =================== */
+  .cover {
+    background: radial-gradient(ellipse at 30% 50%, #0a1a0e 0%, var(--dark) 70%);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(34,197,94,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(20,184,166,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.35);
+    color: var(--green);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .cover h1 {
+    font-size: 78px;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+  .cover h1 span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover .subtitle {
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cover-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ctag {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* =================== SECTION HEADER =================== */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+  .slide-title {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+  }
+  .slide-title span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    max-width: 680px;
+  }
+  .divider {
+    width: 48px; height: 4px;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    border-radius: 2px;
+    margin: 20px 0;
+  }
+
+  /* =================== CARDS =================== */
+  .cards { display: grid; gap: 16px; }
+  .cards-3 { grid-template-columns: repeat(3,1fr); }
+  .cards-2 { grid-template-columns: repeat(2,1fr); }
+  .cards-4 { grid-template-columns: repeat(4,1fr); }
+
+  .card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(34,197,94,0.4); }
+  .card.highlight {
+    background: linear-gradient(135deg, rgba(34,197,94,0.09), rgba(20,184,166,0.04));
+    border-color: rgba(34,197,94,0.28);
+  }
+  .card-icon { font-size: 30px; margin-bottom: 14px; display: block; }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .card .card-num {
+    font-size: 44px; font-weight: 900; line-height: 1; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* =================== LIST ITEMS =================== */
+  .list { display: flex; flex-direction: column; gap: 14px; }
+  .list-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  .list-item:hover { border-color: rgba(34,197,94,0.3); }
+  .li-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; margin-top: 2px;
+  }
+  .li-icon.green { background: rgba(34,197,94,0.14); }
+  .li-icon.teal  { background: rgba(20,184,166,0.14); }
+  .li-icon.amber { background: rgba(245,158,11,0.14); }
+  .li-icon.red   { background: rgba(239,68,68,0.14); }
+  .list-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .list-item p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* =================== TWO COL =================== */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 32px; align-items: start;
+  }
+
+  /* =================== STEPS =================== */
+  .steps { display: flex; flex-direction: column; gap: 14px; }
+  .step  { display: flex; align-items: flex-start; gap: 16px; }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; flex-shrink: 0; color: #0D1117;
+  }
+  .step-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .step-content p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* =================== PILLS =================== */
+  .pills { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .pill { padding: 5px 13px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+  .pill.green { background: rgba(34,197,94,0.13);  color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+  .pill.teal  { background: rgba(20,184,166,0.13); color: var(--teal);  border: 1px solid rgba(20,184,166,0.3); }
+  .pill.amber { background: rgba(245,158,11,0.13); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .pill.red   { background: rgba(239,68,68,0.13);  color: #ef4444;      border: 1px solid rgba(239,68,68,0.3); }
+
+  /* =================== QUOTE =================== */
+  .quote-block {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green);
+    border-radius: 0 12px 12px 0;
+    padding: 22px 26px;
+    margin: 14px 0;
+  }
+  .quote-block p { font-size: 17px; font-style: italic; line-height: 1.7; }
+  .quote-block .author { font-size: 12px; color: var(--muted); margin-top: 10px; font-style: normal; }
+
+  /* =================== BIG STAT =================== */
+  .stat-row { display: flex; gap: 16px; margin-top: 4px; }
+  .big-stat {
+    flex: 1; text-align: center; padding: 28px 20px;
+    background: var(--dark2); border: 1px solid var(--border); border-radius: 16px;
+  }
+  .big-stat .number {
+    font-size: 64px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .big-stat .label { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  /* =================== PILAR HERO =================== */
+  .pilar-hero {
+    background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(20,184,166,0.05));
+    border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .pilar-hero .num {
+    font-size: 72px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .pilar-hero h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .pilar-hero p  { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 680px; }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14px; color: var(--text); line-height: 1.5;
+  }
+  .check-item::before {
+    content: "✓";
+    color: var(--green);
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* RESULTADO BADGE */
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    color: var(--green);
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    margin-top: 18px;
+  }
+
+  /* MODULO CARDS */
+  .modulo-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px;
+    transition: border-color 0.2s;
+  }
+  .modulo-card.rec {
+    background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(20,184,166,0.04));
+    border-color: rgba(34,197,94,0.35);
+  }
+  .modulo-card .rec-tag {
+    display: inline-block;
+    background: var(--green); color: #0D1117;
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .modulo-card h4 { font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+  .modulo-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .modulo-card ul li {
+    font-size: 13px; color: var(--muted);
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .modulo-card ul li::before { content: "—"; color: var(--green); font-weight: 700; flex-shrink: 0; }
+
+  /* CLOSE */
+  .close-slide { text-align: center; }
+  .close-slide h2 {
+    font-size: 64px; font-weight: 900; line-height: 1;
+    letter-spacing: -2px; margin-bottom: 24px;
+  }
+  .close-slide h2 span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .close-slide p {
+    font-size: 20px; color: var(--muted);
+    max-width: 520px; margin: 0 auto 40px; line-height: 1.6;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    color: #0D1117; padding: 16px 36px; border-radius: 12px;
+    font-size: 16px; font-weight: 800; border: none; cursor: pointer;
+  }
+
+  /* DORE SLIDE */
+  .dor-big {
+    background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(245,158,11,0.04));
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .dor-big .dor-icon { font-size: 44px; margin-bottom: 12px; }
+  .dor-big h2 { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+  .dor-big p  { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 700px; }
+
+  /* OPORTUNIDADE */
+  .oport-card {
+    background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(20,184,166,0.06));
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 16px; padding: 22px 26px;
+  }
+  .oport-card .titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--green); margin-bottom: 8px; }
+  .oport-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .oport-card p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+<div id="counter"></div>
+
+<div id="slides">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <div class="badge">&#127807; Grupo NG &nbsp;&#183;&nbsp; Proposta Comercial</div>
+      <h1>Plano de<br/><span>Crescimento</span><br/>Nutrigil</h1>
+      <p class="subtitle">Um projeto pensado para os 4 pilares do seu negocio: midia, tecnologia, processo comercial e pessoas.</p>
+      <div class="cover-tags">
+        <div class="ctag">&#128205; Divinopolis, MG</div>
+        <div class="ctag">&#128197; Reuniao: 09/04/2026</div>
+        <div class="ctag">&#128336; 4 pilares estrategicos</div>
+        <div class="ctag">&#127881; 18 anos de mercado</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: QUEM E A NUTRIGIL ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Diagnostico</div>
+      <div class="slide-title">Quem e a <span>Nutrigil</span> hoje</div>
+      <div class="divider"></div>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-num">18</div>
+          <h3>Anos de mercado</h3>
+          <p>Uma das empresas mais solidas do setor agro de Divinopolis, com reputacao construida ao longo de quase duas decadas.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#127968;</div>
+          <h3>Estrutura de 3 andares</h3>
+          <p>Subsolo (deposito), terreo (loja agropecuaria) e segundo andar (clinica veterinaria). Uma estrutura que poucos concorrentes tem.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128138;</div>
+          <h3>Maior farmacia vet da regiao</h3>
+          <p>Referencia regional em farmacia veterinaria, com parcerias estrategicas com veterinarios de outras clinicas da cidade.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128266;</div>
+          <h3>Investimento em midia</h3>
+          <p>Radio (2 emissoras), TV Cante 10, trafego pago, Divina Expo, outdoor e acoes sazonais. Marca forte e presente.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128203;</div>
+          <h3>Transicao tributaria</h3>
+          <p>Migracao do Simples para o Lucro Real. Mudanca importante que esta consumindo tempo e atencao dos socios.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128101;</div>
+          <h3>Gestao direta</h3>
+          <p>Dejair e Andreia na linha de frente. Empresa familiar com cultura de atendimento presencial e relacionamento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: MAPA DE DORES ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Mapeamento</div>
+      <div class="slide-title">O que identificamos<br/><span>na reuniao</span></div>
+      <div class="divider"></div>
+      <div class="list">
+        <div class="list-item">
+          <div class="li-icon amber">&#128202;</div>
+          <div><h4>Sem metrificacao de canais</h4><p>Investe em radio, TV e trafego pago mas nao sabe com precisao qual canal gera mais resultado.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">&#128203;</div>
+          <div><h4>Base de clientes sem nutricao</h4><p>18 anos de clientes acumulados sem CRM, sem follow-up, sem reativacao. Uma mina de ouro nao explorada.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon green">&#127973;</div>
+          <div><h4>Clinica veterinaria subutilizada</h4><p>Receio de divulgar a clinica para nao perder parceiros veterinarios. Oportunidade represada por falta de estrategia.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#128101;</div>
+          <div><h4>Problema de equipe e rotatividade</h4><p>3 a 5 entrevistas por semana, ainda faltam 2 ou 3 funcionarios. Sem processo seletivo padronizado.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">&#9200;</div>
+          <div><h4>Gestores presos na operacao</h4><p>Socios cuidam de tudo: financeiro, RH, atendimento, contabilidade. Pouco espaco para pensar em crescimento.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: DOR - METRIFICACAO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Dor 01</div>
+      <div class="dor-big">
+        <div class="dor-icon">&#128202;</div>
+        <h2>Voce gasta sem saber o que funciona</h2>
+        <p>Radio, TV, trafego pago, Divina Expo, outdoor. Voce investe em varios canais ao mesmo tempo, mas na hora de medir o retorno, a resposta e sempre vaga. "Acho que a radio funcionou porque vieram mais pessoas." Isso nao e gestao, e intuicao.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <p class="slide-desc" style="font-size:15px; margin-bottom:16px;">Como voce mede hoje:</p>
+          <div class="quote-block">
+            <p>"Eu faco uma acao so na radio, ai eu fico medindo quantas pessoas que vem aqui... ou entao so coloco no Instagram e conto as mensagens no WhatsApp."</p>
+            <div class="author">Dejair, reuniao 24/03</div>
+          </div>
+        </div>
+        <div>
+          <p class="slide-desc" style="font-size:15px; margin-bottom:16px;">O que vai mudar:</p>
+          <div class="checklist">
+            <div class="check-item">Dashboard consolidado com todos os canais em tempo real</div>
+            <div class="check-item">UTMs configurados em cada campanha digital</div>
+            <div class="check-item">Metrificacao de leads por fonte (radio, TV, digital, evento)</div>
+            <div class="check-item">Relatorio mensal com custo por cliente adquirido</div>
+            <div class="check-item">Decisoes de investimento baseadas em dado, nao em feeling</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 5: DOR - CRM ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Dor 02</div>
+      <div class="dor-big">
+        <div class="dor-icon">&#128203;</div>
+        <h2>18 anos de clientes que voce nao esta usando</h2>
+        <p>A Nutrigil acumulou uma base enorme ao longo de quase duas decadas. Mas hoje, quando um cliente para de comprar, ninguem percebe. Quando uma vacina vence, ninguem lembra. Quando um aniversario do pet chega, silencio total. Isso e dinheiro na mesa.</p>
+      </div>
+      <div class="stat-row">
+        <div class="big-stat">
+          <div class="number">0</div>
+          <div class="label">sistema de CRM ativo hoje</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">18</div>
+          <div class="label">anos de base sem ser nutrida</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">5x</div>
+          <div class="label">mais barato reativar do que captar novo</div>
+        </div>
+      </div>
+      <div class="result-badge">&#127919; A oportunidade e reativar quem ja confia em voce antes de gastar mais para conquistar novos</div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 6: DOR - CLINICA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Dor 03</div>
+      <div class="dor-big">
+        <div class="dor-icon">&#127973;</div>
+        <h2>Uma clinica no segundo andar que quase ninguem sabe que existe</h2>
+        <p>Voce tem a estrutura. Voce tem o espaco. Voce tem a equipe. O que falta e uma estrategia de comunicacao que atraia clientes sem conflitar com os veterinarios parceiros da loja. Esse problema tem solucao testada e aprovada.</p>
+      </div>
+      <div class="two-col" style="margin-top:8px;">
+        <div class="quote-block">
+          <p>"A gente nao e agressivo na comunicacao da clinica por questao de cuidado com os concorrentes, porque eles sao meus parceiros na loja."</p>
+          <div class="author">Dejair, reuniao 24/03</div>
+        </div>
+        <div>
+          <div class="checklist" style="margin-top:8px;">
+            <div class="check-item">Campanhas educativas nao ferem parceiros</div>
+            <div class="check-item">Linguagem adequada as normas do CRMV</div>
+            <div class="check-item">Resultado comprovado em clinicas de todo o Brasil</div>
+            <div class="check-item">Cliente da clinica vira cliente da farmacia agro</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 7: OPORTUNIDADE CLINICA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Oportunidade</div>
+      <div class="slide-title">A estrategia que<br/><span>ja funciona</span> para clinicas</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Trabalhamos com clinicas veterinarias em Sao Paulo, no Sul e no Nordeste. As campanhas de tartaro e castracao consistentemente geram os melhores resultados: custo baixo, lead qualificado e sem conflito com o CRMV.</p>
+      <div class="cards cards-2" style="margin-bottom:16px;">
+        <div class="oport-card">
+          <div class="titulo">Campanha Tartaro</div>
+          <h4>Anuncio educativo sobre riscos</h4>
+          <p>Abordagem nos riscos do tartaro para a saude do pet, sem citar preco. Atrai tutor consciente e engajado, pronto para marcar consulta. Custo por lead baixo, qualificacao alta.</p>
+        </div>
+        <div class="oport-card">
+          <div class="titulo">Campanha Castracao</div>
+          <h4>Foco nos riscos de nao castrar</h4>
+          <p>Anuncio informativo sobre os riscos do animal nao castrado. Nao cita valor, nao acirra concorrencia. Gera volume de consultas sem criar atrito com parceiros veterinarios.</p>
+        </div>
+      </div>
+      <div class="cards cards-2">
+        <div class="oport-card">
+          <div class="titulo">Regua de relacionamento</div>
+          <h4>Lembrete de vacina, retorno e aniversario</h4>
+          <p>Mensagem automatica via WhatsApp para clientes da clinica. Recorrencia de consultas sem precisar de novo anuncio a cada vez.</p>
+        </div>
+        <div class="oport-card">
+          <div class="titulo">Cross-sell com a loja</div>
+          <h4>Um negocio alimenta o outro</h4>
+          <p>Quem vem pela clinica conhece a farmacia agro. Quem compra na loja e indicado para a clinica. A estrutura de 3 andares vira vantagem competitiva real.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 8: PILAR 1 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 01</div>
+      <div class="pilar-hero">
+        <div class="num">01</div>
+        <h2>Midia e Captacao de Clientes</h2>
+        <p>Reestruturacao da estrategia de trafego pago com foco em resultado mensuravel. Campanhas segmentadas por produto, perfil de cliente e sazonalidade, incluindo campanhas especificas para a clinica veterinaria.</p>
+      </div>
+      <div class="two-col">
+        <div class="checklist">
+          <div class="check-item">Gestao de Meta Ads e Google Ads com metodologia de 4 etapas</div>
+          <div class="check-item">Campanhas educativas para clinica: tartaro e castracao</div>
+          <div class="check-item">Campanhas sazonais para agro: vacinacao, vermifugacao, nutricao</div>
+          <div class="check-item">Retargeting para base de clientes existente</div>
+          <div class="check-item">Producao de criativos alinhados a identidade da Nutrigil</div>
+        </div>
+        <div>
+          <div class="result-badge" style="display:flex; margin-top:0;">&#127919; Resultado esperado</div>
+          <div class="card" style="margin-top:12px; border-color: rgba(34,197,94,0.2);">
+            <p style="font-size:14px; color:var(--text);">Novos clientes qualificados chegando com custo controlado e mensuravel. Você saberá exatamente quanto custou cada novo cliente e de qual canal ele veio.</p>
+          </div>
+          <div class="pills" style="margin-top:12px;">
+            <div class="pill green">Meta Ads</div>
+            <div class="pill teal">Google Ads</div>
+            <div class="pill amber">Criativos</div>
+            <div class="pill green">Relatorio Mensal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 9: PILAR 2 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 02</div>
+      <div class="pilar-hero">
+        <div class="num">02</div>
+        <h2>Tecnologia, CRM e Metrificacao</h2>
+        <p>Implementacao de sistema de CRM integrado ao WhatsApp para gestao da base de clientes da loja e da clinica. Configuracao de dashboard para que voce saiba, com precisao, o que funciona.</p>
+      </div>
+      <div class="two-col">
+        <div class="checklist">
+          <div class="check-item">Implementacao de CRM integrado ao WhatsApp</div>
+          <div class="check-item">Segmentacao de base: agropecuaria vs clinica vs ambos</div>
+          <div class="check-item">Dashboard de atribuicao de canais (radio, TV, digital)</div>
+          <div class="check-item">Regua automatizada: vacinas, retorno, aniversario do pet</div>
+          <div class="check-item">Campanha de reativacao de clientes inativos</div>
+        </div>
+        <div>
+          <div class="result-badge" style="display:flex; margin-top:0;">&#127919; Resultado esperado</div>
+          <div class="card" style="margin-top:12px; border-color: rgba(34,197,94,0.2);">
+            <p style="font-size:14px; color:var(--text);">Clareza total sobre ROI de cada canal. Base de 18 anos gerando recompra ativa, sem precisar de novos anuncios para cada venda.</p>
+          </div>
+          <div class="pills" style="margin-top:12px;">
+            <div class="pill green">CRM</div>
+            <div class="pill teal">WhatsApp Biz</div>
+            <div class="pill amber">Automacoes</div>
+            <div class="pill green">Dashboard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 10: PILAR 3 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 03</div>
+      <div class="pilar-hero">
+        <div class="num">03</div>
+        <h2>Processo Comercial e Ticket Medio</h2>
+        <p>Mapeamento e reestruturacao do processo de atendimento no balcao da loja e na recepcao da clinica. Tecnicas de upsell e cross-sell no fluxo natural de atendimento, sem criar pressao ou atrito.</p>
+      </div>
+      <div class="two-col">
+        <div class="checklist">
+          <div class="check-item">Mapeamento do processo atual de atendimento</div>
+          <div class="check-item">Script de atendimento com gatilhos de upsell e cross-sell</div>
+          <div class="check-item">Treinamento pratico da equipe de balcao</div>
+          <div class="check-item">Indicadores de ticket medio por atendente</div>
+          <div class="check-item">Combos: farmacia + nutricao + acessorios</div>
+        </div>
+        <div>
+          <div class="result-badge" style="display:flex; margin-top:0;">&#127919; Resultado esperado</div>
+          <div class="card" style="margin-top:12px; border-color: rgba(34,197,94,0.2);">
+            <p style="font-size:14px; color:var(--text);">Aumento do ticket medio sem precisar aumentar o volume de clientes. A maior oportunidade de crescimento muitas vezes esta dentro da propria loja.</p>
+          </div>
+          <div class="pills" style="margin-top:12px;">
+            <div class="pill green">Script de Atendimento</div>
+            <div class="pill teal">Treinamento</div>
+            <div class="pill amber">Upsell</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 11: PILAR 4 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 04</div>
+      <div class="pilar-hero">
+        <div class="num">04</div>
+        <h2>Pessoas e Processo de RH</h2>
+        <p>Voce entrevista 3 a 5 pessoas por semana e ainda esta com equipe insuficiente. O problema nao e o volume de candidatos. E o processo seletivo e o onboarding. Com estrutura certa, voce contrata mais rapido e retem mais.</p>
+      </div>
+      <div class="two-col">
+        <div class="checklist">
+          <div class="check-item">Perfil ideal de cargo por funcao (balconista, auxiliar, recepcao)</div>
+          <div class="check-item">Roteiro de entrevista com criterios objetivos</div>
+          <div class="check-item">Plano de onboarding para os primeiros 30 dias</div>
+          <div class="check-item">Script de apresentacao da empresa para candidatos</div>
+          <div class="check-item">Reducao da taxa de rotatividade</div>
+        </div>
+        <div>
+          <div class="result-badge" style="display:flex; margin-top:0;">&#127919; Resultado esperado</div>
+          <div class="card" style="margin-top:12px; border-color: rgba(34,197,94,0.2);">
+            <p style="font-size:14px; color:var(--text);">Contratar mais rapido, com mais acerto e menor rotatividade. Liberar os socios do processo seletivo manual e reativo.</p>
+          </div>
+          <div class="pills" style="margin-top:12px;">
+            <div class="pill green">Perfil de Cargo</div>
+            <div class="pill teal">Entrevista Estruturada</div>
+            <div class="pill amber">Onboarding</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 12: MODULOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estrutura</div>
+      <div class="slide-title">Como <span>trabalhamos</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">O projeto e modular. Voce comeca com o que faz mais sentido para o momento da Nutrigil e amplia conforme os resultados aparecem. Sem compromisso com tudo de uma vez.</p>
+      <div class="cards cards-3">
+        <div class="modulo-card rec">
+          <div class="rec-tag">Recomendado para comecar</div>
+          <h4>Modulo Essencial</h4>
+          <div style="margin: 10px 0 14px;">
+            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 2.500</span>
+            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mes</span>
+          </div>
+          <ul>
+            <li>Gestao de trafego pago (Meta + Google)</li>
+            <li>Campanhas clinica: tartaro + castracao</li>
+            <li>Dashboard de metrificacao</li>
+            <li>CRM basico com WhatsApp</li>
+          </ul>
+        </div>
+        <div class="modulo-card">
+          <h4>Modulo Crescimento</h4>
+          <div style="margin: 10px 0 14px;">
+            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 3.800</span>
+            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mes</span>
+          </div>
+          <ul>
+            <li>Tudo do Essencial</li>
+            <li>Regua de relacionamento automatizada</li>
+            <li>Processo comercial + treinamento de equipe</li>
+            <li>Campanha de reativacao de base</li>
+          </ul>
+        </div>
+        <div class="modulo-card">
+          <h4>Modulo Completo</h4>
+          <div style="margin: 10px 0 14px;">
+            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 7.500</span>
+            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mes</span>
+          </div>
+          <ul>
+            <li>Tudo do Crescimento</li>
+            <li>Processo e suporte de RH</li>
+            <li>Acompanhamento presencial semanal</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 13: PROXIMOS PASSOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Proximos passos</div>
+      <div class="slide-title">O caminho<br/><span>daqui pra frente</span></div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Reuniao presencial hoje — 09/04, 16h</h4>
+              <p>Alinhamento de modulos, definicao de prioridades e discussao de valores. Tudo presencial, olho no olho.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Definicao do modulo inicial</h4>
+              <p>Escolha do ponto de entrada com base no orcamento e na dor de maior urgencia para voce agora.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Onboarding e acesso as plataformas</h4>
+              <p>Levantamento da base, acesso ao Gerenciador de Anuncios e configuracao dos primeiros fluxos.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Primeiros 30 dias: estrutura e resultados</h4>
+              <p>Campanhas no ar, CRM configurado, metrificacao funcionando e primeiros leads qualificados chegando.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight" style="padding:28px;">
+            <p style="font-size:13px; color:var(--muted); margin-bottom:16px; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Nossos clientes em Divinopolis</p>
+            <div class="list" style="gap:10px;">
+              <div class="list-item" style="padding:14px 18px;">
+                <div class="li-icon green">&#127968;</div>
+                <div><h4 style="font-size:13px;">Francisca Imoveis</h4><p>Time comercial + geracao de clientes</p></div>
+              </div>
+              <div class="list-item" style="padding:14px 18px;">
+                <div class="li-icon teal">&#128176;</div>
+                <div><h4 style="font-size:13px;">Cruzeiro do Sul</h4><p>Processo comercial + midia digital</p></div>
+              </div>
+            </div>
+            <p style="font-size:12px; color:var(--muted); margin-top:16px;">Somos locais. Conhecemos Divinopolis. Podemos nos encontrar pessoalmente sempre que precisar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 14: FECHAMENTO ====== -->
+  <div class="slide" style="background: radial-gradient(ellipse at 50% 50%, #0a1a0e 0%, var(--dark) 70%);">
+    <div class="slide-inner close-slide">
+      <div class="badge" style="margin-bottom:24px;">&#127807; Grupo NG</div>
+      <h2>Pronto para<br/><span>crescer junto?</span></h2>
+      <p>A Nutrigil tem 18 anos de base solida. Agora e hora de dar o proximo passo com estrategia, tecnologia e um time que vai ao lado de voce.</p>
+      <div class="cover-tags" style="justify-content:center; margin-bottom:40px;">
+        <div class="ctag">&#128222; Yuri Garcia</div>
+        <div class="ctag">&#128205; Divinopolis, MG</div>
+        <div class="ctag">&#127807; Grupo NG</div>
+      </div>
+      <button class="btn-primary" onclick="goTo(0)">&#8592; Voltar ao inicio</button>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+  const dotsEl   = document.getElementById('dots');
+
+  // Create dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'exit');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('exit');
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    const pct = ((current + 1) / total) * 100;
+    progress.style.width = pct + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    update();
+  }
+
+  document.getElementById('btn-prev').onclick = () => goTo(current - 1);
+  document.getElementById('btn-next').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     goTo(current - 1);
+  });
+
+  // Touch swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
+  });
+
+  update();
+</script>
+</body>
+</html>
