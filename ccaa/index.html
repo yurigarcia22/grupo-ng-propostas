@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manual de Condução do Lead no WhatsApp · CCAA CG</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --verde:    #075e54;
+      --verde2:   #128c7e;
+      --verde3:   #25d366;
+      --vermelho: #c0392b;
+      --bg:       #f0f2f5;
+      --cinza:    #555;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg);
+      color: #222;
+      line-height: 1.65;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--verde);
+      color: white;
+      padding: 40px 24px 32px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.75rem; margin-bottom: 6px; }
+    header p  { font-size: 0.95rem; opacity: .82; }
+
+    /* NAV */
+    nav {
+      background: var(--verde2);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      padding: 10px 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      transition: background .2s;
+    }
+    nav a:hover { background: rgba(255,255,255,.2); }
+
+    /* LAYOUT */
+    .container { max-width: 900px; margin: 0 auto; padding: 36px 20px 70px; }
+    section { margin-bottom: 52px; scroll-margin-top: 58px; }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--verde);
+      border-bottom: 3px solid var(--verde3);
+      padding-bottom: 8px;
+      margin-bottom: 22px;
+    }
+
+    /* ALERTA */
+    .alert {
+      background: #fff8e1;
+      border-left: 5px solid #f9a825;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 28px;
+      font-size: 0.9rem;
+    }
+    .alert strong { color: #e65100; }
+
+    /* INFO BOX (azul) */
+    .info-box {
+      background: #e3f2fd;
+      border-left: 5px solid #1565c0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 20px;
+      font-size: 0.88rem;
+      color: #0d47a1;
+    }
+
+    /* STEPS */
+    .steps { counter-reset: step; }
+    .step {
+      background: white;
+      border-radius: 10px;
+      padding: 18px 20px 18px 64px;
+      position: relative;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 5px rgba(0,0,0,.08);
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--verde);
+      color: white;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800;
+      font-size: .95rem;
+    }
+    .step h3 { font-size: .95rem; color: var(--verde); margin-bottom: 4px; }
+    .step p  { font-size: .87rem; color: var(--cinza); }
+
+    /* BOLHAS WhatsApp */
+    .conv-title {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 10px 16px;
+    }
+    .conv-block {
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 22px;
+      box-shadow: 0 1px 6px rgba(0,0,0,.1);
+    }
+    .conv-block.ruim   .conv-title { background: #fdecea; color: var(--vermelho); }
+    .conv-block.bom    .conv-title { background: #e8f5e9; color: #1b7a37; }
+    .conv-block.neutro .conv-title { background: #e3f2fd; color: #0d47a1; }
+
+    .bubbles {
+      background: #ece5dd;
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    /* cada bolha */
+    .b {
+      max-width: 82%;
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: .87rem;
+      line-height: 1.6;
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+    .b.nos  { background: #dcf8c6; align-self: flex-end;  border-top-right-radius: 2px; }
+    .b.cli  { background: white;    align-self: flex-start; border-top-left-radius: 2px; }
+    .b.info { background: rgba(0,0,0,.06); align-self: center; font-style: italic;
+              font-size: .76rem; border-radius: 6px; max-width: 95%; text-align: center; padding: 6px 12px; }
+
+    .conv-nota {
+      padding: 10px 16px 14px;
+      font-size: .8rem;
+      color: var(--cinza);
+      background: white;
+    }
+    .conv-nota strong { color: #222; }
+
+    /* CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background: white;
+      border-left: 4px solid var(--verde3);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+    }
+    .card h3 { font-size: .88rem; font-weight: 700; color: var(--verde); margin-bottom: 6px; }
+    .card p  { font-size: .84rem; color: var(--cinza); }
+
+    /* OBJEÇÕES */
+    .objection {
+      background: white;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      overflow: hidden;
+      box-shadow: 0 1px 5px rgba(0,0,0,.08);
+    }
+    .obj-header {
+      background: #fce4e4;
+      padding: 12px 18px;
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--vermelho);
+    }
+    .obj-body { padding: 16px 18px; }
+    .obj-body .label {
+      font-size: .75rem; font-weight: 700; color: var(--verde);
+      text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px;
+    }
+    .obj-body p { font-size: .87rem; color: var(--cinza); margin-bottom: 12px; }
+    .obj-body .resp {
+      background: #f1f8e9;
+      border-left: 3px solid var(--verde3);
+      border-radius: 6px;
+      padding: 10px 14px;
+      font-size: .87rem;
+      white-space: pre-wrap;
+    }
+
+    /* FORMATAÇÃO */
+    .fmt-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) { .fmt-grid { grid-template-columns: 1fr; } }
+
+    .fmt-box {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 5px rgba(0,0,0,.09);
+    }
+    .fmt-box .fmt-label {
+      padding: 9px 14px;
+      font-size: .76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .fmt-box.ruim .fmt-label  { background: #fdecea; color: var(--vermelho); }
+    .fmt-box.bom  .fmt-label  { background: #e8f5e9; color: #1b7a37; }
+    .fmt-box .fmt-content {
+      background: #ece5dd;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-height: 100px;
+    }
+
+    /* REGRAS DE FORMATAÇÃO */
+    .rules { list-style: none; }
+    .rules li {
+      background: white;
+      border-radius: 8px;
+      padding: 13px 16px;
+      margin-bottom: 9px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.07);
+      font-size: .9rem;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .rules li .num {
+      background: var(--verde3);
+      color: white;
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .rules li strong { color: var(--verde); }
+
+    /* CHECKLIST */
+    .checklist { list-style: none; }
+    .checklist li {
+      background: white;
+      border-radius: 7px;
+      padding: 10px 16px;
+      margin-bottom: 8px;
+      display: flex;
+      gap: 10px;
+      font-size: .9rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    .checklist li::before { content: "✓"; color: var(--verde3); font-weight: 900; flex-shrink: 0; }
+
+    /* ETIQUETAS */
+    .tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .tag {
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-size: .82rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    footer {
+      text-align: center;
+      font-size: .78rem;
+      color: #999;
+      padding-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>📱 Manual de Condução do Lead no WhatsApp</h1>
+  <p>CCAA Campina Grande · Do primeiro contato ao fechamento</p>
+</header>
+
+<nav>
+  <a href="#fluxo">Fluxo</a>
+  <a href="#formatacao">Formatação</a>
+  <a href="#diferenciacao">Diferenciação</a>
+  <a href="#qualificacao">Qualificação</a>
+  <a href="#preco">Preço</a>
+  <a href="#followup">Follow-up</a>
+  <a href="#objecoes">Objeções</a>
+  <a href="#fechamento">Fechamento</a>
+  <a href="#etiquetas">Etiquetas</a>
+</nav>
+
+<div class="container">
+
+  <div class="alert">
+    <strong>Três pontos de atenção identificados nos atendimentos:</strong><br>
+    (1) Leads sem follow-up ficando sem retorno por dias.
+    (2) Desconto oferecido antes mesmo do cliente reclamar do valor.
+    (3) Preço passado sem apresentar o diferencial primeiro.
+    Este manual aborda cada um desses pontos com exemplos práticos.
+  </div>
+
+
+  <!-- FLUXO -->
+  <section id="fluxo">
+    <div class="section-title">📋 Fluxo de Atendimento</div>
+
+    <p style="font-size:.9rem;color:var(--cinza);margin-bottom:18px;">Siga essa ordem em todo atendimento. Pular etapas, especialmente ir direto ao preço sem apresentar o produto, é o principal motivo de leads que somem sem resposta.</p>
+
+    <div class="steps">
+      <div class="step">
+        <h3>Recepção e rapport</h3>
+        <p>Cumprimente com o horário do dia, identifique-se como CCAA e abra espaço para o cliente falar. Adapte o tom ao perfil: mais formal com pais e adultos, mais leve com jovens.</p>
+      </div>
+      <div class="step">
+        <h3>Qualificação</h3>
+        <p>Entenda para quem é o curso, qual o objetivo e qual escola o filho estuda. Essas informações definem qual argumento usar e qual perfil de oferta apresentar. Veja a seção de Qualificação para saber como perguntar isso de forma natural.</p>
+      </div>
+      <div class="step">
+        <h3>Apresentação do diferencial</h3>
+        <p>Antes de qualquer valor, mostre por que a CCAA é diferente. Use o histórico da escola, a metodologia e o que o cliente já disse sobre o filho. Construir valor aqui é o que justifica o investimento depois.</p>
+      </div>
+      <div class="step">
+        <h3>Ampliação da necessidade</h3>
+        <p>Faça perguntas para que o cliente verbalize o problema com as próprias palavras. "Há quanto tempo seu filho estuda inglês na escola? Como ele está se saindo?" Isso traz a dor à tona antes do preço.</p>
+      </div>
+      <div class="step">
+        <h3>Pergunta âncora antes do preço</h3>
+        <p>"Tirando o valor, tem mais alguma dúvida ou algo que impeça a matrícula?" Assim você descobre objeções escondidas antes de revelar o investimento.</p>
+      </div>
+      <div class="step">
+        <h3>Apresentação do investimento</h3>
+        <p>Passe o valor com confiança, depois de construir o diferencial. Não ofereça desconto antes de o cliente pedir. Se ele não reclamar do preço, não reduza.</p>
+      </div>
+      <div class="step">
+        <h3>Fechamento ou follow-up programado</h3>
+        <p>Se não fechar na hora, registre o contato com a etiqueta correta e marque mentalmente quando retomar. O follow-up não é para pressionar, é para manter o vínculo e reiniciar a conversa.</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FORMATAÇÃO DE MENSAGENS -->
+  <section id="formatacao">
+    <div class="section-title">📐 Formatação de Mensagens no WhatsApp</div>
+
+    <p style="font-size:.9rem;color:var(--cinza);margin-bottom:18px;">A forma como a mensagem aparece na tela influencia diretamente se o cliente vai ler e responder. Mensagens em bloco único são ignoradas. Mensagens bem divididas e objetivas transmitem profissionalismo.</p>
+
+    <ul class="rules">
+      <li>
+        <span class="num">1</span>
+        <span><strong>Máximo de 3 linhas por bolha.</strong> Se o conteúdo for maior, separe em duas mensagens. Cada mensagem deve ter uma única ideia.</span>
+      </li>
+      <li>
+        <span class="num">2</span>
+        <span><strong>Saudação em mensagem separada.</strong> Não misture "boa tarde" com a pergunta e com as informações na mesma bolha. Cada bloco tem o seu momento.</span>
+      </li>
+      <li>
+        <span class="num">3</span>
+        <span><strong>Use lista quando listar.</strong> Horários, documentos, condições de pagamento: sempre em tópicos com bullet (•) ou número, nunca corrido em texto.</span>
+      </li>
+      <li>
+        <span class="num">4</span>
+        <span><strong>Termine com uma pergunta ou ação clara.</strong> A mensagem deve sempre indicar o próximo passo. Evite mensagens que encerram sem direcionar o cliente.</span>
+      </li>
+      <li>
+        <span class="num">5</span>
+        <span><strong>Pontuação e maiúsculas corretas.</strong> Mensagens sem ponto final, tudo minúsculo ou cheias de abreviações passam descuido. A CCAA tem um padrão de qualidade e a escrita reflete isso.</span>
+      </li>
+      <li>
+        <span class="num">6</span>
+        <span><strong>Use o nome do cliente na conversa.</strong> Inserir o nome da pessoa em pelo menos uma mensagem por atendimento cria proximidade e mostra atenção.</span>
+      </li>
+      <li>
+        <span class="num">7</span>
+        <span><strong>Emojis com moderação.</strong> Um emoji por mensagem ajuda a tornar o tom mais leve. Vários emojis seguidos tiram a credibilidade da comunicação.</span>
+      </li>
+    </ul>
+
+    <!-- EXEMPLO 1: saudação inicial -->
+    <p style="font-size:.82rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Exemplo 1 — Saudação inicial</p>
+    <div class="fmt-grid">
+      <div class="fmt-box ruim">
+        <div class="fmt-label">⚠ Tudo misturado em uma bolha só</div>
+        <div class="fmt-content">
+          <div class="b nos">oi tudo bem sou do ccaa vc quer informação sobre as turmas temos varios horarios disponiveis me fala o que vc precisa</div>
+        </div>
+      </div>
+      <div class="fmt-box bom">
+        <div class="fmt-label">✓ Saudação separada, identificação clara</div>
+        <div class="fmt-content">
+          <div class="b nos">Boa tarde! 😊</div>
+          <div class="b nos">Aqui é a CCAA Campina Grande.</div>
+          <div class="b nos">Em que posso ajudar o senhor?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXEMPLO 2: horários -->
+    <p style="font-size:.82rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Exemplo 2 — Informando horários disponíveis</p>
+    <div class="fmt-grid">
+      <div class="fmt-box ruim">
+        <div class="fmt-label">⚠ Lista corrida, impossível de ler rápido</div>
+        <div class="fmt-content">
+          <div class="b nos">os horários são de manhã as 8h e de tarde as 14h e a noite tem as 18h30 e 20h tambem tem qual você prefere</div>
+        </div>
+      </div>
+      <div class="fmt-box bom">
+        <div class="fmt-label">✓ Lista organizada, fácil de comparar</div>
+        <div class="fmt-content">
+          <div class="b nos">Os horários disponíveis são:<br>• Manhã: 8h<br>• Tarde: 14h<br>• Noite: 18h30 e 20h<br><br>Qual se encaixa melhor na sua rotina?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXEMPLO 3: documentos para matrícula -->
+    <p style="font-size:.82rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Exemplo 3 — Documentos e horário de atendimento</p>
+    <div class="fmt-grid">
+      <div class="fmt-box ruim">
+        <div class="fmt-label">⚠ Informações empilhadas sem separação</div>
+        <div class="fmt-content">
+          <div class="b nos">pode vir aqui na escola qualquer dia das 8 as 18h levar rg e cpf e o pagamento da matricula é 150 reais</div>
+        </div>
+      </div>
+      <div class="fmt-box bom">
+        <div class="fmt-label">✓ Cada bloco com sua função</div>
+        <div class="fmt-content">
+          <div class="b nos">Para a matrícula, a senhora vai precisar trazer:<br>• RG e CPF<br>• Taxa de matrícula: R$&nbsp;150</div>
+          <div class="b nos">Atendemos de segunda a sexta, das 8h às 18h.</div>
+          <div class="b nos">Tem alguma dúvida antes de vir?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXEMPLO 4: apresentação do preço -->
+    <p style="font-size:.82rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Exemplo 4 — Apresentando o investimento</p>
+    <div class="fmt-grid">
+      <div class="fmt-box ruim">
+        <div class="fmt-label">⚠ Preço jogado sem contexto</div>
+        <div class="fmt-content">
+          <div class="b nos">o valor é 580 reais por mes com material incluido pode pagar no cartao ou boleto</div>
+        </div>
+      </div>
+      <div class="fmt-box bom">
+        <div class="fmt-label">✓ Preço apresentado com contexto e próximo passo</div>
+        <div class="fmt-content">
+          <div class="b nos">O investimento mensal é R$&nbsp;580.</div>
+          <div class="b nos">Já está incluso nesse valor:<br>• Todo o material didático<br>• Acesso às aulas presenciais<br>• Suporte com o professor</div>
+          <div class="b nos">O pagamento pode ser no cartão ou boleto. Qual fica melhor para o senhor?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXEMPLO 5: resposta longa -->
+    <p style="font-size:.82rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Exemplo 5 — Explicação sobre o curso</p>
+    <div class="fmt-grid">
+      <div class="fmt-box ruim">
+        <div class="fmt-label">⚠ Parágrafo único que ninguém lê até o final</div>
+        <div class="fmt-content">
+          <div class="b nos">o curso de inglês da CCAA tem duração variada conforme o nível do aluno e são feitas turmas reduzidas com no máximo 15 alunos e as aulas são de segunda quarta e sexta ou terça e quinta e o professor fala ingles na maior parte da aula e o material é entregue no inicio do semestre</div>
+        </div>
+      </div>
+      <div class="fmt-box bom">
+        <div class="fmt-label">✓ Dividido por assunto, direto e legível</div>
+        <div class="fmt-content">
+          <div class="b nos">Sobre como funcionam as aulas:</div>
+          <div class="b nos">• Turmas reduzidas (até 15 alunos)<br>• Aulas às segundas, quartas e sextas ou terças e quintas<br>• Professor conduz a aula em inglês desde o início<br>• Material incluso</div>
+          <div class="b nos">Quer que eu verifique qual turma tem vaga no horário que a senhora me disse?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXEMPLO 6: encerramento -->
+    <p style="font-size:.82rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Exemplo 6 — Encerramento do atendimento</p>
+    <div class="fmt-grid">
+      <div class="fmt-box ruim">
+        <div class="fmt-label">⚠ Encerramento abrupto e informal</div>
+        <div class="fmt-content">
+          <div class="b nos">ok qualquer coisa é só chamar flw</div>
+        </div>
+      </div>
+      <div class="fmt-box bom">
+        <div class="fmt-label">✓ Encerramento que mantém o vínculo aberto</div>
+        <div class="fmt-content">
+          <div class="b nos">Fico por aqui, senhor Carlos.</div>
+          <div class="b nos">Qualquer dúvida pode me chamar aqui mesmo. 😊</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- DIFERENCIAÇÃO -->
+  <section id="diferenciacao">
+    <div class="section-title">🏆 Como Mostrar o Diferencial da CCAA</div>
+
+    <div class="alert">
+      <strong>Por que isso importa:</strong> A CCAA é percebida como a escola mais cara de Campina Grande. Sem apresentar o diferencial antes do preço, o cliente compara só pelo valor e qualquer opção mais barata vai ganhar. O diferencial apresentado antes do preço é o que muda essa equação.
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>65 anos de história</h3>
+        <p>A CCAA está entre as escolas de inglês com mais tempo de atuação no Brasil, com milhões de alunos formados. Não é promessa de marca, é histórico real.</p>
+      </div>
+      <div class="card">
+        <h3>Professores formados aqui</h3>
+        <p>Professores como Sara e Renata foram alunas da CCAA de Campina Grande, aprenderam inglês aqui e hoje ensinam nos maiores colégios da cidade. O método funciona na prática.</p>
+      </div>
+      <div class="card">
+        <h3>Escola de referência na cidade</h3>
+        <p>A CCAA tem a fama de ser a escola das famílias de referência em Campina Grande. Use isso a favor: "Você quer estar entre os que realmente aprendem?"</p>
+      </div>
+      <div class="card">
+        <h3>Metodologia de conversação</h3>
+        <p>A maioria das pessoas não aprende inglês por medo de errar, não por falta de vocabulário. A metodologia da CCAA foi construída para quebrar isso por meio da prática em sala desde a primeira aula.</p>
+      </div>
+    </div>
+
+    <div class="conv-block ruim">
+      <div class="conv-title">⚠ Abordagem que antecipa o desconto sem necessidade</div>
+      <div class="bubbles">
+        <div class="b cli">Boa tarde, queria saber o valor do curso de inglês</div>
+        <div class="b nos">Boa tarde! O curso é R$ 600, mas temos promoção essa semana com 35% de desconto, fica R$ 410 para a senhora.</div>
+      </div>
+      <div class="conv-nota"><strong>O que acontece aqui:</strong> O cliente nem reclamou do preço. O desconto foi dado por antecipação, quebrando a margem sem necessidade e passando a impressão de que o valor original não tem sustentação.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Construindo valor antes do preço</div>
+      <div class="bubbles">
+        <div class="b cli">Boa tarde, queria saber o valor do curso de inglês</div>
+        <div class="b nos">Boa tarde! Aqui é a CCAA Campina Grande. 😊</div>
+        <div class="b nos">Antes de passar o investimento, me deixa entender melhor o que a senhora precisa para mostrar a opção mais adequada.</div>
+        <div class="b nos">É para a senhora ou para o(a) filho(a)?</div>
+        <div class="b cli">Para minha filha, ela tem 12 anos</div>
+        <div class="b nos">Que ótimo! Ela já teve algum contato com inglês antes, ou seria o primeiro curso mesmo?</div>
+        <div class="b cli">Ela tem inglês na escola mas não tá aprendendo muito</div>
+        <div class="b nos">Entendo. Isso acontece bastante.</div>
+        <div class="b nos">O inglês da grade escolar normalmente não é voltado para conversação. Ele prepara para prova, não para falar.</div>
+        <div class="b nos">A metodologia da CCAA funciona diferente: desde a primeira aula a aluna já pratica em sala, com professor. Sem aquele inglês de decorar conjugação.</div>
+        <div class="b nos">Me fala uma coisa: em qual escola sua filha estuda?</div>
+      </div>
+      <div class="conv-nota"><strong>O que mudou:</strong> Antes de qualquer valor, o atendente qualificou o lead, identificou a dor da mãe ("não tá aprendendo") e apresentou o diferencial. Agora o preço vai ser apresentado com contexto real e a conversa continua aberta.</div>
+    </div>
+  </section>
+
+
+  <!-- QUALIFICAÇÃO -->
+  <section id="qualificacao">
+    <div class="section-title">🔍 Qualificação: Como Perguntar a Escola de Forma Natural</div>
+
+    <div class="info-box">
+      Perguntar diretamente "Em qual escola seu filho estuda?" pode gerar estranhamento. O cliente não entende o motivo da pergunta e, às vezes, não responde. O segredo é dar contexto para a pergunta antes de fazê-la, criando uma razão que beneficia o próprio cliente.
+    </div>
+
+    <div class="conv-block ruim">
+      <div class="conv-title">⚠ Pergunta direta sem contexto</div>
+      <div class="bubbles">
+        <div class="b nos">Me passa em qual escola sua filha estuda?</div>
+        <div class="b cli">Por que isso?</div>
+        <div class="b info">Quando o cliente questiona o motivo, o atendente fica sem argumento e a conversa esfria.</div>
+      </div>
+      <div class="conv-nota"><strong>O problema:</strong> A pergunta foi feita sem preparar o cliente para ela. Sem saber o motivo, a pessoa desconfia ou simplesmente ignora.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Pergunta com contexto: uso da parceria como gancho</div>
+      <div class="bubbles">
+        <div class="b cli">Queria saber sobre o curso para meu filho</div>
+        <div class="b nos">Claro! Para eu já apresentar a melhor opção para o senhor, me conta: quantos anos tem seu filho?</div>
+        <div class="b cli">13 anos</div>
+        <div class="b nos">Ótimo. Você sabe que a gente tem parceria com algumas escolas aqui de Campina Grande?</div>
+        <div class="b nos">Dependendo de onde ele estuda, pode ter condição diferenciada. Em qual colégio ele está?</div>
+        <div class="b cli">Está no Alfredo Dantas</div>
+        <div class="b info">Agora o atendente tem a informação de qualificação de forma natural. Se for escola particular, pode trabalhar o preço cheio. Se for pública, já ajusta a estratégia de negociação.</div>
+      </div>
+      <div class="conv-nota"><strong>O que mudou:</strong> A pergunta sobre a escola foi antecedida por um benefício para o cliente ("pode ter condição diferenciada"). Isso transforma a pergunta de invasiva em útil. O cliente responde porque entende que a resposta é a favor dele.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Qualificação quando o foco é no adulto</div>
+      <div class="bubbles">
+        <div class="b cli">Queria informação sobre o curso de inglês para mim</div>
+        <div class="b nos">Com prazer! Para entender o que faz mais sentido para o senhor, me conta: é mais para uso profissional, viagem ou algo específico?</div>
+        <div class="b cli">Profissional mesmo, quero crescer na empresa</div>
+        <div class="b nos">Entendido. O senhor já teve alguma experiência com inglês antes, mesmo que básico?</div>
+        <div class="b cli">Estudei um pouco na escola mas faz tempo</div>
+        <div class="b nos">Tranquilo, isso é muito comum. Nesse caso a gente faz um teste de nivelamento rápido para encaixar o senhor no ponto certo, sem ter que recomeçar do zero.</div>
+        <div class="b nos">Qual horário costuma ter mais disponibilidade?</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> Cada pergunta tem uma razão clara para o cliente. O nivelamento é apresentado como benefício, não como burocracia. A conversa avança sem parecer um formulário.</div>
+    </div>
+  </section>
+
+
+  <!-- PREÇO -->
+  <section id="preco">
+    <div class="section-title">💰 Como Passar o Investimento</div>
+
+    <div class="alert">
+      <strong>Regra principal:</strong> Nunca ofereça desconto antes de o cliente dizer que está caro. Se ele não reclamar, não reduza. O desconto é a última carta, não a primeira jogada.
+    </div>
+
+    <div class="conv-block ruim">
+      <div class="conv-title">⚠ Desconto dado antes da objeção</div>
+      <div class="bubbles">
+        <div class="b cli">Quanto custa?</div>
+        <div class="b nos">O valor é R$ 600 por mês, mas pra você hoje tenho 40% de desconto, fica R$ 360.</div>
+        <div class="b info">O cliente não reclamou do preço. O desconto foi dado por antecipação.</div>
+      </div>
+      <div class="conv-nota"><strong>O que acontece:</strong> Além de quebrar a margem, o cliente começa a pensar: "Se tem 40% de desconto toda hora, quanto vale de verdade?"</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Pergunta âncora antes do preço</div>
+      <div class="bubbles">
+        <div class="b nos">Senhor João, antes de passar o investimento, só uma pergunta rápida.</div>
+        <div class="b nos">Tirando o valor em si, tem mais alguma dúvida ou algo que esteja impedindo a matrícula?</div>
+        <div class="b cli">Não, acho que não</div>
+        <div class="b nos">Perfeito! O investimento mensal é R$ 580, com material didático incluso.</div>
+        <div class="b nos">O pagamento pode ser no cartão ou boleto. Qual fica melhor para o senhor?</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> A pergunta âncora revela objeções escondidas antes do preço. Se o cliente não tem mais dúvidas, o valor é apresentado com confiança e o próximo passo já vai direto para a forma de pagamento.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Quando o cliente diz que está caro: compare com o cotidiano</div>
+      <div class="bubbles">
+        <div class="b cli">Poxa, achei um pouco caro não...</div>
+        <div class="b nos">Entendo, dona Maria. Posso colocar em outro contexto?</div>
+        <div class="b nos">R$ 580 ao mês dá menos de R$ 20 por dia. Menos do que uma saída para jantar no fim de semana.</div>
+        <div class="b nos">E nesse investimento já estão incluídos o material, as aulas com professor formado e a metodologia da escola.</div>
+        <div class="b nos">A senhora tem alguma preferência de horário que a gente possa verificar disponibilidade?</div>
+      </div>
+      <div class="conv-nota"><strong>Técnica:</strong> Troque a referência de comparação. Em vez de disputar com a escola mais barata, compare com algo do cotidiano que o cliente já gasta sem questionar. Só então avance para o próximo passo, sem insistir no preço.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Quando o desconto for necessário, use com propósito</div>
+      <div class="bubbles">
+        <div class="b cli">Tô com vontade mas o valor ficou um pouco acima do que eu esperava</div>
+        <div class="b nos">Entendo. Deixa eu ver o que consigo fazer pelo senhor.</div>
+        <div class="b nos">Tenho uma condição especial que a gente pode aplicar nessa matrícula. Consigo chegar em R$ 500 com o mesmo material incluso.</div>
+        <div class="b nos">Faz sentido para o senhor?</div>
+      </div>
+      <div class="conv-nota"><strong>A diferença:</strong> O desconto veio em resposta a uma objeção real, não antecipado. Foi apresentado como uma condição especial, não como promoção barata. E já encerra com uma pergunta de fechamento.</div>
+    </div>
+  </section>
+
+
+  <!-- FOLLOW-UP -->
+  <section id="followup">
+    <div class="section-title">🔁 Follow-up: Como Reiniciar a Conversa</div>
+
+    <div class="alert">
+      <strong>Entenda o objetivo:</strong> O follow-up não é para vender. É para reiniciar a conversa. Mandar "temos promoção esta semana!" quase nunca funciona. O que funciona é criar um motivo humano e genuíno para retomar o contato.
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Não some após o preço</h3>
+        <p>Se o cliente parou de responder após o valor, não espere. No dia seguinte, retome com algo diferente. Não repita o preço, abra a conversa por outro ângulo.</p>
+      </div>
+      <div class="card">
+        <h3>Misture os canais</h3>
+        <p>Mensagem no WhatsApp primeiro. Se não responder em 24h, ligue. Se não atender, tente de outro número. Ligação tem taxa de retorno muito maior que mensagem.</p>
+      </div>
+      <div class="card">
+        <h3>Informalidade gera resposta</h3>
+        <p>Mensagem formal e corporativa raramente recebe retorno. Mensagem leve, personalizada e com toque humano funciona muito melhor. Não tenha medo de ser natural.</p>
+      </div>
+      <div class="card">
+        <h3>Use o histórico da conversa</h3>
+        <p>Volte ao que o cliente disse antes. Isso mostra que você prestou atenção, não que está mandando mensagem em massa para uma lista.</p>
+      </div>
+    </div>
+
+    <div class="conv-block ruim">
+      <div class="conv-title">⚠ Follow-up que raramente funciona</div>
+      <div class="bubbles">
+        <div class="b info">3 dias após o cliente parar de responder</div>
+        <div class="b nos">Boa tarde! Ainda temos a promoção disponível para a senhora. Aproveite antes que encerre! 🎉</div>
+        <div class="b info">Sem resposta.</div>
+      </div>
+      <div class="conv-nota"><strong>O que acontece:</strong> O cliente já sabe o preço. Reforçar promoção só confirma o que ele já tem na cabeça, sem criar nenhuma razão nova para responder.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Follow-up usando o histórico da conversa</div>
+      <div class="bubbles">
+        <div class="b info">2 dias após o silêncio</div>
+        <div class="b nos">Dona Ana, bom dia! 😊</div>
+        <div class="b nos">Lembrei que a senhora tinha comentado que sua filha estuda inglês na escola mas não está conseguindo desenvolver muito.</div>
+        <div class="b nos">Separei um material aqui sobre como funciona nossa metodologia de conversação, que trabalha exatamente esse ponto. Posso mandar?</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> Voltou ao problema da cliente, não ao preço. Criou um motivo genuíno para a resposta. E pediu permissão para enviar conteúdo, o que aumenta a chance de engajamento.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Follow-up com humor para leads que sumiram há mais tempo</div>
+      <div class="bubbles">
+        <div class="b info">5 dias sem resposta</div>
+        <div class="b nos">Senhor Carlos, tudo bem? 😄</div>
+        <div class="b nos">Fiquei esperando aqui... parece foto de perfil que nunca muda. haha</div>
+        <div class="b nos">Mas falando sério: ainda tenho o horário que o senhor tinha pedido anotado aqui. É só me dar um sinal!</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> O humor quebra o gelo sem pressionar. Cria urgência suave com o horário "anotado" sem forçar uma decisão. O cliente se sente lembrado, não cobrado.</div>
+    </div>
+
+    <div class="conv-block bom">
+      <div class="conv-title">✓ Follow-up para confirmar aula experimental no mesmo dia</div>
+      <div class="bubbles">
+        <div class="b info">Manhã do dia da aula experimental agendada</div>
+        <div class="b nos">Bom dia, dona Carla! 😊</div>
+        <div class="b nos">Só passando para confirmar a aula experimental da sua filha hoje às 14h.</div>
+        <div class="b nos">A professora já está esperando. A gente vai adorar conhecer ela!</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> Confirmação cria comprometimento. Quando a pessoa faz um compromisso verbal, a chance de comparecer aumenta. O tom caloroso reforça a conexão com a escola antes mesmo de ela chegar.</div>
+    </div>
+  </section>
+
+
+  <!-- OBJEÇÕES -->
+  <section id="objecoes">
+    <div class="section-title">🛡️ Quebra de Objeções</div>
+
+    <div class="alert">
+      <strong>Ponto importante:</strong> "Tá caro" quase nunca é sobre dinheiro. Na maioria das vezes é sinal de que o valor não foi construído ainda, ou de que existe uma objeção escondida. Antes de dar qualquer desconto, faça perguntas para entender o que está por trás.
+    </div>
+
+    <div class="objection">
+      <div class="obj-header">💬 "Tá caro"</div>
+      <div class="obj-body">
+        <div class="label">O que pode estar por trás</div>
+        <p>O cliente ainda não percebeu o diferencial, ou está comparando com uma escola mais barata. Investigue antes de mexer no preço.</p>
+        <div class="label">Como responder</div>
+        <div class="resp">Entendo, senhor João. Me conta: o senhor está comparando com alguma opção específica?
+
+Se for com outras escolas da cidade, posso explicar o que é diferente aqui, porque o investimento é maior, mas a proposta também é.</div>
+      </div>
+    </div>
+
+    <div class="objection">
+      <div class="obj-header">💬 "Vou pensar"</div>
+      <div class="obj-body">
+        <div class="label">O que pode estar por trás</div>
+        <p>"Vou pensar" quase sempre é uma objeção escondida. O cliente não quer dizer não diretamente. O objetivo é trazer a objeção real à tona.</p>
+        <div class="label">Como responder</div>
+        <div class="resp">Claro, sem pressa. 😊
+
+Só pra eu entender melhor: o que ainda falta para o senhor ter certeza? É mais o horário, o investimento, ou tem alguma outra questão?</div>
+      </div>
+    </div>
+
+    <div class="objection">
+      <div class="obj-header">💬 "Preciso falar com meu marido / minha esposa"</div>
+      <div class="obj-body">
+        <div class="label">O que pode estar por trás</div>
+        <p>Pode ser objeção real ou uma forma de ganhar tempo. Tente descobrir se existe alguma outra questão antes de liberar a conversa.</p>
+        <div class="label">Como responder</div>
+        <div class="resp">Claro, faz todo sentido decidir juntos. 😊
+
+Só uma pergunta antes: tirando essa parte de alinhar com ele, tem mais alguma dúvida ou algo que esteja impedindo a matrícula?</div>
+      </div>
+    </div>
+
+    <div class="objection">
+      <div class="obj-header">💬 "Tem escola mais barata aqui perto"</div>
+      <div class="obj-body">
+        <div class="label">O que pode estar por trás</div>
+        <p>O cliente ainda está comprando por preço, não por valor. Mude a referência de comparação sem atacar o concorrente.</p>
+        <div class="label">Como responder</div>
+        <div class="resp">Com certeza existem opções com preço menor, dona Maria.
+
+A diferença está no que cada escola entrega. A CCAA tem mais de 60 anos formando alunos, com professores que aprenderam inglês aqui mesmo e hoje ensinam nos maiores colégios da cidade.
+
+A pergunta que vale fazer é: qual escola vai fazer seu filho realmente se comunicar em inglês?</div>
+      </div>
+    </div>
+
+    <div class="objection">
+      <div class="obj-header">💬 "Ele já tem inglês na escola"</div>
+      <div class="obj-body">
+        <div class="label">O que pode estar por trás</div>
+        <p>O pai ainda não diferencia inglês da grade escolar de curso de idiomas. Esclareça isso sem diminuir a escola do filho.</p>
+        <div class="label">Como responder</div>
+        <div class="resp">Entendo. Me conta: com o inglês da escola, seu filho já consegue se comunicar bem no idioma?
+
+O inglês da grade normalmente é voltado para passar na prova, não para conversar. A metodologia da CCAA funciona pelo lado da prática em sala, que é o que muda o nível real do aluno.</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FECHAMENTO -->
+  <section id="fechamento">
+    <div class="section-title">🤝 Técnicas de Fechamento</div>
+
+    <p style="font-size:.9rem;color:var(--cinza);margin-bottom:20px;">Tente fechar no menor ciclo possível. A decisão de compra é emocional e esfria com o tempo. Após quebrar as objeções principais, avance para o fechamento sem timidez.</p>
+
+    <div class="conv-block neutro">
+      <div class="conv-title">🔷 Fechamento presumido</div>
+      <div class="bubbles">
+        <div class="b info">Após responder as objeções e não houver mais dúvidas</div>
+        <div class="b nos">Ótimo, dona Ana! Para a gente agilizar a matrícula da sua filha, você prefere pagar no cartão ou no boleto?</div>
+        <div class="b info">Não perguntou "vai fechar?". Assumiu que sim e foi direto para o próximo passo.</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> Quem quer fugir tem que dizer ativamente que não quer. Quem estava em dúvida mas já resolveu todas as objeções tende a seguir em frente quando o próximo passo é claro e simples.</div>
+    </div>
+
+    <div class="conv-block neutro">
+      <div class="conv-title">🔷 Urgência com fator real</div>
+      <div class="bubbles">
+        <div class="b nos">Senhor Carlos, só um aviso: a turma do horário que o senhor pediu está quase fechando.</div>
+        <div class="b nos">Consigo segurar a vaga até amanhã. Depois disso não consigo mais garantir esse horário.</div>
+      </div>
+      <div class="conv-nota"><strong>Atenção:</strong> Só use se for verdade. Urgência que não existe queima a confiança do cliente quando ele descobre. Se a turma realmente está enchendo, esse é um argumento sólido e honesto.</div>
+    </div>
+
+    <div class="conv-block neutro">
+      <div class="conv-title">🔷 Convite para aula experimental</div>
+      <div class="bubbles">
+        <div class="b nos">Dona Maria, antes de qualquer decisão final, que tal sua filha vir assistir uma aula experimental sem compromisso?</div>
+        <div class="b nos">Ela conhece a professora, sente o ambiente, e aí vocês decidem com mais tranquilidade.</div>
+        <div class="b nos">O que a senhora acha? Tem disponibilidade essa semana?</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> Tira a pressão da decisão financeira e substitui por um compromisso menor, que é visitar a escola. Quem visita tem muito mais chance de matricular do que quem fica só no WhatsApp.</div>
+    </div>
+
+    <div class="conv-block neutro">
+      <div class="conv-title">🔷 Pergunta que antecipa a objeção do "terceiro"</div>
+      <div class="bubbles">
+        <div class="b nos">Senhor Paulo, tirando a questão do investimento e o alinhamento com sua esposa, tem mais alguma coisa que o senhor queira esclarecer antes de decidir?</div>
+        <div class="b info">Reúne as objeções que já apareceram e verifica se existe alguma outra escondida.</div>
+      </div>
+      <div class="conv-nota"><strong>Por que funciona:</strong> Ao juntar as objeções já levantadas em uma única pergunta, você verifica se ainda existe algo não dito. Se o cliente responder "não, só isso", você tem uma abertura clara para avançar.</div>
+    </div>
+  </section>
+
+
+  <!-- ETIQUETAS -->
+  <section id="etiquetas">
+    <div class="section-title">🏷️ Organização com Etiquetas no WhatsApp</div>
+
+    <p style="font-size:.9rem;color:var(--cinza);margin-bottom:16px;">Todo contato deve ter uma etiqueta. Sem isso, leads ficam misturados e o follow-up não acontece. No início de cada turno, filtre por etiqueta e retome os pendentes antes de atender novos contatos.</p>
+
+    <div class="tags">
+      <span class="tag" style="background:#e67e22;">🟠 Novo Lead</span>
+      <span class="tag" style="background:#2980b9;">🔵 1o Contato Feito</span>
+      <span class="tag" style="background:#8e44ad;">🟣 Preço Enviado</span>
+      <span class="tag" style="background:#c0392b;">🔴 Aguardando Retorno</span>
+      <span class="tag" style="background:#27ae60;">🟢 Aula Experimental Marcada</span>
+      <span class="tag" style="background:#16a085;">🟩 Matriculado</span>
+      <span class="tag" style="background:#7f8c8d;">⚫ Fora do Perfil</span>
+    </div>
+
+    <div style="margin-top:20px;background:white;border-radius:10px;padding:20px;box-shadow:0 1px 5px rgba(0,0,0,.08);">
+      <p style="font-size:.88rem;color:var(--cinza);">
+        <strong style="color:#222;">Rotina sugerida por turno:</strong><br><br>
+        1. Filtre por <strong>"Aguardando Retorno"</strong> e retome todos os contatos sem resposta do dia anterior.<br>
+        2. Filtre por <strong>"Aula Experimental Marcada"</strong> e confirme a presença no mesmo dia da aula.<br>
+        3. Filtre por <strong>"Preço Enviado"</strong> e faça follow-up nos que sumiram após o valor.<br>
+        4. Só depois atenda os contatos novos e mova-os para <strong>"1o Contato Feito"</strong>.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- CHECKLIST FINAL -->
+  <section>
+    <div class="section-title">✅ Checklist de Atendimento</div>
+    <ul class="checklist">
+      <li>Recebi o cliente com saudação no horário certo e me identifiquei como CCAA?</li>
+      <li>Qualifiquei o lead antes de passar qualquer informação de preço?</li>
+      <li>Apresentei o diferencial da escola antes de falar o valor?</li>
+      <li>Fiz a pergunta âncora: "Tirando o investimento, tem mais alguma coisa?"</li>
+      <li>Passei o preço com confiança, sem oferecer desconto antes de ser pedido?</li>
+      <li>Se o cliente parou de responder, já marquei para fazer follow-up no dia seguinte?</li>
+      <li>Tentei ligar além de só mandar mensagem?</li>
+      <li>O contato está etiquetado corretamente no WhatsApp?</li>
+      <li>As mensagens que enviei seguem a formatação: curtas, divididas e com uma pergunta no final?</li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  CCAA Campina Grande · Manual interno de atendimento comercial · 2026
+</footer>
+
+</body>
+</html>

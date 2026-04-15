@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A&S Sorriso · Atendimento Presencial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    /* ═══════════════════════════════════════
+       DESIGN TOKENS — Atomic Level 0
+    ═══════════════════════════════════════ */
+    :root {
+      /* NG Brand */
+      --ng-navy:        #1D2B6B;
+      --ng-navy-deep:   #131D4E;
+      --ng-navy-mid:    #253480;
+      --ng-coral:       #E07265;
+      --ng-coral-lt:    #F08576;
+      --ng-coral-10:    rgba(224,114,101,0.12);
+
+      /* A&S Brand */
+      --as-marrom:      #5C3120;
+      --as-bordeaux:    #7D1D31;
+      --as-dourado:     #C4923A;
+      --as-dourado-lt:  #F0DEB8;
+      --as-verde:       #1A5E40;
+
+      /* Surface & Background */
+      --bg:             #EAE4DA;
+      --bg-warm:        #F0EBE1;
+      --surface:        #FFFFFF;
+      --surface-warm:   #FAF7F2;
+      --border:         rgba(0,0,0,0.07);
+      --border-warm:    rgba(92,49,32,0.12);
+
+      /* Text */
+      --text-1:         #141414;
+      --text-2:         #3A3A3A;
+      --text-3:         #6B6B6B;
+      --text-4:         #9B9B9B;
+
+      /* Elevation */
+      --e1: 0 1px 3px rgba(0,0,0,0.05), 0 2px 10px rgba(0,0,0,0.06);
+      --e2: 0 4px 20px rgba(0,0,0,0.09), 0 1px 4px rgba(0,0,0,0.05);
+      --e3: 0 8px 40px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.06);
+
+      /* Radius */
+      --r-xs:  6px;
+      --r-sm:  10px;
+      --r-md:  16px;
+      --r-lg:  22px;
+      --r-xl:  32px;
+      --r-full: 9999px;
+
+      /* WhatsApp */
+      --wpp: #25D366;
+      --wpp-dark: #1AAD54;
+      --wpp-bg: #F0FAF3;
+    }
+
+    /* ═══════════════════════════════════════
+       RESET & BASE
+    ═══════════════════════════════════════ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-2);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.5;
+    }
+
+    /* ═══════════════════════════════════════
+       ORGANISM: NG TOP BAR
+    ═══════════════════════════════════════ */
+    .ng-bar {
+      background: var(--ng-navy-deep);
+      padding: 0 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .ng-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    /* Atom: NG Logo Mark */
+    .ng-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--r-xs);
+      background: linear-gradient(135deg, var(--ng-navy-mid), var(--ng-navy));
+      border: 1.5px solid rgba(224,114,101,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .ng-mark::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 30%, rgba(224,114,101,0.2), transparent 60%);
+    }
+    .ng-mark svg {
+      width: 20px;
+      height: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ng-bar-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .ng-bar-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.92);
+      letter-spacing: 0.2px;
+      line-height: 1;
+    }
+    .ng-bar-sub {
+      font-size: 10px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.3px;
+      line-height: 1;
+    }
+
+    .ng-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ng-bar-tag {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--r-full);
+      padding: 4px 12px;
+      font-size: 10.5px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.55);
+      letter-spacing: 0.3px;
+    }
+    .ng-bar-tag.accent {
+      background: var(--ng-coral-10);
+      border-color: rgba(224,114,101,0.25);
+      color: var(--ng-coral-lt);
+    }
+
+    /* ═══════════════════════════════════════
+       ORGANISM: HERO
+    ═══════════════════════════════════════ */
+    .hero {
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(224,114,101,0.18) 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 80%, rgba(196,146,58,0.15) 0%, transparent 40%),
+        linear-gradient(150deg, var(--ng-navy-deep) 0%, var(--ng-navy) 45%, var(--as-marrom) 100%);
+      padding: 56px 48px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 40px;
+    }
+
+    /* Atom: A&S Logo */
+    .as-logo {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      background: linear-gradient(140deg, var(--as-dourado) 0%, #8B5C14 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 19px;
+      color: white;
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.12),
+        0 0 0 7px rgba(196,146,58,0.18),
+        0 12px 40px rgba(0,0,0,0.35);
+      position: relative;
+    }
+    .as-logo::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: linear-gradient(140deg, rgba(255,255,255,0.18), transparent 60%);
+      pointer-events: none;
+    }
+
+    .hero-content { flex: 1; }
+
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--r-full);
+      padding: 5px 14px;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .hero-label-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--ng-coral);
+      flex-shrink: 0;
+      box-shadow: 0 0 0 3px rgba(224,114,101,0.3);
+    }
+
+    .hero-title {
+      font-size: 30px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.18;
+      letter-spacing: -0.5px;
+      margin-bottom: 10px;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--as-dourado-lt);
+      position: relative;
+    }
+
+    .hero-desc {
+      font-size: 13.5px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 400;
+      margin-bottom: 24px;
+      letter-spacing: 0.1px;
+    }
+
+    /* Molecule: Badge Group */
+    .badge-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: var(--r-full);
+      padding: 6px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.2px;
+    }
+    .badge.gold {
+      background: rgba(196,146,58,0.2);
+      border-color: rgba(196,146,58,0.35);
+      color: var(--as-dourado-lt);
+    }
+    .badge-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.8;
+    }
+
+    /* ═══════════════════════════════════════
+       LAYOUT WRAPPER
+    ═══════════════════════════════════════ */
+    .main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 52px 24px 80px;
+    }
+
+    /* ═══════════════════════════════════════
+       MOLECULE: SECTION HEADER
+    ═══════════════════════════════════════ */
+    .secao { margin-bottom: 60px; }
+
+    .secao-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .secao-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--r-sm);
+      background: linear-gradient(135deg, var(--ng-navy), var(--ng-navy-mid));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(29,43,107,0.35);
+    }
+    .secao-icon-wrap svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--ng-coral-lt);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .secao-meta { flex: 0 0 auto; }
+    .secao-num {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--ng-coral);
+      margin-bottom: 2px;
+    }
+    .secao-titulo {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--ng-navy);
+      line-height: 1.2;
+      letter-spacing: -0.2px;
+    }
+
+    .secao-divider {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, rgba(29,43,107,0.18), transparent);
+    }
+
+    /* ═══════════════════════════════════════
+       ATOM: CARD (DICA)
+    ═══════════════════════════════════════ */
+    .grid { display: grid; gap: 14px; }
+    .col-2 { grid-template-columns: repeat(2, 1fr); }
+    .col-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .card {
+      background: var(--surface);
+      border-radius: var(--r-md);
+      padding: 22px 22px 20px;
+      border: 1px solid var(--border);
+      box-shadow: var(--e1);
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .card:hover {
+      box-shadow: var(--e2);
+      transform: translateY(-1px);
+    }
+
+    /* Atom: Card top accent line */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--as-dourado), var(--as-dourado-lt));
+      border-radius: var(--r-md) var(--r-md) 0 0;
+    }
+    .card.bordeaux::before { background: linear-gradient(90deg, var(--as-bordeaux), #A0304A); }
+    .card.verde::before    { background: linear-gradient(90deg, var(--as-verde), #2A8055); }
+    .card.marrom::before   { background: linear-gradient(90deg, var(--as-marrom), #7A4530); }
+    .card.ng::before       { background: linear-gradient(90deg, var(--ng-navy), var(--ng-navy-mid)); }
+
+    /* Atom: Card corner watermark */
+    .card::after {
+      content: attr(data-num);
+      position: absolute;
+      top: 14px; right: 16px;
+      font-size: 32px;
+      font-weight: 900;
+      color: rgba(0,0,0,0.025);
+      line-height: 1;
+      pointer-events: none;
+      letter-spacing: -2px;
+    }
+
+    .card-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--as-dourado);
+      margin-bottom: 7px;
+    }
+    .card.bordeaux .card-tag { color: var(--as-bordeaux); }
+    .card.verde    .card-tag { color: var(--as-verde); }
+    .card.marrom   .card-tag { color: var(--as-marrom); }
+    .card.ng       .card-tag { color: var(--ng-navy); }
+
+    .card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .card > p {
+      font-size: 13px;
+      color: var(--text-3);
+      line-height: 1.72;
+      flex: 1;
+    }
+
+    /* Molecule: How-to apply block */
+    .aplicar {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(0,0,0,0.055);
+    }
+    .aplicar-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--as-dourado);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .aplicar-label::before {
+      content: '';
+      width: 12px;
+      height: 1.5px;
+      background: currentColor;
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+    .card.bordeaux .aplicar-label { color: var(--as-bordeaux); }
+    .card.verde    .aplicar-label { color: var(--as-verde); }
+    .card.marrom   .aplicar-label { color: var(--as-marrom); }
+    .card.ng       .aplicar-label { color: var(--ng-navy); }
+    .aplicar p {
+      font-size: 12.5px;
+      color: var(--text-2);
+      line-height: 1.68;
+      font-style: italic;
+    }
+
+    /* ═══════════════════════════════════════
+       ORGANISM: PROTOCOL TIMELINE
+    ═══════════════════════════════════════ */
+    .timeline {
+      background: var(--surface);
+      border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--e2);
+      overflow: hidden;
+    }
+
+    .timeline-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      position: relative;
+    }
+
+    .timeline-step:not(:last-child) {
+      border-bottom: 1px solid rgba(0,0,0,0.045);
+    }
+
+    /* Left number column */
+    .step-left {
+      width: 72px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0 0;
+      position: relative;
+    }
+
+    /* Atom: Step number bubble */
+    .step-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--ng-navy), var(--ng-navy-mid));
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(29,43,107,0.3);
+      position: relative;
+      z-index: 1;
+    }
+    .step-num.bordeaux {
+      background: linear-gradient(135deg, var(--as-bordeaux), #9A2540);
+      box-shadow: 0 4px 14px rgba(125,29,49,0.3);
+    }
+    .step-num.verde {
+      background: linear-gradient(135deg, var(--as-verde), #25845A);
+      box-shadow: 0 4px 14px rgba(26,94,64,0.3);
+    }
+
+    /* Connecting line between steps */
+    .step-line {
+      width: 2px;
+      flex: 1;
+      background: linear-gradient(to bottom, rgba(29,43,107,0.15), transparent);
+      margin-top: 8px;
+      margin-bottom: 0;
+      min-height: 20px;
+    }
+
+    /* Right content column */
+    .step-body {
+      flex: 1;
+      padding: 22px 24px 22px 8px;
+    }
+
+    .step-body strong {
+      display: block;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-1);
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .step-body > p {
+      font-size: 13px;
+      color: var(--text-3);
+      line-height: 1.72;
+    }
+
+    /* Atom: Speech bubble quote */
+    .step-fala {
+      margin-top: 12px;
+      border-radius: 0 var(--r-sm) var(--r-sm) var(--r-sm);
+      padding: 11px 16px;
+      font-size: 13px;
+      font-style: italic;
+      line-height: 1.65;
+      color: var(--text-2);
+      background: linear-gradient(to right, rgba(196,146,58,0.09), rgba(196,146,58,0.03));
+      border-left: 3px solid var(--as-dourado);
+      position: relative;
+    }
+    .step-fala.bordeaux {
+      background: linear-gradient(to right, rgba(125,29,49,0.08), rgba(125,29,49,0.02));
+      border-left-color: var(--as-bordeaux);
+    }
+    .step-fala.verde {
+      background: linear-gradient(to right, rgba(26,94,64,0.08), rgba(26,94,64,0.02));
+      border-left-color: var(--as-verde);
+    }
+
+    /* ═══════════════════════════════════════
+       ORGANISM: WHATSAPP GRID
+    ═══════════════════════════════════════ */
+    .wpp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .wpp-card {
+      background: var(--surface);
+      border-radius: var(--r-md);
+      border: 1px solid var(--border);
+      box-shadow: var(--e1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+    .wpp-card:hover {
+      box-shadow: var(--e2);
+      transform: translateY(-1px);
+    }
+
+    /* Molecule: WPP Card Header */
+    .wpp-head {
+      padding: 16px 18px 14px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .wpp-tipo {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--wpp-dark);
+      margin-bottom: 3px;
+    }
+    .wpp-quando {
+      font-size: 11.5px;
+      color: var(--text-4);
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .wpp-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--wpp);
+      flex-shrink: 0;
+    }
+    .wpp-icon-wrap {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(37,211,102,0.12);
+      border: 1.5px solid rgba(37,211,102,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .wpp-icon-wrap svg {
+      width: 13px;
+      height: 13px;
+      fill: var(--wpp-dark);
+    }
+
+    /* Atom: Message Bubble */
+    .wpp-body {
+      padding: 14px 18px 18px;
+      flex: 1;
+    }
+    .wpp-msg {
+      background: var(--wpp-bg);
+      border: 1px solid rgba(37,211,102,0.14);
+      border-radius: 2px var(--r-sm) var(--r-sm) var(--r-sm);
+      padding: 12px 14px;
+      font-size: 12.5px;
+      color: var(--text-2);
+      line-height: 1.7;
+      position: relative;
+    }
+    .wpp-msg::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -6px;
+      width: 0; height: 0;
+      border-right: 6px solid var(--wpp-bg);
+      border-bottom: 6px solid transparent;
+    }
+
+    /* ═══════════════════════════════════════
+       ORGANISM: HIGHLIGHT QUOTE
+    ═══════════════════════════════════════ */
+    .destaque {
+      border-radius: var(--r-xl);
+      padding: 52px 64px;
+      margin-top: 52px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 15% 50%, rgba(224,114,101,0.2) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 20%, rgba(196,146,58,0.18) 0%, transparent 45%),
+        linear-gradient(135deg, var(--ng-navy-deep) 0%, var(--ng-navy) 55%, var(--as-marrom) 100%);
+    }
+    .destaque-noise {
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    .destaque-bar {
+      width: 36px;
+      height: 3px;
+      background: var(--ng-coral);
+      border-radius: var(--r-full);
+      margin: 0 auto 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .destaque p {
+      font-size: 18px;
+      color: rgba(255,255,255,0.82);
+      line-height: 1.85;
+      font-style: italic;
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      font-weight: 400;
+    }
+    .destaque strong {
+      color: var(--as-dourado-lt);
+      font-style: normal;
+      font-weight: 700;
+    }
+    .destaque-open-quote {
+      position: absolute;
+      top: 20px; left: 40px;
+      font-size: 180px;
+      color: rgba(255,255,255,0.04);
+      font-family: Georgia, serif;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ═══════════════════════════════════════
+       ORGANISM: NG FOOTER
+    ═══════════════════════════════════════ */
+    .ng-footer {
+      background: var(--ng-navy-deep);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .ng-footer-made {
+      font-size: 12px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 400;
+    }
+    .ng-footer-sep {
+      width: 1px;
+      height: 18px;
+      background: rgba(255,255,255,0.1);
+    }
+    .ng-footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ng-footer-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--r-xs);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(224,114,101,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ng-footer-mark svg { width: 18px; height: 18px; }
+    .ng-footer-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.2px;
+    }
+    .ng-footer-tagline {
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      font-weight: 400;
+    }
+  /* =================== MOBILE RESPONSIVO =================== */
+  @media (max-width: 768px) {
+
+    body { overflow-y: auto; height: auto; }
+    #slides { height: auto; position: relative; }
+
+    .slide {
+      position: relative;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: all !important;
+      padding: 40px 20px 80px;
+      height: auto;
+      min-height: 100svh;
+      display: none;
+      align-items: flex-start;
+    }
+    .slide.active { display: flex; }
+
+    #dots { bottom: 16px; }
+    .nav-btn { bottom: 12px; }
+    #btn-prev { right: 100px; }
+    #btn-next { right: 52px; }
+    #counter { bottom: 18px; right: 16px; }
+
+    .cover h1 { font-size: 42px; letter-spacing: -1.5px; }
+    .cover .subtitle { font-size: 15px; }
+    .cover-tags { gap: 8px; }
+    .ctag { font-size: 11px; padding: 6px 12px; }
+
+    .slide-title { font-size: 30px; letter-spacing: -0.5px; }
+    .slide-desc  { font-size: 15px; margin-bottom: 24px; }
+    .section-label { font-size: 10px; }
+
+    .cards-3,
+    .cards-4,
+    .cards-2 { grid-template-columns: 1fr; }
+
+    .two-col { grid-template-columns: 1fr; gap: 20px; }
+
+    .stat-row { flex-direction: column; gap: 12px; }
+    .big-stat .number { font-size: 48px; }
+
+    .pilar-hero { padding: 20px; }
+    .pilar-hero .num { font-size: 48px; }
+    .pilar-hero h2 { font-size: 20px; }
+    .pilar-hero p  { font-size: 14px; }
+
+    .dor-big { padding: 20px; }
+    .dor-big .dor-icon { font-size: 32px; }
+    .dor-big h2 { font-size: 20px; }
+    .dor-big p  { font-size: 14px; }
+
+    .close-slide h2 { font-size: 36px; }
+    .close-slide p  { font-size: 16px; }
+
+    .card { padding: 18px 20px; }
+    .card .card-num { font-size: 36px; }
+    .list-item { padding: 14px 16px; }
+    .quote-block p { font-size: 14px; }
+    .slide-inner { max-width: 100%; }
+
+    /* Document-specific responsive */
+    .ng-bar { padding: 0 20px; }
+    .ng-bar-right { display: none; }
+    .hero { padding: 36px 20px 32px; }
+    .hero-inner { flex-direction: column; gap: 20px; }
+    .as-logo { width: 68px; height: 68px; font-size: 16px; }
+    .hero-title { font-size: 22px; }
+    .hero-desc { font-size: 12.5px; }
+    .badge-group { gap: 6px; }
+    .badge { font-size: 10.5px; padding: 5px 11px; }
+    .main { padding: 32px 16px 60px; }
+    .col-2 { grid-template-columns: 1fr; }
+    .col-3 { grid-template-columns: 1fr; }
+    .wpp-grid { grid-template-columns: 1fr; }
+    .secao-head { gap: 10px; }
+    .secao-titulo { font-size: 15px; }
+    .destaque { padding: 36px 24px; border-radius: var(--r-lg); }
+    .destaque p { font-size: 15px; }
+    .ng-footer { padding: 20px 24px; gap: 12px; }
+    .timeline-step { gap: 0; }
+    .step-left { width: 56px; }
+    .step-body { padding: 18px 16px 18px 6px; }
+  }
+
+  @media (max-width: 400px) {
+    .cover h1 { font-size: 34px; }
+    .slide-title { font-size: 26px; }
+    .pilar-hero .num { font-size: 40px; }
+    .hero-title { font-size: 19px; }
+    .secao-titulo { font-size: 14px; }
+    .destaque p { font-size: 14px; }
+  }
+  </style>
+</head>
+<body>
+
+  <!-- NG TOP BAR -->
+  <nav class="ng-bar">
+    <div class="ng-bar-left">
+      <div class="ng-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 5h2.5L13 15V5h2.5v14H13L6.5 9v10H4V5Z" fill="#E07265"/>
+          <path d="M20 12c0 2.21-1.79 4-4 4h-1v-2h1c1.1 0 2-.9 2-2s-.9-2-2-2h-2v8h-2V8h4c2.21 0 4 1.79 4 4Z" fill="#E07265"/>
+        </svg>
+      </div>
+      <div class="ng-bar-brand">
+        <span class="ng-bar-name">Grupo NG</span>
+        <span class="ng-bar-sub">Estratégia &amp; Marketing Digital</span>
+      </div>
+    </div>
+    <div class="ng-bar-right">
+      <span class="ng-bar-tag">A&amp;S Sorriso</span>
+      <span class="ng-bar-tag accent">Material Exclusivo</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-noise"></div>
+    <div class="hero-inner">
+      <div class="as-logo">A&amp;S</div>
+      <div class="hero-content">
+        <div class="hero-label">
+          <div class="hero-label-dot"></div>
+          Clínica Odontológica · A&amp;S Sorriso
+        </div>
+        <h1 class="hero-title">Ideias de personalização do<br><em>atendimento presencial</em></h1>
+        <p class="hero-desc">Estratégias práticas para ambiente e recepção · Desenvolvido por Grupo NG</p>
+        <div class="badge-group">
+          <div class="badge gold">
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+            7 estratégias de ambiente
+          </div>
+          <div class="badge">
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg>
+            Protocolo em 6 etapas
+          </div>
+          <div class="badge">
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            6 modelos WhatsApp
+          </div>
+          <div class="badge">
+            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            6 estratégias extras
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         BLOCO 1 — EXPERIÊNCIA DO AMBIENTE
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section class="secao">
+      <div class="secao-head">
+        <div class="secao-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="secao-meta">
+          <div class="secao-num">Bloco 01</div>
+          <div class="secao-titulo">Experiência do ambiente</div>
+        </div>
+        <div class="secao-divider"></div>
+      </div>
+
+      <div class="grid col-2">
+
+        <div class="card" data-num="01">
+          <div class="card-tag">Ambiente 01</div>
+          <h3>Música ambiente na sala de espera</h3>
+          <p>Uma trilha sonora leve, como jazz, bossa nova instrumental ou música clássica, reduz a percepção do tempo de espera e ameniza a ansiedade comum em clínicas odontológicas.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Criar uma playlist no Spotify (gratuito) com o nome "A&S Sorriso Recepção" e conectar ao sistema de som ou a uma caixa Bluetooth já disponível na clínica. Volume baixo, ao fundo.</p>
+          </div>
+        </div>
+
+        <div class="card bordeaux" data-num="02">
+          <div class="card-tag">Ambiente 02</div>
+          <h3>Conteúdo personalizado na TV</h3>
+          <p>A TV já está instalada na sala de espera. Exibir uma apresentação em loop com a equipe da clínica, dicas de saúde bucal e depoimentos de pacientes transforma a espera em engajamento.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Criar uma apresentação no Canva (gratuito), com 6 a 8 slides nas cores da A&S. Conectar o notebook à TV via HDMI e configurar o modo "apresentar em loop". Atualizar trimestralmente.</p>
+          </div>
+        </div>
+
+        <div class="card marrom" data-num="03">
+          <div class="card-tag">Ambiente 03</div>
+          <h3>Aroma ambiente discreto</h3>
+          <p>O olfato é o sentido mais ligado à memória afetiva. Um aroma suave, como lavanda, eucalipto ou baunilha, neutraliza o cheiro clínico que gera ansiedade em muitos pacientes e cria uma memória sensorial positiva.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Usar um difusor elétrico de aromaterapia com essência natural. Posicionar na sala de espera ou na entrada. Manter intensidade baixa para não incomodar. Investimento pontual de baixo custo.</p>
+          </div>
+        </div>
+
+        <div class="card" data-num="04">
+          <div class="card-tag">Ambiente 04</div>
+          <h3>Organização visível do balcão de recepção</h3>
+          <p>O balcão é o primeiro ponto de contato visual do paciente com a equipe. Um balcão limpo, sem papéis soltos ou objetos desnecessários, transmite profissionalismo e confiança antes de qualquer palavra ser dita.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Ao início de cada turno, garantir que o balcão esteja organizado: apenas o essencial visível, fios escondidos e superfícies limpas. Criar um checklist de abertura para a recepcionista seguir diariamente.</p>
+          </div>
+        </div>
+
+        <div class="card bordeaux" data-num="05">
+          <div class="card-tag">Ambiente 05</div>
+          <h3>Sinalização do Wi-Fi para pacientes</h3>
+          <p>Disponibilizar o Wi-Fi da clínica para os pacientes é um gesto de hospitalidade que muitas clínicas ignoram. Além de conforto, mantém o paciente engajado e mais relaxado durante a espera.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Criar um cartão impresso ou uma plaquinha com nome da rede e senha, usando o Canva nas cores da A&S. Posicionar em destaque no balcão e na mesa lateral da sala de espera.</p>
+          </div>
+        </div>
+
+        <div class="card verde" data-num="06">
+          <div class="card-tag">Ambiente 06</div>
+          <h3>Quadro "Conheça nossa equipe"</h3>
+          <p>Pacientes que conhecem visualmente os profissionais antes de entrar no consultório chegam mais calmos e confiantes. Humanizar a equipe pelo nome e especialidade reduz a barreira emocional do tratamento odontológico.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Tirar fotos simples e profissionais de cada membro da equipe com boa iluminação. Criar um painel impresso no Canva com foto, nome e especialidade. Fixar em local visível da sala de espera.</p>
+          </div>
+        </div>
+
+        <div class="card marrom" data-num="07">
+          <div class="card-tag">Ambiente 07</div>
+          <h3>Material de leitura com identidade da clínica</h3>
+          <p>Em vez de revistas genéricas, disponibilizar um folder ou guia simples, criado pela própria clínica, com dicas de cuidados bucais, apresentação dos serviços e informações sobre a equipe.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Criar um documento de 4 páginas no Canva com conteúdo educativo leve. Imprimir em gráfica local em papel couchê. Deixar sobre a mesa da sala de espera. Renovar a cada 6 meses.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         BLOCO 2 — PROTOCOLO DE ATENDIMENTO
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section class="secao">
+      <div class="secao-head">
+        <div class="secao-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div class="secao-meta">
+          <div class="secao-num">Bloco 02</div>
+          <div class="secao-titulo">Protocolo de atendimento</div>
+        </div>
+        <div class="secao-divider"></div>
+      </div>
+
+      <div class="timeline">
+
+        <div class="timeline-step">
+          <div class="step-left">
+            <div class="step-num">1</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <strong>Receber de pé e pelo nome</strong>
+            <p>Ao identificar a chegada do paciente, a recepcionista se levanta, faz contato visual e o cumprimenta pelo nome. Esse gesto simples comunica que ele foi esperado, e não mais um número na agenda.</p>
+            <div class="step-fala">"Olá, [Nome]! Seja bem-vindo(a) à A&S Sorriso. Pode vir, estamos te aguardando."</div>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-left">
+            <div class="step-num bordeaux">2</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <strong>Oferecer café ou água de forma ativa</strong>
+            <p>Antes mesmo de o paciente sentar, oferecer o cantinho do café ativamente. O café já está disponível. A diferença está no gesto de oferecer com intenção e olho no olho, não em deixar o paciente descobrir sozinho.</p>
+            <div class="step-fala bordeaux">"Posso te oferecer um café ou água enquanto aguarda? Fique completamente à vontade."</div>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-left">
+            <div class="step-num verde">3</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <strong>Comunicar o tempo de espera logo na chegada</strong>
+            <p>Informar o tempo estimado de espera elimina a maior fonte de ansiedade em clínicas: a incerteza. Uma frase de dez segundos muda completamente a percepção do paciente sobre a organização da clínica.</p>
+            <div class="step-fala verde">"O(A) Dr(a). [Nome] termina em cerca de 10 minutos. Pode ficar à vontade, assim que estiver pronto(a) eu te chamo."</div>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-left">
+            <div class="step-num">4</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <strong>Conduzir o paciente ao consultório pessoalmente</strong>
+            <p>Em vez de chamar o nome da porta ou do corredor, a recepcionista vai até o paciente na sala de espera e o acompanha até o consultório. Gesto raro que transmite cuidado e exclusividade.</p>
+            <div class="step-fala">"[Nome], o(a) Dr(a). já pode te receber. Pode vir comigo."</div>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-left">
+            <div class="step-num bordeaux">5</div>
+            <div class="step-line"></div>
+          </div>
+          <div class="step-body">
+            <strong>Despedida que fideliza</strong>
+            <p>O último contato é o mais lembrado, e pesquisas de experiência do cliente confirmam isso. Perguntar como o paciente está se sentindo, acompanhá-lo até a saída e se despedir com calor humano garante que ele saia com uma boa história para contar.</p>
+            <div class="step-fala bordeaux">"[Nome], tudo bem? Qualquer dúvida, pode nos chamar no WhatsApp. Foi um prazer te atender. Até a próxima!"</div>
+          </div>
+        </div>
+
+        <div class="timeline-step">
+          <div class="step-left">
+            <div class="step-num verde">6</div>
+          </div>
+          <div class="step-body">
+            <strong>Solicitar avaliação no momento certo</strong>
+            <p>O melhor momento para pedir uma avaliação no Google é logo após a despedida, enquanto o paciente ainda está satisfeito e emocionalmente presente. Um pedido direto e gentil tem taxa de conversão muito maior do que qualquer mensagem automática.</p>
+            <div class="step-fala verde">"[Nome], se você ficou satisfeito com o atendimento, uma avaliação nossa no Google nos ajuda muito a crescer. Levaria menos de um minuto. O QR Code está aqui no balcão."</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         BLOCO 3 — ATENDIMENTO RELACIONAL
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section class="secao">
+      <div class="secao-head">
+        <div class="secao-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="secao-meta">
+          <div class="secao-num">Bloco 03</div>
+          <div class="secao-titulo">Atendimento relacional</div>
+        </div>
+        <div class="secao-divider"></div>
+      </div>
+
+      <div class="grid col-2">
+
+        <div class="card verde" data-num="01">
+          <div class="card-tag">Relacional 01</div>
+          <h3>Registrar informações pessoais do paciente</h3>
+          <p>Anotar detalhes mencionados durante a visita, como profissão, família e eventos, e resgatá-los na consulta seguinte cria uma relação de proximidade que vai além do atendimento clínico.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Criar um campo de "observações" no cadastro do paciente (pode ser no próprio sistema ou em uma planilha simples). Antes de cada consulta, a recepcionista revisa as anotações e usa as informações para personalizar o cumprimento.</p>
+          </div>
+        </div>
+
+        <div class="card" data-num="02">
+          <div class="card-tag">Relacional 02</div>
+          <h3>Lembrete de retorno preventivo</h3>
+          <p>Entrar em contato com o paciente antes que ele precise ligar para marcar consulta é uma inversão de expectativa poderosa. Demonstra cuidado proativo e reduz significativamente a taxa de abandono.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Ao final de cada consulta, registrar internamente a data do retorno recomendado. Uma semana antes, enviar uma mensagem no WhatsApp lembrando e já oferecendo para agendar. Pode ser feito com mensagem padrão adaptada.</p>
+          </div>
+        </div>
+
+        <div class="card bordeaux" data-num="03">
+          <div class="card-tag">Relacional 03</div>
+          <h3>Postura, tom de voz e linguagem corporal</h3>
+          <p>A forma como a recepcionista se apresenta, com postura ereta, voz calma e olho no olho, comunica confiança e profissionalismo antes mesmo de qualquer palavra. Pacientes ansiosos são especialmente sensíveis a esses sinais.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Incorporar ao treinamento da equipe uma revisão básica de linguagem corporal: não cruzar os braços ao atender, manter o rosto visível e sorrir ao cumprimentar. Reforçar em reuniões periódicas com exemplos práticos.</p>
+          </div>
+        </div>
+
+        <div class="card marrom" data-num="04">
+          <div class="card-tag">Relacional 04</div>
+          <h3>Protocolo para pacientes de primeira consulta</h3>
+          <p>A primeira visita é o momento mais crítico para a formação da impressão. Um recebimento diferenciado, mais detalhado e cuidadoso, define se o paciente voltará ou não.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Identificar previamente os pacientes novos na agenda do dia. Recebê-los com uma apresentação breve da clínica: mostrar onde ficam o banheiro, o cantinho do café e apresentar a equipe pelo nome antes de encaminhá-los ao consultório.</p>
+          </div>
+        </div>
+
+        <div class="card" data-num="05">
+          <div class="card-tag">Relacional 05</div>
+          <h3>Linguagem acessível na recepção</h3>
+          <p>Muitos pacientes se sentem intimidados ao ouvir termos clínicos no balcão de atendimento. Uma comunicação simples e humana reduz barreiras e faz o paciente se sentir incluído, não excluído.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Treinar a equipe para substituir termos técnicos por linguagem cotidiana ao falar sobre procedimentos, valores e prazos. Por exemplo: "limpeza" em vez de "profilaxia", "aparelho" em vez de "ortodontia". Manter o tom técnico apenas dentro do consultório.</p>
+          </div>
+        </div>
+
+        <div class="card verde" data-num="06">
+          <div class="card-tag">Relacional 06</div>
+          <h3>Checklist de abertura e fechamento da recepção</h3>
+          <p>Uma rotina estruturada garante que o ambiente esteja sempre preparado para receber pacientes com o mesmo padrão de qualidade, independentemente de qual colaborador esteja de plantão.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Criar dois checklists simples, de abertura e fechamento, com itens como: organização do balcão, abastecimento do café, ligar música e TV, checar agenda do dia, conferir recados no WhatsApp. Imprimir e fixar na área interna da recepção.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         BLOCO 4 — MENSAGENS WHATSAPP
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section class="secao">
+      <div class="secao-head">
+        <div class="secao-icon-wrap">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <div class="secao-meta">
+          <div class="secao-num">Bloco 04</div>
+          <div class="secao-titulo">Mensagens de WhatsApp</div>
+        </div>
+        <div class="secao-divider"></div>
+      </div>
+
+      <div class="wpp-grid">
+
+        <div class="wpp-card">
+          <div class="wpp-head">
+            <div>
+              <div class="wpp-tipo">Confirmação de consulta</div>
+              <div class="wpp-quando"><div class="wpp-dot"></div>1 dia antes da consulta</div>
+            </div>
+            <div class="wpp-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.122 1.526 5.855L.057 23.082a.75.75 0 00.924.924l5.227-1.469A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.638-.488-5.168-1.347l-.371-.213-3.838 1.079 1.079-3.838-.213-.371A9.952 9.952 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            </div>
+          </div>
+          <div class="wpp-body">
+            <div class="wpp-msg">
+              Olá, <strong>[Nome]</strong>! Tudo bem?<br><br>
+              Passando para confirmar sua consulta na A&amp;S Sorriso amanhã, [dia] às [hora].<br><br>
+              Se precisar reagendar, é só nos avisar aqui. Te esperamos!
+            </div>
+          </div>
+        </div>
+
+        <div class="wpp-card">
+          <div class="wpp-head">
+            <div>
+              <div class="wpp-tipo">Pós-consulta</div>
+              <div class="wpp-quando"><div class="wpp-dot"></div>No dia seguinte à consulta</div>
+            </div>
+            <div class="wpp-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.122 1.526 5.855L.057 23.082a.75.75 0 00.924.924l5.227-1.469A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.638-.488-5.168-1.347l-.371-.213-3.838 1.079 1.079-3.838-.213-.371A9.952 9.952 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            </div>
+          </div>
+          <div class="wpp-body">
+            <div class="wpp-msg">
+              Olá, <strong>[Nome]</strong>! Como você está se sentindo após a consulta de ontem?<br><br>
+              Se tiver qualquer dúvida ou desconforto, pode nos chamar aqui. Estamos à disposição!
+            </div>
+          </div>
+        </div>
+
+        <div class="wpp-card">
+          <div class="wpp-head">
+            <div>
+              <div class="wpp-tipo">Aniversário</div>
+              <div class="wpp-quando"><div class="wpp-dot"></div>No dia do aniversário</div>
+            </div>
+            <div class="wpp-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.122 1.526 5.855L.057 23.082a.75.75 0 00.924.924l5.227-1.469A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.638-.488-5.168-1.347l-.371-.213-3.838 1.079 1.079-3.838-.213-.371A9.952 9.952 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            </div>
+          </div>
+          <div class="wpp-body">
+            <div class="wpp-msg">
+              <strong>[Nome]</strong>, hoje é um dia especial: feliz aniversário!<br><br>
+              Toda a equipe da A&amp;S Sorriso deseja muita saúde, alegria e um sorriso bonito por muitos anos.
+            </div>
+          </div>
+        </div>
+
+        <div class="wpp-card">
+          <div class="wpp-head">
+            <div>
+              <div class="wpp-tipo">Lembrete de retorno</div>
+              <div class="wpp-quando"><div class="wpp-dot"></div>7 dias antes do retorno recomendado</div>
+            </div>
+            <div class="wpp-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.122 1.526 5.855L.057 23.082a.75.75 0 00.924.924l5.227-1.469A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.638-.488-5.168-1.347l-.371-.213-3.838 1.079 1.079-3.838-.213-.371A9.952 9.952 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            </div>
+          </div>
+          <div class="wpp-body">
+            <div class="wpp-msg">
+              Olá, <strong>[Nome]</strong>! Tudo bem?<br><br>
+              Sua próxima consulta de manutenção está chegando. Quer que a gente agende para você? É só escolher o melhor dia!
+            </div>
+          </div>
+        </div>
+
+        <div class="wpp-card">
+          <div class="wpp-head">
+            <div>
+              <div class="wpp-tipo">Pedido de avaliação</div>
+              <div class="wpp-quando"><div class="wpp-dot"></div>Após consulta com boa experiência</div>
+            </div>
+            <div class="wpp-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.122 1.526 5.855L.057 23.082a.75.75 0 00.924.924l5.227-1.469A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.638-.488-5.168-1.347l-.371-.213-3.838 1.079 1.079-3.838-.213-.371A9.952 9.952 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            </div>
+          </div>
+          <div class="wpp-body">
+            <div class="wpp-msg">
+              <strong>[Nome]</strong>, ficamos felizes em te atender!<br><br>
+              Se quiser, sua avaliação no Google nos ajuda muito a crescer e a atender mais pessoas bem. Obrigado pela confiança!
+            </div>
+          </div>
+        </div>
+
+        <div class="wpp-card">
+          <div class="wpp-head">
+            <div>
+              <div class="wpp-tipo">Boas-vindas na 1.ª consulta</div>
+              <div class="wpp-quando"><div class="wpp-dot"></div>Após agendamento da 1.ª consulta</div>
+            </div>
+            <div class="wpp-icon-wrap">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.124.554 4.122 1.526 5.855L.057 23.082a.75.75 0 00.924.924l5.227-1.469A11.944 11.944 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.878 0-3.638-.488-5.168-1.347l-.371-.213-3.838 1.079 1.079-3.838-.213-.371A9.952 9.952 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            </div>
+          </div>
+          <div class="wpp-body">
+            <div class="wpp-msg">
+              Olá, <strong>[Nome]</strong>! Seja bem-vindo(a) à A&amp;S Sorriso.<br><br>
+              Sua consulta está agendada para [dia] às [hora]. Caso tenha dúvidas antes de chegar, pode nos chamar aqui. Estamos te esperando!
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+         BLOCO 5 — ESTRATÉGIAS ADICIONAIS
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+    <section class="secao">
+      <div class="secao-head">
+        <div class="secao-icon-wrap">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <div class="secao-meta">
+          <div class="secao-num">Bloco 05</div>
+          <div class="secao-titulo">Estratégias adicionais de experiência</div>
+        </div>
+        <div class="secao-divider"></div>
+      </div>
+
+      <div class="grid col-3">
+
+        <div class="card bordeaux" data-num="01">
+          <div class="card-tag">Extra 01</div>
+          <h3>QR Code para avaliação no Google</h3>
+          <p>Facilitar ao máximo o caminho para a avaliação aumenta significativamente o número de feedbacks recebidos.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Gerar o QR Code pelo Google Meu Negócio (gratuito) e imprimir uma plaquinha para o balcão. Posicionar em local visível durante o atendimento de saída.</p>
+          </div>
+        </div>
+
+        <div class="card verde" data-num="02">
+          <div class="card-tag">Extra 02</div>
+          <h3>Pasta de apresentação para novos pacientes</h3>
+          <p>Um material simples e impresso com a história da clínica, a equipe e os principais serviços cria uma primeira impressão de organização e credibilidade.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Criar no Canva um documento de 4 páginas e imprimir em gráfica. Entregar ao paciente enquanto aguarda ou ao chegar pela primeira vez.</p>
+          </div>
+        </div>
+
+        <div class="card" data-num="03">
+          <div class="card-tag">Extra 03</div>
+          <h3>Cartão de retorno personalizado</h3>
+          <p>Entregar ao paciente um cartão com a data e hora da próxima consulta já marcada reduz faltas e reforça o vínculo com a clínica no momento da saída.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Imprimir cartões simples no Canva com espaço para preencher à mão a data e o nome do paciente. Entregar na despedida como parte da rotina.</p>
+          </div>
+        </div>
+
+        <div class="card marrom" data-num="04">
+          <div class="card-tag">Extra 04</div>
+          <h3>Uniforme padronizado da equipe de recepção</h3>
+          <p>Uma identidade visual consistente entre os colaboradores reforça o profissionalismo e a seriedade da clínica desde o primeiro contato visual do paciente.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Definir paleta de cores e estilo para o uniforme ou aventais. Não precisa ser camiseta bordada: uma cor sólida padronizada já comunica coesão e identidade.</p>
+          </div>
+        </div>
+
+        <div class="card bordeaux" data-num="05">
+          <div class="card-tag">Extra 05</div>
+          <h3>Responder avaliações do Google com atenção</h3>
+          <p>Responder ativamente às avaliações, positivas e negativas, demonstra que a clínica ouve seus pacientes. Isso aumenta a confiança de quem ainda não é paciente e pesquisa online.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Reservar 15 minutos semanais para revisar e responder avaliações no Google Meu Negócio. Nas positivas, agradecer com personalização. Nas negativas, responder com calma, empatia e proposta de resolução.</p>
+          </div>
+        </div>
+
+        <div class="card verde" data-num="06">
+          <div class="card-tag">Extra 06</div>
+          <h3>Agenda diária compartilhada com a equipe</h3>
+          <p>Quando a recepcionista conhece antecipadamente o perfil dos pacientes do dia, quem é novo, quem tem retorno, quem é aniversariante, o atendimento fica muito mais personalizado.</p>
+          <div class="aplicar">
+            <div class="aplicar-label">Como aplicar</div>
+            <p>Ao início de cada turno, a recepcionista revisa a agenda e marca os pacientes especiais: primeiro atendimento, aniversário do mês ou longo tempo sem visita. Planejar uma abordagem diferenciada para cada um.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DESTAQUE FINAL -->
+    <div class="destaque">
+      <div class="destaque-noise"></div>
+      <div class="destaque-open-quote">"</div>
+      <div class="destaque-bar"></div>
+      <p>"O paciente pode esquecer o que o dentista fez, mas <strong>nunca vai esquecer como se sentiu</strong> sendo atendido. O atendimento presencial não é um detalhe da clínica: ele é o produto."</p>
+    </div>
+
+  </main>
+
+  <!-- NG FOOTER -->
+  <footer class="ng-footer">
+    <span class="ng-footer-made">Material produzido por</span>
+    <div class="ng-footer-sep"></div>
+    <div class="ng-footer-brand">
+      <div class="ng-footer-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 5h2.5L13 15V5h2.5v14H13L6.5 9v10H4V5Z" fill="#E07265"/>
+          <path d="M20 12c0 2.21-1.79 4-4 4h-1v-2h1c1.1 0 2-.9 2-2s-.9-2-2-2h-2v8h-2V8h4c2.21 0 4 1.79 4 4Z" fill="#E07265"/>
+        </svg>
+      </div>
+      <div>
+        <div class="ng-footer-name">Grupo NG</div>
+        <div class="ng-footer-tagline">Estratégia e Marketing Digital</div>
+      </div>
+    </div>
+    <div class="ng-footer-sep"></div>
+    <span class="ng-footer-made">A&amp;S Sorriso · Clínica Odontológica</span>
+  </footer>
+
+</body>
+</html>
