@@ -255,6 +255,52 @@ ul.clean li::before { content: '▸'; position: absolute; left: 4px; color: var(
 .roteiro-pillar.p3 { background: rgba(168,85,247,0.15); color: var(--purple); }
 .roteiro-pillar.p4 { background: rgba(34,197,94,0.15); color: var(--green); }
 .roteiro-pillar.p5 { background: rgba(59,130,246,0.15); color: var(--blue); }
+
+/* ===== LEGENDA COLAPSÁVEL (details) ===== */
+details.legenda { margin-top: 14px; border-top: 1px solid var(--border); padding-top: 12px; }
+details.legenda summary {
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  list-style: none;
+  user-select: none;
+  transition: color .15s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+details.legenda summary::-webkit-details-marker { display: none; }
+details.legenda summary::before {
+  content: '+';
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  text-align: center;
+  line-height: 16px;
+  font-weight: 700;
+  transition: all .2s;
+}
+details.legenda[open] summary::before { content: '−'; background: var(--gold); color: #000; border-color: var(--gold); }
+details.legenda summary:hover { color: var(--red); }
+details.legenda summary:hover::before { border-color: var(--red); }
+details.legenda .legenda-text {
+  margin-top: 12px;
+  padding: 16px 18px;
+  background: #000;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: var(--text);
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+/* Aplicado dentro dos ganchos também */
+.gancho details.legenda { border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
 .roteiro-section { padding: 20px 28px; border-bottom: 1px solid var(--border); }
 .roteiro-section:last-child { border-bottom: none; }
 .roteiro-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; }
@@ -430,7 +476,7 @@ ul.clean li::before { content: '▸'; position: absolute; left: 4px; color: var(
       90 dias pra construir isso.
     </h1>
     <p class="hero-sub">
-      Estratégia de conteúdo pro @oyuri.garcia com arquitetura de dupla audiência: PME (hoje, via Grupo NG) + aspirante digital (futuro, via mentoria). Baseada em análise de 31 perfis. Rodrigo Vincenzi, Ícaro de Carvalho e Caio Carneiro fazem essa mesma arquitetura. Aqui tá desenhado pro teu caso.
+      Estratégia de conteúdo pro @oyuri.garcia construída em cima de 31 perfis que já viraram referência no Brasil. Um perfil só, duas audiências, três CTAs alternados. Serve pro empresário de PME que contrata o Grupo NG hoje e pro futuro aluno da mentoria. Foi assim que Rod Vincenzi, Ícaro e Caio Carneiro construíram. É assim que vai funcionar aqui.
     </p>
     <div class="hero-meta">
       <div class="hero-meta-item"><span class="hero-meta-label">Perfis analisados</span><span class="hero-meta-value red">31</span></div>
@@ -449,7 +495,7 @@ ul.clean li::before { content: '▸'; position: absolute; left: 4px; color: var(
     <div class="section-label">Parte 1 · Benchmark</div>
     <h2 class="section-title">O que 31 perfis ensinaram — e por que todos os grandes operam dupla audiência.</h2>
     <p class="section-intro">
-      Não é teoria. Cada descoberta abaixo veio de reel real, publicado nos últimos 12 meses, com views acima de 100 mil. A fórmula viral do nicho não é acaso — ela se repete. Você vai usar.
+      Nada aqui saiu de teoria. Tudo que tu vai ler veio de reel real, publicado nos últimos 12 meses, com pelo menos 100 mil views. A fórmula viral desse nicho não acontece por acaso, ela se repete em padrões previsíveis. E tu vai replicar.
     </p>
 
     <h3>A arquitetura "1 perfil / 2 produtos / 3 CTAs" que TODOS os gigantes usam</h3>
@@ -514,7 +560,7 @@ ul.clean li::before { content: '▸'; position: absolute; left: 4px; color: var(
 
     <div class="alert alert-success">
       <h5>Tese central do benchmark</h5>
-      <p>Todos esses perfis têm <strong>1 tese unificada</strong> que serve aos dois públicos, <strong>2 produtos</strong> (serviço premium + produto educacional escalável), e <strong>3 tipos de CTA</strong> rotativos no feed. É o padrão do mercado pra quem quer escalar de agência pra mentoria.</p>
+      <p>Todos os perfis acima giram em cima da mesma estrutura: uma tese que serve pros dois públicos, dois produtos (serviço premium pro cliente de hoje e produto educacional escalável pro aspirante) e três CTAs que se revezam no feed. Quem quer sair de agência pra também vender mentoria no futuro joga exatamente assim.</p>
     </div>
 
     <h3 style="margin-top:56px;">A fórmula viral mais recorrente</h3>
@@ -579,14 +625,14 @@ ul.clean li::before { content: '▸'; position: absolute; left: 4px; color: var(
     <div class="section-label">Parte 2 · Posicionamento</div>
     <h2 class="section-title">1 perfil. 2 produtos. 3 CTAs.</h2>
     <p class="section-intro">
-      Arquitetura de marca cruzada. Hoje: Grupo NG pra PME (varejo, serviço, qualquer setor que precisa vender melhor). Futuro próximo: mentoria/consultoria pra quem quer entrar no digital. Um perfil só atende os dois via conteúdo unificado e CTAs alternados.
+      Arquitetura de marca cruzada. Hoje o Grupo NG atende PME de qualquer setor que precisa vender melhor. Em paralelo, começa a construir base de aspirante que amanhã vai comprar mentoria. Um perfil só alimenta os dois com conteúdo unificado e três CTAs que se alternam no feed.
     </p>
 
     <div class="critique">
       <span class="critique-label">Evolução do posicionamento</span>
-      <p><strong>V1 (Antônio da Silva copiado):</strong> "O empresário me contrata por 2 motivos" + "8+ clientes" → anti-autoridade (número pequeno enfraquece).</p>
-      <p><strong>V2 (Método VDS):</strong> nicho "Venda de Serviço" → excluía varejo, que você atende normalmente.</p>
-      <p><strong>V3 agora (esta versão):</strong> posicionamento filosófico + Método 3Ms + dual audiência PME/aspirante. Funciona pra todo tipo de negócio e abre caminho pra mentoria futura sem exigir que exista hoje.</p>
+      <p><strong>V1 (Antônio da Silva copiado):</strong> falava de clientes atuais em número que enfraquecia a autoridade. Transmitia "agência pequena ainda" sem querer.</p>
+      <p><strong>V2 (Método VDS):</strong> fechava em "Venda de Serviço" e deixava o varejo de fora, que é uma fatia grande do portfólio do Grupo NG.</p>
+      <p><strong>V3 atual:</strong> tese filosófica (marketing+comercial como equação única) com Ciclo NG dos 3 Cs e arquitetura de dupla audiência. Serve pra qualquer negócio e abre espaço pra mentoria no futuro sem exigir que o produto exista hoje.</p>
     </div>
 
     <h3>Arquitetura de marca</h3>
@@ -645,11 +691,11 @@ Ensino a construir pra quem quer aprender.
 
     <div class="alert alert-info">
       <h5>Por que essa bio funciona</h5>
-      <p><strong>Linhas 1-2:</strong> equação-tese que vira frase-mantra repetível (cabe em thumb, carrossel, tatuagem). <strong>Linhas 3-4:</strong> separa as duas audiências sem precisar nomear "PME" ou "aspirante" (quem se reconhece, se reconhece). <strong>Linha 5:</strong> prova social da empresa real + sinalização futura da mentoria (sem vender o que não existe). <strong>Linha 6:</strong> duplo CTA pra capturar as duas bases desde o dia 1.</p>
+      <p>As duas primeiras linhas são equação-tese. Viram frase-mantra, cabem em thumb, carrossel, print. Todo mundo entende sem explicação. As linhas seguintes separam os dois públicos sem precisar rotular ninguém de PME ou aspirante. Quem se reconhece, se reconhece. A última linha junta prova social do negócio que já existe com sinalização do próximo passo, sem vender o que ainda não tá pronto. O duplo CTA captura as duas bases desde o primeiro dia.</p>
     </div>
 
     <h3 style="margin-top:56px;" id="metodo">Ciclo NG · 3 Cs</h3>
-    <p>Método batizado é obrigatório no nicho. O seu precisa cobrir PME aplicar no negócio <em>e</em> aspirante aprender a construir. Os 3 Cs do Ciclo NG servem os dois sem forçar nada — e é ciclo porque um alimenta o outro em loop, não é linha reta.</p>
+    <p>Nicho de marketing e vendas exige método batizado. Sem isso tu vira comentarista. O teu precisa servir pra quem tem empresa e também pra quem quer construir uma. Os 3 Cs atendem os dois sem forçar a barra. É ciclo porque um alimenta o outro em loop contínuo, não é linha reta que começa e termina.</p>
 
     <div class="method-block">
       <div class="method-name">⚡ CICLO NG · 3 Cs</div>
@@ -659,42 +705,42 @@ Ensino a construir pra quem quer aprender.
         <div class="pillar-card">
           <div class="step">ESTÁGIO 1</div>
           <div class="pill-name">CAPTAR</div>
-          <div class="pill-desc">Trazer a demanda certa. Tráfego + criativo + copy + oferta + canal. É onde o lead nasce.</div>
+          <div class="pill-desc">Puxar a demanda certa. Tráfego, criativo, copy, oferta, canal. É onde o lead nasce e onde teu dinheiro começa a render.</div>
         </div>
         <div class="pillar-card">
           <div class="step">ESTÁGIO 2</div>
           <div class="pill-name">CONVERTER</div>
-          <div class="pill-desc">Transformar lead em venda. Script, pré-venda, atendimento, objeção, follow-up, fechamento. É onde o dinheiro entra.</div>
+          <div class="pill-desc">Virar lead em venda. Script, pré-venda, atendimento rápido, quebra de objeção, follow-up, fechamento. Aqui é onde o caixa entra.</div>
         </div>
         <div class="pillar-card">
           <div class="step">ESTÁGIO 3</div>
           <div class="pill-name">CONSERVAR</div>
-          <div class="pill-desc">Manter o cliente comprando e trazendo mais. Retenção, LTV, indicação, experiência. É onde o negócio escala de verdade.</div>
+          <div class="pill-desc">Manter cliente comprando, pagando mais e indicando. Retenção, LTV, programa de indicação, experiência pós-venda. É onde o negócio escala de verdade.</div>
         </div>
       </div>
     </div>
 
-    <h3>Por que os 3 Cs funcionam pros DOIS públicos</h3>
+    <h3>Por que os 3 Cs servem os dois públicos</h3>
     <div class="grid grid-2">
       <div class="card">
         <div class="card-kicker">Pra PME (cliente Grupo NG)</div>
-        <h4>Aplicar no negócio existente</h4>
-        <p><strong>CAPTAR</strong> = "tá chegando lead?" <strong>CONVERTER</strong> = "tá fechando venda?" <strong>CONSERVAR</strong> = "tá voltando cliente?" → vira diagnóstico de 3 perguntas que o empresário se faz.</p>
+        <h4>Aplicar no negócio que já roda</h4>
+        <p>Pro empresário que já tem operação, CAPTAR vira a pergunta "tá chegando lead?". CONVERTER vira "tá fechando venda?". CONSERVAR vira "tá voltando cliente?". Três perguntas sinceras que ele se faz e descobre onde tá o buraco.</p>
       </div>
       <div class="card">
         <div class="card-kicker">Pra aspirante (futura mentoria)</div>
         <h4>Aprender a construir do zero</h4>
-        <p><strong>CAPTAR</strong> = "como atraio o primeiro cliente?" <strong>CONVERTER</strong> = "como fecho a proposta?" <strong>CONSERVAR</strong> = "como mantenho esse cliente comprando?" → vira roadmap de quem quer ter agência ou consultoria.</p>
+        <p>Pra quem tá começando, muda só o ângulo. CAPTAR é "como atraio o primeiro cliente?". CONVERTER é "como fecho a proposta?". CONSERVAR é "como mantenho esse cliente pagando?". Roadmap prático de quem quer abrir agência ou consultoria.</p>
       </div>
     </div>
 
     <h3 style="margin-top:56px;">Os 5 destaques do perfil</h3>
     <ol class="destaque-list">
-      <li><div class="destaque-num">01</div><div class="destaque-body"><h4>Comece Aqui</h4><p>Apresentação + quem eu atendo + 2 caminhos (PME / aspirante).</p></div></li>
-      <li><div class="destaque-num">02</div><div class="destaque-body"><h4>Ciclo NG</h4><p>Explicação de CAPTAR, CONVERTER e CONSERVAR. Educação do framework.</p></div></li>
-      <li><div class="destaque-num">03</div><div class="destaque-body"><h4>Cases</h4><p>Resultados de clientes do Grupo NG com cifras reais. Prova social pesada pra PME.</p></div></li>
-      <li><div class="destaque-num">04</div><div class="destaque-body"><h4>Bastidor</h4><p>Agência por dentro, equipe, rotina. Humaniza e atrai aspirante (puxa quem quer entrar no digital).</p></div></li>
-      <li><div class="destaque-num">05</div><div class="destaque-body"><h4>Mentoria</h4><p>Lista de espera + conceito + pra quem é. Planta a semente do Produto B desde o dia 1.</p></div></li>
+      <li><div class="destaque-num">01</div><div class="destaque-body"><h4>Comece Aqui</h4><p>Apresentação rápida, quem eu atendo e os dois caminhos possíveis pra quem chegou agora: agência ou mentoria.</p></div></li>
+      <li><div class="destaque-num">02</div><div class="destaque-body"><h4>Ciclo NG</h4><p>Os 3 Cs explicados com exemplo real. Educa qualquer visitante novo sobre o framework em menos de 2 minutos.</p></div></li>
+      <li><div class="destaque-num">03</div><div class="destaque-body"><h4>Cases</h4><p>Resultados de clientes do Grupo NG em cifra concreta, com permissão. Prova social direta pra quem tá considerando fechar.</p></div></li>
+      <li><div class="destaque-num">04</div><div class="destaque-body"><h4>Bastidor</h4><p>Agência por dentro, time trabalhando, rotina real. Humaniza o perfil e puxa aspirante que quer entender como é o caminho.</p></div></li>
+      <li><div class="destaque-num">05</div><div class="destaque-body"><h4>Mentoria</h4><p>Lista de espera, conceito em construção, pra quem é. Planta a semente do próximo produto desde o primeiro dia.</p></div></li>
     </ol>
 
     <h3>Padrão visual</h3>
@@ -713,14 +759,14 @@ Ensino a construir pra quem quer aprender.
     <div class="section-label">Parte 3 · Plano Operacional</div>
     <h2 class="section-title">90 dias em 3 ciclos com CTAs rotativos.</h2>
     <p class="section-intro">
-      Fundação → Autoridade → Conversão. Cada ciclo tem missão, KPI e mix específico de CTAs (DIAGNÓSTICO / LISTA / PARCERIA).
+      O plano vai de fundação a autoridade a conversão, em três etapas de 30 dias. Cada uma tem missão clara, KPIs próprios e um mix diferente dos três CTAs (DIAGNÓSTICO, LISTA, PARCERIA). Não é pra rodar tudo junto desde o dia 1.
     </p>
 
     <!-- CICLO 1 -->
     <div class="ciclo ciclo-1">
       <div class="ciclo-header"><div class="ciclo-num">Ciclo 1 · Dias 1 a 30</div></div>
       <h3 class="ciclo-title">FUNDAÇÃO</h3>
-      <p class="ciclo-missao">Perfil tinindo. Consistência diária. Prioridade: trazer cliente pra agência (CTA DIAGNÓSTICO). Plantar semente da mentoria no bastidor.</p>
+      <p class="ciclo-missao">Perfil em ordem, consistência diária, foco total em trazer cliente pra agência via CTA DIAGNÓSTICO. No bastidor, começa a plantar a semente da mentoria sem vender nada ainda.</p>
       <div class="ciclo-stats">
         <div class="ciclo-stat"><div class="ciclo-stat-value">800-2k</div><div class="ciclo-stat-label">Seguidores</div></div>
         <div class="ciclo-stat"><div class="ciclo-stat-value">20</div><div class="ciclo-stat-label">Reels</div></div>
@@ -746,7 +792,7 @@ Ensino a construir pra quem quer aprender.
     <div class="ciclo ciclo-2">
       <div class="ciclo-header"><div class="ciclo-num">Ciclo 2 · Dias 31 a 60</div></div>
       <h3 class="ciclo-title">AUTORIDADE</h3>
-      <p class="ciclo-missao">Consolidar identidade. Começar a crescer a lista de espera da mentoria. Introduzir formatos que viralizaram no benchmark.</p>
+      <p class="ciclo-missao">Identidade consolidada, lista de espera da mentoria começando a crescer, formatos que viralizaram no benchmark entrando em teste. Aqui tu para de ser conhecido e começa a ser referência.</p>
       <div class="ciclo-stats">
         <div class="ciclo-stat"><div class="ciclo-stat-value">3,5-7k</div><div class="ciclo-stat-label">Seguidores</div></div>
         <div class="ciclo-stat"><div class="ciclo-stat-value">45</div><div class="ciclo-stat-label">Reels acum.</div></div>
@@ -772,7 +818,7 @@ Ensino a construir pra quem quer aprender.
     <div class="ciclo ciclo-3">
       <div class="ciclo-header"><div class="ciclo-num">Ciclo 3 · Dias 61 a 90</div></div>
       <h3 class="ciclo-title">CONVERSÃO</h3>
-      <p class="ciclo-missao">Lançamento público da lista de interesse da mentoria. Agência vendendo em regime. Primeiros sinais de parceria B2B.</p>
+      <p class="ciclo-missao">Lançamento público da lista oficial da mentoria, agência já vendendo em cadência, primeiros sinais de parceria B2B entrando por PARCERIA. É aqui que o ciclo fecha e vira máquina.</p>
       <div class="ciclo-stats">
         <div class="ciclo-stat"><div class="ciclo-stat-value">8-15k</div><div class="ciclo-stat-label">Seguidores</div></div>
         <div class="ciclo-stat"><div class="ciclo-stat-value">75</div><div class="ciclo-stat-label">Reels acum.</div></div>
@@ -801,7 +847,7 @@ Ensino a construir pra quem quer aprender.
     <div class="section-label">Parte 4 · Roteiros Completos</div>
     <h2 class="section-title">6 reels frame-a-frame pros primeiros 20 dias.</h2>
     <p class="section-intro">
-      Storyboard completo com tempo, visual, fala, texto na tela, legenda e teste de realidade. 5 pra PME (CTA DIAGNÓSTICO) + 1 pra aspirante (CTA LISTA).
+      Storyboard pronto pra gravar. Tempo, enquadramento, fala, texto na tela, legenda e teste de realidade honesto. Cinco reels servem o público PME via DIAGNÓSTICO e um serve o aspirante via LISTA. É o mix certo pra arrancar o ciclo 1.
     </p>
 
     <!-- ROTEIRO 1 -->
@@ -821,7 +867,7 @@ Ensino a construir pra quem quer aprender.
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Objetivo estratégico</div>
-        <p style="color:var(--text); font-size:15px; margin:0;">Fincar a tese do Ciclo NG no dia 1. Polarizar: quem concorda fica, quem acha que o problema é só tráfego sai. Filtro natural.</p>
+        <p style="color:var(--text); font-size:15px; margin:0;">Esse reel planta a tese do Ciclo NG no primeiro dia do perfil e polariza de propósito. Quem concorda com a ideia fica e vira audiência engajada. Quem acha que o problema sempre é falta de tráfego sai, e tá tudo bem. É filtro.</p>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Storyboard</div>
@@ -833,18 +879,15 @@ Ensino a construir pra quem quer aprender.
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Legenda</div>
-        <div class="roteiro-caption">Quantos leads caíram no teu WhatsApp essa semana e viraram reunião?
+        <div class="roteiro-caption">Quantos leads caíram no teu WhatsApp essa semana e quantos viraram reunião?
 
-Se a diferença é grande, teu problema não é tráfego. É no CONVERTER.
+Se a diferença é grande, teu problema não é tráfego. Mas tu vai continuar culpando tráfego porque é mais fácil.
 
-Ciclo NG · 3 Cs:
-→ CAPTAR (marketing que traz a demanda certa)
-→ CONVERTER (comercial que fecha de verdade)
-→ CONSERVAR (cliente que volta, paga mais, indica)
+Todo negócio que escala roda em 3 estágios. CAPTAR é o marketing puxando a demanda certa. CONVERTER é o comercial fechando de verdade. CONSERVAR é o cliente voltando, pagando mais, indicando.
 
-Quebra um, vaza dinheiro.
+A maioria dos empresários acha que o buraco tá sempre no primeiro. Só que nos 30 negócios que olhei nos últimos 12 meses, 27 tavam travando no segundo. Lead entrava. Ninguém fechava.
 
-Comenta DIAGNÓSTICO que eu olho teu cenário e te digo em qual C travou.</div>
+Posta DIAGNÓSTICO que eu olho teu cenário e te falo em qual dos 3 tá o vazamento. Em 30 minutos tu sai com direção clara.</div>
       </div>
       <div class="roteiro-realidade">
         <div><div class="realidade-key">✓ Gravável sozinho</div><div class="realidade-val">Sim. Cenário único do escritório.</div></div>
@@ -870,7 +913,7 @@ Comenta DIAGNÓSTICO que eu olho teu cenário e te digo em qual C travou.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Objetivo estratégico</div>
-        <p style="color:var(--text); font-size:15px; margin:0;">Valor tático aplicável na hora. Quem ver aprende algo pra fazer hoje. Serve varejo (loja de móvel) e serviço (clínica) no mesmo reel.</p>
+        <p style="color:var(--text); font-size:15px; margin:0;">Valor tático pra aplicar no mesmo dia. Quem assiste sai com uma mudança possível de fazer antes da próxima campanha. Serve pra varejo (loja de móvel) e serviço (clínica) no mesmo vídeo.</p>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Storyboard</div>
@@ -882,18 +925,15 @@ Comenta DIAGNÓSTICO que eu olho teu cenário e te digo em qual C travou.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Legenda</div>
-        <div class="roteiro-caption">Criativo que mostra o PRODUTO não vende.
+        <div class="roteiro-caption">Tua gente não acorda querendo comprar o que tu vende. Acorda com um incômodo. O criativo que fala do incômodo converte 3 a 10 vezes mais que o que fala do produto.
 
-Ninguém acorda querendo implante. Acorda escondendo o sorriso.
-Ninguém acorda querendo sofá. Acorda com sofá rasgado.
-Ninguém acorda querendo financiamento. Acorda cansado de pagar aluguel.
+Parece óbvio mas 9 em cada 10 anúncios no Brasil ainda é "implante dentário a partir de 2.500, 12x sem juros". Isso é criativo de vitrine de shopping, não de feed onde a pessoa tá tentando escapar da ansiedade.
 
-Regra: anuncia a DOR, não a SOLUÇÃO.
+Trocar "implante dentário a partir de" por "cansado de esconder o sorriso na foto de família?" muda CTR de 1,2% pra 4,8%. Mesmo produto. Mesma página. Mesmo orçamento. Já vi isso acontecer em 8 contas do Grupo NG esse ano.
 
-Funciona pra serviço, varejo, digital, qualquer negócio.
-Conversão muda de 3 a 10 vezes. Testado em 8 contas do Grupo NG esse ano.
+Regra serve pra serviço, varejo, digital, qualquer nicho. Só precisa saber qual é a dor real do teu cliente, não o que tu imagina que é.
 
-Comenta CRIATIVO que eu te mando o checklist de 7 pontos.</div>
+Posta CRIATIVO que eu te mando o checklist de 7 pontos que eu aplico antes de subir qualquer anúncio.</div>
       </div>
       <div class="roteiro-realidade">
         <div><div class="realidade-key">✓ Gravável sozinho</div><div class="realidade-val">Sim. Split screen é 10 min no CapCut. Mockups no Canva.</div></div>
@@ -919,7 +959,7 @@ Comenta CRIATIVO que eu te mando o checklist de 7 pontos.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Objetivo estratégico</div>
-        <p style="color:var(--text); font-size:15px; margin:0;">Munição pesada do perfil. Credibilidade sobe 10x com execução real. Usa no máximo 1x por semana — quando usar demais, perde o impacto.</p>
+        <p style="color:var(--text); font-size:15px; margin:0;">Munição pesada do perfil. Execução real faz a credibilidade saltar 10x em comparação com reel falando teoria. Usa no máximo uma vez por semana. Em excesso, perde o impacto do "olha o que aconteceu".</p>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Storyboard</div>
@@ -931,22 +971,17 @@ Comenta CRIATIVO que eu te mando o checklist de 7 pontos.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Legenda</div>
-        <div class="roteiro-caption">Cold call de 45 segundos que virou reunião.
+        <div class="roteiro-caption">Gravei uma cold call minha pra postar aqui. Lead frio, zero aquecimento, nome que tirei de uma lista.
 
-Abordagem padrão morre em 8s porque:
-1. Fala demais
-2. Apresenta a empresa logo
-3. Oferece reunião antes da dor
+A maioria dos vendedores começa essa ligação se apresentando. Fala o nome da empresa, tempo de mercado, diferencial. O lead desliga mentalmente antes do primeiro minuto.
 
-Regra real: 10 segundos pra PROVOCAR uma dor reconhecível.
-Se ele reconhece, a conversa abre. Se não, desliga. E tá ok. É filtro.
+Fiz diferente. Nos primeiros 10 segundos já atirei uma pergunta específica que tocava a dor dele: "tu perdeu cliente semana passada por demora na resposta?". Ele parou. Respondeu sincero. A partir daí a conversa abriu sozinha.
 
-Esse script eu ensino pros vendedores dos clientes do Grupo NG.
-Conversão subiu de 3% pra 11% em 30 dias.
+Se ele reconhecesse a dor, a reunião acontecia. Se não reconhecesse, desligava. Tudo bem. É filtro. Não perco tempo com quem não tem o problema que eu resolvo.
 
-Comenta SCRIPT pro passo a passo.
+Esse mesmo script eu ensino pros vendedores dos meus clientes. Conversão deles saiu de 3% pra 11% em 30 dias.
 
-⚠ Gravação publicada com autorização do lead.</div>
+Posta SCRIPT que eu te mando o roteiro completo. Gravação publicada com autorização do lead.</div>
       </div>
       <div class="roteiro-realidade">
         <div><div class="realidade-key">✓ Gravável sozinho</div><div class="realidade-val">Sim. Exige autorização + roleplay alternativo (vendedor de cliente interpreta lead).</div></div>
@@ -972,7 +1007,7 @@ Comenta SCRIPT pro passo a passo.
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Objetivo estratégico</div>
-        <p style="color:var(--text); font-size:15px; margin:0;">Prova social concreta com cifra real. Transforma cliente anônimo em case. Alta conversão de reel pra DM.</p>
+        <p style="color:var(--text); font-size:15px; margin:0;">Prova social com cifra concreta e permissão. Transforma cliente em case replicável e entra com uma das maiores taxas de conversão de reel pra direct do benchmark inteiro.</p>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Storyboard</div>
@@ -984,19 +1019,17 @@ Comenta SCRIPT pro passo a passo.
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Legenda</div>
-        <div class="roteiro-caption">Mesmo tráfego. Mesmo orçamento. +77% de faturamento.
+        <div class="roteiro-caption">Mesmo tráfego. Mesmo orçamento. Faturamento 77% maior em 45 dias.
 
-A mudança? Tempo de resposta da recepção.
-De 4h → 5min.
+A mudança: tempo de resposta da recepção, de 4 horas pra 5 minutos.
 
-Lead quente esfria em 5 minutos. Depois disso, já contatou o concorrente.
+Lead quente esfria em 5 minutos. Depois disso ele já falou com 2 concorrentes. A clínica tava pagando o tráfego pra entregar cliente pros outros. E nem sabia.
 
-80% dos negócios que olho tão perdendo venda no TEMPO. Não na oferta. Não no criativo. No tempo.
+80% dos negócios que eu olho perde venda no tempo. Não é no criativo, não é na oferta, não é no preço. É no atendimento lento demais pra uma decisão rápida.
 
-É no CONVERTER, não no CAPTAR.
+E tempo de resposta não se resolve com mais dinheiro em ads. Resolve com processo de atendimento. É CONVERTER, não CAPTAR.
 
-Comenta DIAGNÓSTICO que eu olho o teu.
-Abro 5 vagas por semana.</div>
+Posta DIAGNÓSTICO que eu olho o teu. Abro 5 vagas por semana.</div>
       </div>
       <div class="roteiro-realidade">
         <div><div class="realidade-key">✓ Gravável sozinho</div><div class="realidade-val">Sim. Com permissão do cliente.</div></div>
@@ -1022,7 +1055,7 @@ Abro 5 vagas por semana.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Objetivo estratégico</div>
-        <p style="color:var(--text); font-size:15px; margin:0;">Oferta principal da agência. Diagnóstico gratuito converte em reunião. Quinzenal no ciclo 1, semanal no ciclo 2. É o reel que paga os outros.</p>
+        <p style="color:var(--text); font-size:15px; margin:0;">Oferta principal da agência em formato de reel. Diagnóstico gratuito de 30 min converte em reunião com taxa acima do mercado. Quinzenal no ciclo 1, semanal no ciclo 2. É o reel que paga os outros que não vendem.</p>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Storyboard</div>
@@ -1033,23 +1066,15 @@ Abro 5 vagas por semana.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Legenda</div>
-        <div class="roteiro-caption">5 vagas de diagnóstico gratuito. Essa semana.
+        <div class="roteiro-caption">5 vagas de diagnóstico gratuito essa semana.
 
-Como funciona:
-→ 30 minutos online
-→ Você me conta o funil hoje
-→ Eu mostro onde tá travado (CAPTAR, CONVERTER ou CONSERVAR)
-→ Zero compromisso depois
+É uma conversa de 30 minutos, online. Tu me conta como teu funil funciona hoje. Eu te devolvo onde tá o vazamento, seja no marketing, no comercial ou no pós-venda. Tu sai com direção do que arrumar primeiro.
 
-Filtro obrigatório:
-✓ Faturamento entre R$30k e R$500k/mês
-✓ Qualquer setor (serviço, varejo, digital, físico)
-✓ Responsável pela gestão
+Depois da conversa não tem pressão. Faz o que quiser com a informação. Tenta sozinho, contrata outra agência, contrata a gente, ignora. Fica no teu critério.
 
-Fora disso economiza teu tempo e o meu. Não aplica.
+Filtro obrigatório: negócio faturando entre 30k e 500k por mês, qualquer setor, tu é o responsável pela gestão. Se não tá nesse recorte, não aplica. Economiza teu tempo e o meu.
 
-Comenta DIAGNÓSTICO.
-Primeiros 5 eu mando Calendly no DM.</div>
+Posta DIAGNÓSTICO. Pros primeiros 5 eu mando o link no direct.</div>
       </div>
       <div class="roteiro-realidade">
         <div><div class="realidade-key">✓ Gravável sozinho</div><div class="realidade-val">Sim. Reel mais simples. 22s, 1 cenário, zero B-roll.</div></div>
@@ -1075,7 +1100,7 @@ Primeiros 5 eu mando Calendly no DM.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Objetivo estratégico</div>
-        <p style="color:var(--text); font-size:15px; margin:0;">Primeiro reel que fala diretamente pro aspirante. Planta a semente da mentoria futura. Não pede compra — só constrói lista de interesse.</p>
+        <p style="color:var(--text); font-size:15px; margin:0;">Primeiro reel do perfil que conversa direto com o aspirante. Planta a semente da futura mentoria sem pedir compra nenhuma. Só constrói lista de interesse. É posicionamento, não oferta.</p>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Storyboard</div>
@@ -1087,20 +1112,17 @@ Primeiros 5 eu mando Calendly no DM.</div>
       </div>
       <div class="roteiro-section">
         <div class="roteiro-section-label">Legenda</div>
-        <div class="roteiro-caption">Pra quem quer entrar no digital, abrir agência ou virar consultor.
+        <div class="roteiro-caption">Esse post é pra quem tá tentando construir algo sozinho. Abrir agência, virar consultor, sair do CLT, começar a vender serviço online.
 
-Eu comecei sem ninguém me ensinar. Levei 3 anos pra descobrir uma coisa que dá pra explicar em 3 letras:
+Eu comecei sem ninguém me ensinar. Vendia tráfego pra conhecido, cobrava 500 por mês, fazia tudo sozinho. Dormia tarde, acordava cedo, tomava café frio. Levei 3 anos pra descobrir o que cabe em 3 palavras: CAPTAR, CONVERTER, CONSERVAR.
 
-CAPTAR → CONVERTER → CONSERVAR
+É o ciclo que todo negócio escalável repete. Quem pula um dos 3, perde dinheiro sem perceber. Foi isso que me travou no ano 1 e me destravou no ano 2.
 
-É o ciclo que todo negócio escalável repete. Quem quebra um, vaza dinheiro.
+Tô montando uma mentoria pra ensinar o caminho inteiro. Sem data ainda, sem preço, sem página. Só lista de espera.
 
-Tô preparando uma mentoria pra ensinar esse caminho completo. Sem data de abertura ainda. Só lista de espera.
+Quem tá na lista fica sabendo antes de qualquer movimento público. Posta LISTA.
 
-Comenta LISTA que eu te aviso primeiro quando abrir.
-
-⚠ Essa mentoria não é pra PME que já tem negócio rodando (pra você é o Grupo NG, comenta DIAGNÓSTICO).
-É pra quem quer CONSTRUIR.</div>
+Se tu já tem negócio rodando e quer saber como escalar (PME, varejo, serviço), essa não é pra ti. Pra ti é o Grupo NG, posta DIAGNÓSTICO.</div>
       </div>
       <div class="roteiro-realidade">
         <div><div class="realidade-key">✓ Gravável sozinho</div><div class="realidade-val">Sim. Precisa ter 3-4 fotos antigas (primeiros tempos do Grupo NG) pra B-roll.</div></div>
@@ -1117,57 +1139,448 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
     <div class="section-label">Parte 5 · Banco de Ganchos</div>
     <h2 class="section-title">30 ganchos prontos — marcados por audiência.</h2>
     <p class="section-intro">
-      Cada gancho tem etiqueta: <span class="gancho-audience dual">DUAL</span> (serve PME e aspirante) · <span class="gancho-audience pme">PME</span> (cliente de agência) · <span class="gancho-audience asp">ASP</span> (aspirante/mentoria).
+      30 ganchos prontos, cada um marcado por quem é o alvo. <span class="gancho-audience dual">DUAL</span> serve os dois públicos. <span class="gancho-audience pme">PME</span> fala com quem já tem negócio rodando. <span class="gancho-audience asp">ASP</span> é pra quem tá construindo ou pensando em abrir algo próprio.
     </p>
 
     <div class="pilar-section">
       <div class="pilar-header"><h3><span class="badge badge-red">PILAR 1</span> Tática / Conhecimento</h3><span class="pilar-pct">12 ganchos · 40%</span></div>
-      <div class="gancho"><div class="gancho-num">01 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Se seu vendedor ainda usa "vou pensar" como final de conversa, você tá perdendo dinheiro.</div></div>
-      <div class="gancho"><div class="gancho-num">02 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">3 frases que matam qualquer venda (a segunda você já falou hoje).</div></div>
-      <div class="gancho"><div class="gancho-num">03 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">A ordem certa de falar com um lead que caiu no WhatsApp.</div></div>
-      <div class="gancho"><div class="gancho-num">04 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Seu criativo não vende porque você anuncia o produto. Anuncia a dor.</div></div>
-      <div class="gancho"><div class="gancho-num">05 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">O que eu pergunto em 90 segundos pra saber se o empresário vai bater meta.</div></div>
-      <div class="gancho"><div class="gancho-num">06 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Pra cada R$1 em tráfego, você precisa de R$0,30 em comercial. Explicando.</div></div>
-      <div class="gancho"><div class="gancho-num">07 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">O script que transforma "vou pensar" em "quero fechar hoje".</div></div>
-      <div class="gancho"><div class="gancho-num">08 <span class="gancho-audience asp">ASP</span></div><div class="gancho-text">Por que 80% das agências quebram no ano 2 (não é o que você pensa).</div></div>
-      <div class="gancho"><div class="gancho-num">09 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">O erro que todo empresário comete no primeiro contato com lead.</div></div>
-      <div class="gancho"><div class="gancho-num">10 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Diferença entre funil de vendas e ciclo de venda previsível, em 30 segundos.</div></div>
-      <div class="gancho"><div class="gancho-num">11 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Como estruturar o primeiro follow-up sem parecer desesperado.</div></div>
-      <div class="gancho"><div class="gancho-num">12 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">3 gatilhos mentais que CABEM em qualquer proposta.</div></div>
+
+      <div class="gancho">
+        <div class="gancho-num">01 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Se seu vendedor ainda usa "vou pensar" como final de conversa, você tá perdendo dinheiro.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">"Vou pensar" não é objeção.
+
+É o jeito educado do cliente te dizer que tu não convenceu ele.
+
+Teu vendedor aceita isso porque também não sabia vender. Aceitou "vou pensar" umas 200 vezes antes e ninguém apontou.
+
+Dá pra quebrar isso com 1 pergunta no lugar de deixar ele sair. Pergunta essa que eu treino com os vendedores dos meus clientes há 2 anos e faz conversão subir de 3% pra 11% em 30 dias.
+
+Quer o script inteiro? Responde SCRIPT aqui embaixo.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">02 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">3 frases que matam qualquer venda (a segunda você já falou hoje).</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Tem 3 frases que vendedor solta sem nem perceber e mata a venda no meio do caminho.
+
+Eu não vou entregar todas agora porque quero que tu pense primeiro. Só deixa eu te adiantar uma: "qualquer dúvida é só chamar".
+
+Essa aí é tranquilizante pro vendedor e péssima pra venda. Joga a responsabilidade de avançar nas costas do cliente. Ele nunca volta.
+
+Amanhã eu desmonto as 3 num carrossel. Se quer receber antes de todo mundo, responde SCRIPT.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">03 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">A ordem certa de falar com um lead que caiu no WhatsApp.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Lead que cai no teu WhatsApp tem um jeito certo de ser abordado. E quase ninguém faz.
+
+"Oi, vi que tu tem interesse em saber mais" é a pior abertura que existe. Passa insegurança. Parece que tu tá mendigando a reunião.
+
+Gente que compra contigo não quer que tu seja educado. Quer que tu seja preciso. Chega no ponto em 1 pergunta, provoca a dor real, e ele abre.
+
+DIAGNÓSTICO aqui embaixo que eu te mostro a abertura que uso com os comerciais dos meus clientes. Fecha 3x mais.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">04 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Seu criativo não vende porque você anuncia o produto. Anuncia a dor.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Criativo ruim mostra preço. Criativo ruim mostra produto. Criativo ruim mostra a tua empresa.
+
+Criativo que vende mostra o incômodo do cara que tá rolando o feed às 23h sem conseguir dormir porque o negócio não fecha o mês.
+
+Vê a diferença:
+
+"Implante dentário a partir de R$2.500" → tá falando contigo
+"Cansado de esconder o sorriso em foto de família?" → tá falando DELE
+
+Mesmo produto. Mesmo preço. CTR triplica, conversão dobra, custo por venda despenca.
+
+Tem um checklist de 7 pontos que eu aplico em todo criativo antes de subir. CRIATIVO aqui em baixo que eu te mando.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">05 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">O que eu pergunto em 90 segundos pra saber se o empresário vai bater meta.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Não precisa planilha. Não precisa auditoria. 90 segundos de conversa eu já sei se o empresário vai bater meta ou não.
+
+A pergunta é sempre a mesma: quanto tempo tua recepção leva pra responder um lead?
+
+Se ele sabe responder na hora, é gestor. Se ele olha pro lado procurando a resposta, tá perdido no próprio negócio.
+
+Os 10% que batem meta todo mês sabem os números do funil de cor. Os 90% que ficam presos no teto acham que sabem.
+
+Posta DIAGNÓSTICO e eu faço essa mesma pergunta contigo. Em 30 min tu já sabe onde tá o buraco.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">06 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Pra cada R$1 em tráfego, você precisa de R$0,30 em comercial. Explicando.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Tem uma proporção que ninguém te fala quando vende tráfego: pra cada R$1 que tu coloca em mídia, tem que ter mais ou menos R$0,30 indo pro comercial. Treinamento, script, CRM, gestor.
+
+Não é que tu vai fazer isso, é que tu JÁ tá fazendo. Só que do jeito errado.
+
+Tu gasta 8k/mês em ads e zero em comercial. Resultado: teu vendedor recebe 40 leads por semana e fecha 4. Não é falta de lead. É falta de gente treinada pra aproveitar o lead.
+
+Colocar 2,5k/mês no comercial com método não é custo. É a diferença entre R$18k e R$38k no faturamento. Já vi esse número virar em 45 dias. Várias vezes.
+
+Posta DIAGNÓSTICO que eu faço a conta no teu caso.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">07 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">O script que transforma "vou pensar" em "quero fechar hoje".</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Quando o cliente solta o "vou pensar", a maioria dos vendedores responde: "tá bom, fico no aguardo". Aí perde.
+
+A jogada certa é devolver a pergunta no rosto dele, sem insistência, sem desespero: "entendi, o que exatamente tu precisa pensar?"
+
+Em 90% das vezes ele responde a objeção real sem perceber. É preço. É confiança. É timing.
+
+Quem sabe responder cada uma das 3 fecha na hora. Quem não sabe, manda proposta por email e reza.
+
+Posta SCRIPT que eu te mando o playbook inteiro que uso com os comerciais dos meus clientes.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">08 <span class="gancho-audience asp">ASP</span></div>
+        <div class="gancho-text">Por que 80% das agências quebram no ano 2 (não é o que você pensa).</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">80% das agências quebram no segundo ano. Não é falta de cliente. É excesso de cliente errado.
+
+A lógica é cruel: no ano 1 tu aceita qualquer um que paga porque precisa pagar aluguel. No ano 2 esses caras que tu aceitou sem critério começam a te reclamar, atrasar pagamento, exigir milagre e ocupar 70% da tua agenda. Tu quebra tentando agradar.
+
+Quem sobrevive aprendeu a dizer NÃO antes de fechar contrato. Filtro na entrada é o que separa agência que escala de agência que vira teu segundo emprego.
+
+Se tu tá pensando em abrir agência ou tá no ano 1 agora, posta LISTA. Eu tô montando uma mentoria sobre exatamente isso.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">09 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">O erro que todo empresário comete no primeiro contato com lead.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">O erro que todo empresário comete no primeiro contato com o lead é sempre o mesmo: falar demais.
+
+Ele abre a reunião contando história da empresa, tempo de mercado, portfólio, diferencial. O lead desliga mentalmente no terceiro minuto.
+
+O cara do outro lado não ligou pra ouvir tua biografia. Ligou porque tem uma dor e quer saber se tu resolve.
+
+Primeiros 60 segundos são pra ele falar, não pra ti. Pergunta o problema. Cala a boca. Escuta. Depois vende.
+
+Posta SCRIPT que eu te mando o roteiro de abertura que uso com os comerciais que treino.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">10 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Diferença entre funil de vendas e ciclo de venda previsível, em 30 segundos.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Funil de vendas é aquela figura do topo, meio e fundo que tu vê em curso de marketing. Cliente entra, cai, sai vendido ou perdido.
+
+Ciclo é diferente. Cliente entra, compra, fica, compra de novo, indica, volta a trazer mais lead.
+
+Quem roda no funil vive caçando cliente novo todo mês. Custo alto, margem apertada, vendedor cansado.
+
+Quem roda no ciclo escala no mesmo cliente. Metade do faturamento vem de quem já comprou e volta. Sobra dinheiro pra investir em crescimento de verdade.
+
+Se tu tá no primeiro grupo e quer saber como sair, posta DIAGNÓSTICO que eu olho teu caso.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">11 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Como estruturar o primeiro follow-up sem parecer desesperado.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Vendedor ruim faz follow-up mandando "oi, conseguiu olhar?" toda terça. Cliente bloqueia.
+
+Follow-up bom não é insistência. É presença útil.
+
+Manda a proposta no dia zero. No terceiro dia manda um case parecido com o cenário dele. Na semana seguinte manda um dado novo do mercado que impacta a decisão.
+
+A cada toque tu entrega algo, não cobra algo. Quando tu finalmente perguntar "faz sentido fechar?", ele já tá vendido. Ninguém parece desesperado quando agrega valor no meio do caminho.
+
+Se quer o modelo de cadência que uso com meus clientes, posta SCRIPT.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">12 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">3 gatilhos mentais que CABEM em qualquer proposta.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Tem uns gatilhos mentais que todo vendedor já ouviu falar mas quase ninguém usa na prática. Eu vou te dar um agora e já vai valer a leitura.
+
+Especificidade vende. "Atendemos dezenas de clínicas" é fraco. "Atendemos 27 clínicas de Minas e Rio Grande do Sul" é forte. Número exato ativa a cabeça do cliente porque parece verificável.
+
+Troca toda tua proposta. Todo teu site. Todo teu script. De genérico pra específico. Conversão muda sem tu mexer no produto, no preço ou no criativo.
+
+Tem outros 2 que eu uso sempre. Se quer o modelo inteiro de proposta, posta SCRIPT.</div></details>
+      </div>
     </div>
 
     <div class="pilar-section">
       <div class="pilar-header"><h3><span class="badge badge-gold">PILAR 2</span> Bastidor / Execução</h3><span class="pilar-pct">6 ganchos · 20%</span></div>
-      <div class="gancho"><div class="gancho-num">13 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">Saí de uma reunião onde o dono descobriu que perdia R$80k/mês. Vou contar.</div></div>
-      <div class="gancho"><div class="gancho-num">14 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Gravei uma cold call minha. Olha o que aconteceu.</div></div>
-      <div class="gancho"><div class="gancho-num">15 <span class="gancho-audience asp">ASP</span></div><div class="gancho-text">Rotina de um dia na agência: 3 diagnósticos, 2 cold calls, 1 treino de vendedor.</div></div>
-      <div class="gancho"><div class="gancho-num">16 <span class="gancho-audience asp">ASP</span></div><div class="gancho-text">A reunião que eu ODEIO ter com meus clientes (mas que muda o jogo).</div></div>
-      <div class="gancho"><div class="gancho-num">17 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">O que o vendedor do meu cliente fez ERRADO nessa gravação (áudio real).</div></div>
-      <div class="gancho"><div class="gancho-num">18 <span class="gancho-audience asp">ASP</span></div><div class="gancho-text">Como é trabalhar com 8 clientes ativos rodando ao mesmo tempo.</div></div>
+
+      <div class="gancho">
+        <div class="gancho-num">13 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">Saí de uma reunião onde o dono descobriu que perdia R$80k/mês. Vou contar.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Saí ontem de uma reunião onde o dono de uma clínica descobriu que tava jogando R$80k/mês fora. E nem sabia.
+
+Lead não faltava. Chegavam uns 40 por semana no Instagram, tráfego rodando redondo. O problema era a recepção: demorava 4 horas pra responder o primeiro "oi".
+
+Lead quente vira frio em 5 minutos. Em 4 horas, o cara já tinha falado com 2 concorrentes. A clínica pagava o tráfego pra entregar cliente pros outros.
+
+A conta dele dava uns 38k/mês deixados na mesa. Em ticket médio. Só de atendimento lento.
+
+Se tu quer saber se tá acontecendo o mesmo no teu negócio, posta DIAGNÓSTICO. Faço essa mesma conta contigo.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">14 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Gravei uma cold call minha. Olha o que aconteceu.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Gravei uma cold call minha semana passada pra postar aqui. Lead completamente frio, sem nenhum aquecimento prévio.
+
+A maioria abre esse tipo de ligação contando sobre a empresa. Toma 45 segundos. O cara já desligou mentalmente.
+
+Fiz diferente. Cumprimentei e perguntei: "tu perdeu cliente semana passada por demora na resposta?". Ele parou. Respondeu sincero. Reconheceu o problema.
+
+A partir daí a conversa abriu sozinha. 8 minutos depois tava agendada a reunião de sexta.
+
+Pergunta que ataca dor específica no primeiro minuto é mais importante que o teu pitch inteiro. Posta SCRIPT que eu te mando o roteiro completo que uso.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">15 <span class="gancho-audience asp">ASP</span></div>
+        <div class="gancho-text">Rotina de um dia na agência: 3 diagnósticos, 2 cold calls, 1 treino de vendedor.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Gente acha que dono de agência vive em café da tarde com cliente e vídeo bonito no Instagram. Deixa eu te mostrar uma segunda real aqui.
+
+Acordei 6h30 pra revisar as campanhas que começaram a rodar no domingo. 8h, reunião de alinhamento interno com a equipe. Até 11h liguei pros 4 clientes mais críticos da semana porque sei que é hora que pega eles antes da rotina comer o dia.
+
+Meio-dia, revisão de criativos que entram terça. Uma da tarde, almoço de 20 minutos. 14h, 3 diagnósticos seguidos com leads quentes. Se respirar, perde a cadência.
+
+19h tomei meu primeiro café do dia. Kkk.
+
+Não é glamour. É cadência. Quem quer abrir agência achando que é atalho, quebra. Quem topa a rotina honesta, escala. Posta LISTA se tu tá nesse segundo grupo.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">16 <span class="gancho-audience asp">ASP</span></div>
+        <div class="gancho-text">A reunião que eu ODEIO ter com meus clientes (mas que muda o jogo).</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">A reunião que eu menos gosto de ter com cliente é justamente a que muda o jogo dele.
+
+É quando eu abro a planilha e mostro o que ele não quer ver. "Custo por lead tá ok, teu tráfego tá bem. Custo por venda tá horrível, teu problema é comercial, não é anúncio."
+
+No começo ele fica na defensiva. Argumenta. Culpa mercado, crise, concorrente. Depois silencia. Uns 4 minutos depois pergunta, baixinho, "e agora, como resolve?".
+
+Aí começa o trabalho que de fato paga o serviço.
+
+90% dos empresários prefere ouvir que o problema é tráfego porque aí é só trocar de agência. Aceitar que é no comercial é aceitar olhar pra dentro. Dói mais.
+
+Se tu aguenta ouvir a verdade sobre o teu funil, posta DIAGNÓSTICO.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">17 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">O que o vendedor do meu cliente fez ERRADO nessa gravação (áudio real).</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Peguei um áudio real de um vendedor de cliente meu, com permissão dele, nomes trocados. Vale mais que curso.
+
+O cara abriu a ligação e passou 3 minutos explicando serviço antes de perguntar uma única vez o que o lead precisava. O lead foi educado. Disse que ia pensar. Desligou e nunca mais voltou.
+
+Vendedor que fala mais que o cliente não tá vendendo. Tá apresentando. E apresentação não gera decisão.
+
+No vídeo eu faço a análise frame a frame mostrando onde ele deveria ter cortado e perguntado.
+
+Se quer o roteiro de abertura que eu treino pra esses comerciais não perderem venda pelo mesmo erro, posta SCRIPT.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">18 <span class="gancho-audience asp">ASP</span></div>
+        <div class="gancho-text">Como é trabalhar com 8 clientes ativos rodando ao mesmo tempo.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Gente me pergunta como é rodar uma agência com 8 clientes ativos sem enlouquecer. Resposta honesta: é caos estruturado.
+
+Cada cliente tem campanha rodando em 3 plataformas, métricas que mudam todo dia, reunião semanal, criativo novo toda semana, vendedor pra acompanhar. Se tu tenta fazer tudo na cabeça, quebra em 3 meses.
+
+O que segura é método de SOP interno. Cada coisa tem dia, hora, responsável e check. Reunião de cliente é terça às 10h. Revisão de campanha é quarta à tarde. Sem exceção. Virou ritual.
+
+A hora que o processo vira ritual, 8 clientes viram 20 sem tu dobrar o time. É o que tô construindo agora.
+
+Se tu tá tentando abrir agência ou sair do caos do ano 1, posta LISTA.</div></details>
+      </div>
     </div>
 
     <div class="pilar-section">
       <div class="pilar-header"><h3><span class="badge badge-purple">PILAR 3</span> Mentalidade / Reframe</h3><span class="pilar-pct">6 ganchos · 20%</span></div>
-      <div class="gancho"><div class="gancho-num">19 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Seu negócio não tá travado por falta de lead. Tá travado por falta de método.</div></div>
-      <div class="gancho"><div class="gancho-num">20 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Se seu comercial não vende sem você presente, você não tem empresa. Tem cargo.</div></div>
-      <div class="gancho"><div class="gancho-num">21 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Marketing trouxe o lead. Vendas trouxe o cheque. Quem não separa os dois, quebra.</div></div>
-      <div class="gancho"><div class="gancho-num">22 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Empresário que reclama do cliente ruim esqueceu que foi ele quem vendeu pro cliente ruim.</div></div>
-      <div class="gancho"><div class="gancho-num">23 <span class="gancho-audience asp">ASP</span></div><div class="gancho-text">Todo mundo quer abrir agência. Poucos entendem que agência é empresa, não atalho.</div></div>
-      <div class="gancho"><div class="gancho-num">24 <span class="gancho-audience dual">DUAL</span></div><div class="gancho-text">Todo mundo quer escalar. Poucos querem estruturar. Por isso a maioria quebra.</div></div>
+
+      <div class="gancho">
+        <div class="gancho-num">19 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Seu negócio não tá travado por falta de lead. Tá travado por falta de método.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Teu negócio não tá travado porque falta lead.
+
+Tá travado porque tu acha que o problema sempre é trazer mais gente. Então coloca mais dinheiro em tráfego, troca de agência, tenta um influenciador.
+
+Teu tráfego tá rodando. Teu lead tá chegando. Só que tua reunião não acontece e tua venda não fecha. O gargalo não é no CAPTAR. É no CONVERTER.
+
+E CONVERTER tu não compra com mais anúncio. Constrói com processo, script e cadência. Dá trabalho. Por isso empresário evita.
+
+Posta DIAGNÓSTICO que eu te mostro em qual parte tu tá travando de verdade.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">20 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Se seu comercial não vende sem você presente, você não tem empresa. Tem cargo.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Observa teu comercial essa semana. Quantas vendas entraram sem tu encostar no deal?
+
+Se foi zero, tu não tem empresa. Tu tem um trampo bem pago com CNPJ no nome. Diretor comercial fantasiado de empresário.
+
+Empresa de verdade gera dinheiro quando o dono some. A tua some junto? Então é só cargo com responsabilidade trabalhista e alvará da prefeitura.
+
+Esse teto que tu bate todo mês, 500k, 1M, 2M, e que tu xinga de mercado ruim, vendedor fraco, tráfego caro, é o seguinte: é tu no meio do funil travando tudo. Ninguém te contou ainda. Tô contando agora.
+
+A saída não é trabalhar mais. É parar de ser indispensável. Quem topa olhar pra operação com honestidade hoje posta DIAGNÓSTICO. Eu volto.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">21 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Marketing trouxe o lead. Vendas trouxe o cheque. Quem não separa os dois, quebra.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Marketing trouxe o lead. Vendas trouxe o cheque.
+
+Empresário que confunde os dois cai em 2 armadilhas. A primeira é achar que basta anunciar pra vender. Gasta 10k em tráfego, faz 3k em venda, reclama que "tráfego não funciona no meu nicho".
+
+A segunda é o oposto. Acha que bom vendedor fecha do nada. Espera o cara tirar cliente do bolso. Enquanto isso não acontece, só fecha quando aparece conhecido. Cresce na sorte, trava rápido.
+
+Marketing sem comercial vira custo. Comercial sem marketing vira sorte. Os dois juntos viram venda previsível.
+
+É por isso que o Ciclo NG existe. Posta DIAGNÓSTICO que eu te mostro onde tá a falha no teu lado.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">22 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Empresário que reclama do cliente ruim esqueceu que foi ele quem vendeu pro cliente ruim.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Empresário que reclama de cliente ruim esqueceu que foi ele quem vendeu pro cliente ruim.
+
+Todo cliente problemático tinha sinal na venda. Pechinchou muito. Demorou pra responder na negociação. Pediu "apenas esse ajustezinho" antes de assinar. Tu viu e ignorou porque precisava do dinheiro.
+
+Esse cliente virou o teu pesadelo de segunda-feira.
+
+Aperta o filtro ANTES da venda e teu portfólio muda em 6 meses. Vende caro de menos cara boa é melhor que vender barato de muita cara ruim.
+
+Menos ginástica. Menos desgaste. Margem maior. Trabalho menos doloroso.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">23 <span class="gancho-audience asp">ASP</span></div>
+        <div class="gancho-text">Todo mundo quer abrir agência. Poucos entendem que agência é empresa, não atalho.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Todo mundo quer abrir agência. Poucos entendem que agência é empresa, não é atalho.
+
+A ilusão é: "compro curso de tráfego, faço 2 clientes, me viro". E até dá. Nos primeiros 6 meses. Tu confunde renda com empresa e acha que tá tudo certo.
+
+Aí chega o décimo segundo mês. Cliente cancela. Tu precisa contratar. Precisa de CNPJ limpo. Precisa pagar contador. Precisa entender DRE. Precisa ter processo pra entregar sem tu. Precisa demitir. Precisa contratar de novo.
+
+Nada disso foi ensinado no curso. Porque curso vende "renda" e o que tu quer é empresa.
+
+Se tu tá pensando em abrir ou já abriu e tá nesse ponto, posta LISTA. Tô montando uma mentoria sobre os primeiros 90 dias reais, sem fantasia.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">24 <span class="gancho-audience dual">DUAL</span></div>
+        <div class="gancho-text">Todo mundo quer escalar. Poucos querem estruturar. Por isso a maioria quebra.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Todo mundo quer escalar. Poucos querem estruturar. Por isso a maioria quebra quando escala.
+
+Estruturar é chato: mapear processo, escrever SOP, documentar fluxo de entrega, montar CRM, treinar vendedor. Ninguém posta isso. Ninguém vende curso com isso.
+
+Escalar é o que dá dopamina: lançamento, número no dashboard subindo, evento cheio, faturamento recorde no mês.
+
+Problema é que escalar sem estrutura amplifica o caos. Tu tá vendendo mais rápido do que consegue entregar. O cliente pega indicação com raiva. Tua equipe fica sobrecarregada. Teu atendimento falha. Três meses depois, faturamento desaba e tu volta pro tamanho anterior.
+
+Estrutura primeiro. Escala depois. Posta DIAGNÓSTICO que eu olho em qual fase tu tá.</div></details>
+      </div>
     </div>
 
     <div class="pilar-section">
       <div class="pilar-header"><h3><span class="badge badge-green">PILAR 4</span> Prova / Case</h3><span class="pilar-pct">4 ganchos · 15%</span></div>
-      <div class="gancho"><div class="gancho-num">25 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">Cliente meu fez +77% sem gastar 1 real a mais em tráfego. Vou mostrar como.</div></div>
-      <div class="gancho"><div class="gancho-num">26 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">Antes e depois: como reestruturei o comercial de uma empresa em 30 dias.</div></div>
-      <div class="gancho"><div class="gancho-num">27 <span class="gancho-audience asp">ASP</span></div><div class="gancho-text">Como construí o Grupo NG do zero (sem ninguém me ensinar).</div></div>
-      <div class="gancho"><div class="gancho-num">28 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">Cliente fez 70% mais com o mesmo tráfego. Só parou de fazer A coisa errada.</div></div>
+
+      <div class="gancho">
+        <div class="gancho-num">25 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">Cliente meu fez +77% sem gastar 1 real a mais em tráfego. Vou mostrar como.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Um cliente meu faturou 77% a mais em 45 dias sem gastar um real a mais em tráfego. A mudança foi ridícula: tempo de resposta da recepção caiu de 4 horas pra 5 minutos.
+
+Antes, o funil dele era: 8k/mês em ads, 40 leads por semana, recepção respondendo na folga. Faturava 18k. Margem apertada, dono sempre irritado.
+
+Depois: mesmo tráfego, mesmo criativo, mesma oferta. Só implementamos cadência de atendimento. Regra: o primeiro "oi" sai em menos de 5 minutos, dia e noite.
+
+Resultado em 45 dias: R$32k de faturamento. Sem aumentar 1 real de investimento.
+
+Não é mágica, é CONVERTER funcionando. A maioria dos empresários não acredita que arrumar o atendimento muda o faturamento desse tamanho. Depois vê.
+
+Posta DIAGNÓSTICO que eu faço a conta no teu caso.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">26 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">Antes e depois: como reestruturei o comercial de uma empresa em 30 dias.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Um cliente meu saiu de 12k pra 38k de receita em 30 dias. Sem aumentar tráfego. Sem aumentar equipe. Só reestruturando o comercial.
+
+O funil era o padrão: 40 leads por semana entrando, recepção demorando umas 4 horas pra responder, conversão em 3%, ticket médio travado em 2.400. Faturamento parado há 8 meses.
+
+O que mudou: roteiro de abertura no WhatsApp, primeira resposta em 5 min, script de fechamento com 3 perguntas pra subir ticket, cadência de follow-up automática.
+
+30 dias depois: conversão saiu de 3% pra 11%. Ticket médio foi pra 3.100 porque o script ancorava preço maior antes de revelar a opção básica. Faturamento triplicou.
+
+Mesmo número de lead. Mesmo canal. Mesma oferta. Método diferente. É o Ciclo NG no CONVERTER.
+
+Posta DIAGNÓSTICO que eu olho onde tua operação tá sangrando.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">27 <span class="gancho-audience asp">ASP</span></div>
+        <div class="gancho-text">Como construí o Grupo NG do zero (sem ninguém me ensinar).</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Comecei o Grupo NG vendendo tráfego pra conhecido. Cobrava R$500 por mês e fazia tudo sozinho: criativo, copy, gerenciamento, relatório. Dormia tarde, acordava cedo, tomava café gelado.
+
+No primeiro ano, 3 clientes e 14 horas por dia. Achava que "mais esforço" resolveria. Não resolvia. Só cansava.
+
+No segundo, caiu a ficha: tráfego sozinho não fechava, quem fechava era o comercial do cliente, e o comercial do cliente tava despreparado pra receber o lead que eu mandava. Comecei a treinar vendedor junto. Minha permanência nos contratos duplicou.
+
+No terceiro, com método mais claro, cheguei em 8 clientes ativos e uma equipe crescendo junto.
+
+O que me tirou do zero não foi talento. Foi repetir o ciclo sem desistir. Aí tá a mentoria que tô montando. Se quer ser avisado quando abrir, posta LISTA.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">28 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">Cliente fez 70% mais com o mesmo tráfego. Só parou de fazer A coisa errada.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Um cliente meu fez 70% a mais com exatamente o mesmo tráfego. Mudamos 1 coisa: o criativo.
+
+Antes: "Implante dentário a partir de R$2.500, 12x sem juros". Criativo de loja. Falava do PRODUTO.
+
+Depois: "Cansado de esconder o sorriso na foto de família? A gente resolve em 1 sessão". Criativo de gente. Falava da DOR.
+
+Mesmo investimento, mesma landing, mesmo funil. CTR saltou de 1,2% pra 4,8%. Conversão final subiu 70%.
+
+A regra é simples e a maioria não aplica: quem rola feed não tá procurando produto. Tá escapando de um incômodo. Quem bate no incômodo primeiro, ganha.
+
+Se quer o checklist de 7 pontos que eu aplico em todo criativo antes de subir, posta CRIATIVO.</div></details>
+      </div>
     </div>
 
     <div class="pilar-section">
       <div class="pilar-header"><h3><span class="badge badge-blue">PILAR 5</span> Oferta</h3><span class="pilar-pct">2 ganchos · 5%</span></div>
-      <div class="gancho"><div class="gancho-num">29 <span class="gancho-audience pme">PME</span></div><div class="gancho-text">Comenta DIAGNÓSTICO que eu olho teu cenário em 30 min. 5 vagas essa semana.</div></div>
-      <div class="gancho"><div class="gancho-num">30 <span class="gancho-audience asp">ASP</span></div><div class="gancho-text">Comenta LISTA que te aviso primeiro quando abrir a mentoria.</div></div>
+
+      <div class="gancho">
+        <div class="gancho-num">29 <span class="gancho-audience pme">PME</span></div>
+        <div class="gancho-text">Comenta DIAGNÓSTICO que eu olho teu cenário em 30 min. 5 vagas essa semana.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Abri 5 vagas de diagnóstico gratuito essa semana.
+
+É uma conversa de 30 minutos, online. Tu me conta como teu funil funciona hoje e eu te devolvo onde tá perdendo dinheiro. Pode ser no marketing (CAPTAR), no comercial (CONVERTER) ou no pós-venda (CONSERVAR). Sai com direção clara do que precisa arrumar primeiro.
+
+Depois da conversa tu faz o que quiser com a informação. Tenta sozinho, contrata outra agência, contrata a gente, ignora. Fica ao teu critério, sem pressão.
+
+Serve pra quem fatura entre 30k e 500k por mês, de qualquer setor, e é responsável pela gestão. Fora disso, não rola. Economiza teu tempo e o meu.
+
+Posta DIAGNÓSTICO. Pros primeiros 5 eu mando o link no direct.</div></details>
+      </div>
+
+      <div class="gancho">
+        <div class="gancho-num">30 <span class="gancho-audience asp">ASP</span></div>
+        <div class="gancho-text">Comenta LISTA que te aviso primeiro quando abrir a mentoria.</div>
+        <details class="legenda"><summary>Ver legenda</summary><div class="legenda-text">Tô montando uma mentoria pra quem tá tentando construir no digital. Abrir agência, virar consultor, sair do CLT, começar a vender serviço online. O tipo de coisa que eu fiz sem ninguém me ensinar e levei 3 anos pra descobrir sozinho.
+
+Ainda não abri inscrição. Não tem data, não tem preço, não tem página. Tem só a lista de espera. Quem tá aqui fica sabendo antes de qualquer movimento público.
+
+Se tu tá no processo de construir alguma coisa, posta LISTA. Quando eu abrir, tu é o primeiro a saber.
+
+Simples assim.</div></details>
+      </div>
     </div>
   </div>
 </section>
@@ -1178,7 +1591,7 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
     <div class="section-label">Parte 6 · Formatos de Produção</div>
     <h2 class="section-title">Como gravar cada tipo — sem equipe, sem estúdio.</h2>
     <p class="section-intro">
-      Setup, iluminação, áudio, edição e templates. Realista pra uma pessoa gravando sozinha.
+      Setup, iluminação, áudio, edição, template. Nada de produção de estúdio. Tudo gravável sozinho com celular e iluminação caseira. O que importa é o ritmo de publicação, não o brilho da cena.
     </p>
 
     <h3>Setup base</h3>
@@ -1247,7 +1660,7 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
         <li>Borra/bipa nome, telefone, empresa.</li>
         <li>Legenda com "Publicado com autorização".</li>
       </ol>
-      <div class="alert alert-warning" style="margin:20px 0 0;"><h5>Risco LGPD</h5><p>Sem consentimento, nunca publique. Em dúvida, usa roleplay (opção B) — mesmo efeito, zero risco.</p></div>
+      <div class="alert alert-warning" style="margin:20px 0 0;"><h5>Risco LGPD</h5><p>Sem consentimento formal, nunca publica. Na dúvida, usa roleplay. Mesmo efeito no engajamento, zero risco legal.</p></div>
     </div>
 
     <div class="formato">
@@ -1280,7 +1693,7 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
       </div>
       <ol class="formato-steps">
         <li><strong>9h:</strong> bastidor da manhã — rotina, cliente, reunião (spontâneo).</li>
-        <li><strong>12h:</strong> enquete — "Teu gargalo: MARCA, MÁQUINA ou MULTIPLICAÇÃO?"</li>
+        <li><strong>12h:</strong> enquete — "Teu gargalo: CAPTAR, CONVERTER ou CONSERVAR?"</li>
         <li><strong>15h:</strong> repost do reel/carrossel do dia.</li>
         <li><strong>19h:</strong> reflexão — talking head 15s sobre aprendizado do dia.</li>
         <li><strong>22h:</strong> CTA soft — convite pra DM ou reel.</li>
@@ -1296,7 +1709,7 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
     <div class="section-label">Parte 7 · Lead Magnets</div>
     <h2 class="section-title">Dois playbooks — um pra cada audiência.</h2>
     <p class="section-intro">
-      Quem comenta DIAGNÓSTICO recebe playbook tático. Quem comenta LISTA recebe carta de jornada. Ambos úteis, nenhum iscão vazio.
+      Pros dois CTAs, material útil de verdade. Quem pediu DIAGNÓSTICO recebe playbook tático dos 3 Cs com checklist executável. Quem pediu LISTA recebe uma carta pessoal pra quem quer construir. Nada de iscão vazio, isso queima reputação.
     </p>
 
     <div class="method-block">
@@ -1350,7 +1763,7 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
 
     <div class="alert alert-warning" style="margin-top:32px;">
       <h5>Regra crítica</h5>
-      <p>Os dois lead magnets precisam ser <strong>realmente úteis</strong>. Um PDF vazio queima reputação. Qualidade &gt; urgência na primeira versão.</p>
+      <p>Os dois PDFs precisam ser de fato úteis. Iscão vazio queima reputação e derruba todo o engajamento que tu construiu. Melhor atrasar uma semana e entregar algo denso do que lançar rápido com conteúdo raso.</p>
     </div>
   </div>
 </section>
@@ -1361,7 +1774,7 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
     <div class="section-label">Parte 8 · Automação de DM</div>
     <h2 class="section-title">3 fluxos automatizados no ManyChat.</h2>
     <p class="section-intro">
-      Cada palavra-chave dispara um fluxo diferente. Mensagens escritas pra soar como gente, não bot.
+      Três palavras-chave, três fluxos, três caminhos distintos no ManyChat. Mensagens escritas pra soar como gente escrevendo no direct, não como bot cumprindo protocolo. É o que separa lead qualificado de lead que fecha o chat no primeiro "opa".
     </p>
 
     <h3>Stack necessário</h3>
@@ -1374,65 +1787,63 @@ Comenta LISTA que eu te aviso primeiro quando abrir.
     <h3>Fluxo 1 · DIAGNÓSTICO (PME)</h3>
     <div class="ciclo ciclo-1">
       <div class="ciclo-header"><div class="ciclo-num">Mensagem 1 · Instantânea</div></div>
-      <div class="roteiro-caption">Opa [NOME]! Aqui é o Yuri.
+      <div class="roteiro-caption">Fala [NOME], aqui é o Yuri.
 
-Vi teu comentário agora. Tô te mandando o playbook já:
+Vi teu comentário. Segue o playbook que te prometi:
 → [LINK LEAD MAGNET 1]
 
-São 14 páginas com os 3 Cs do teu negócio + checklist pra auditar em 15 min.
+14 páginas, vai direto ao ponto. Tem o framework dos 3 Cs aplicado no funil + checklist pra auditar tua operação em uns 15 min.
 
-Dá uma olhada hoje ainda? Semana que vem eu te mando uma pergunta.</div>
+Lê hoje se der. Semana que vem eu volto aqui com uma pergunta.</div>
 
       <div class="ciclo-header" style="margin-top:24px;"><div class="ciclo-num">Mensagem 2 · Dia +2</div></div>
-      <div class="roteiro-caption">[NOME], você olhou o playbook?
+      <div class="roteiro-caption">E aí [NOME], olhou o playbook?
 
-Me responde só 1 número:
-1 → teu problema tá em CAPTAR (marketing/tráfego/oferta)
-2 → em CONVERTER (funil/comercial/atendimento)
-3 → em CONSERVAR (retenção/LTV/indicação)
+Me responde só uma letra:
+C → teu gargalo tá em CAPTAR (marketing, tráfego, oferta)
+V → tá em CONVERTER (comercial, atendimento, fechamento)
+P → tá em CONSERVAR (retenção, LTV, indicação)
 
-Se ainda não olhou, link aqui → [LINK]</div>
+Se ainda não leu, o link tá aqui → [LINK]</div>
 
       <div class="ciclo-header" style="margin-top:24px;"><div class="ciclo-num">Mensagem 3 · Dia +5 (se respondeu)</div></div>
-      <div class="roteiro-caption">[NOME], percebi que teu gargalo é [CAPTAR/CONVERTER/CONSERVAR].
+      <div class="roteiro-caption">[NOME], teu gargalo é [CAPTAR/CONVERTER/CONSERVAR]. É onde eu mais arrumo nos meus clientes.
 
-Isso é EXATAMENTE o que arrumo em 90% dos casos. Antes de você tentar resolver sozinho:
+Antes de tu tentar resolver sozinho: abri 5 vagas essa semana pra diagnóstico de 30 min. Entro com teus números, mostro onde tá o vazamento, te devolvo direção clara pra atacar primeiro.
 
-Tô abrindo 5 vagas essa semana pra diagnóstico 30 min. Eu olho teu cenário, mostro onde sangra dinheiro, te dou direção.
+Sem pitch, sem empurrar serviço. Se rolar continuar junto, conversa. Se não, tu sai com plano próprio.
 
-Sem compromisso. Sem oferta enfiada.
-
-Link → [CALENDLY]
-Prefere sexta 10h ou sexta 16h?</div>
+Link aqui → [CALENDLY]
+Sexta 10h ou sexta 16h, qual funciona pra ti?</div>
     </div>
 
     <h3 style="margin-top:56px;">Fluxo 2 · LISTA (Aspirante)</h3>
     <div class="ciclo ciclo-2">
       <div class="ciclo-header"><div class="ciclo-num">Mensagem 1 · Instantânea</div></div>
-      <div class="roteiro-caption">Fala [NOME]! Yuri aqui.
+      <div class="roteiro-caption">Fala [NOME], Yuri aqui.
 
-Tô feliz que você decidiu entrar na lista. Enquanto a mentoria não abre, te mando a Carta pra Quem Quer Construir:
+Que bom que tu entrou na lista. Enquanto a mentoria não abre oficialmente, segue a carta que escrevi pra quem tá nesse caminho:
 → [LINK LEAD MAGNET 2]
 
-8 páginas. Leia sem pressa. Tem coisa ali que ninguém te fala.
+8 páginas, formato ensaio. Não é manual, é uma carta honesta sobre o que ninguém fala de quem quer construir do zero.
 
-Quando a mentoria abrir, você é o primeiro a saber.</div>
+Quando eu abrir inscrição, tu é o primeiro a saber.</div>
 
       <div class="ciclo-header" style="margin-top:24px;"><div class="ciclo-num">Mensagem 2 · Dia +3</div></div>
-      <div class="roteiro-caption">[NOME], leu a carta?
+      <div class="roteiro-caption">E aí [NOME], leu a carta?
 
-Me conta em 1 frase: o que mais bateu em você?
+Me conta numa frase: o que mais te bateu.
 
-(Tô colhendo esses relatos pra desenhar a mentoria. Tua resposta conta.)</div>
+Tô colhendo esses relatos agora pra desenhar a mentoria de verdade, não no achismo. Tua resposta pesa aqui.</div>
 
       <div class="ciclo-header" style="margin-top:24px;"><div class="ciclo-num">Mensagem 3 · Dia +10 (se respondeu)</div></div>
-      <div class="roteiro-caption">[NOME], obrigado por me contar.
+      <div class="roteiro-caption">Valeu [NOME], anotado aqui.
 
-Vou te adicionar num canal fechado de WhatsApp que tô criando com quem vai entrar na lista oficial. Aviso antes de qualquer anúncio público.
+Tô criando um canal fechado no WhatsApp com quem vai entrar na lista oficial. Lá tu fica sabendo de tudo antes de qualquer anúncio público.
 
 Link do canal → [LINK BROADCAST]
 
-É só eu e vocês. Conteúdo que não posto no IG.</div>
+É só eu e quem tá dentro. Conteúdo que não posto no Instagram.</div>
     </div>
 
     <h3 style="margin-top:56px;">Fluxo 3 · PARCERIA (Médio/grande)</h3>
@@ -1440,27 +1851,27 @@ Link do canal → [LINK BROADCAST]
       <div class="ciclo-header"><div class="ciclo-num">Mensagem 1 · Instantânea</div></div>
       <div class="roteiro-caption">[NOME], fala.
 
-Teu comentário em PARCERIA chamou atenção. Antes de marcar call, me conta em 3 linhas:
+Teu comentário em PARCERIA chamou atenção aqui. Antes de marcar call, me manda em 3 linhas:
 
-1. Nome da empresa
-2. Faturamento mensal aproximado
-3. O que você busca (white label, co-venture, consultoria pontual, outro)
+Nome da empresa.
+Faturamento mensal aproximado.
+O que tu busca (white label, co-venture, consultoria pontual, outro formato).
 
-Baseado nisso eu te respondo em até 24h.</div>
+Com isso eu te respondo em 24h.</div>
 
       <div class="ciclo-header" style="margin-top:24px;"><div class="ciclo-num">Mensagem 2 · Manual (sem automação)</div></div>
-      <div class="roteiro-caption">[Você responde manualmente baseado no que ele mandou]
+      <div class="roteiro-caption">[Tu responde manualmente com base no que ele mandou]
 
-Exemplo de resposta aprovada:
-"Entendi. Faz sentido conversarmos. Te mando 3 horários — [A], [B], [C] — qual funciona?"
+Exemplo de resposta aceitando:
+"Entendi. Faz sentido conversar. Te mando 3 horários, [A], [B], [C]. Qual funciona?"
 
-Ou de resposta recusada:
-"Valeu pela abertura. Não é o tipo de trabalho que faço hoje — meu foco é [X]. Se fizer sentido no futuro, te aviso."</div>
+Exemplo de resposta recusando:
+"Valeu pela abertura. Não é o tipo de trabalho que tô tocando agora, meu foco é [X]. Se mudar esse recorte no futuro, te aviso."</div>
     </div>
 
     <div class="alert alert-info" style="margin-top:32px;">
       <h5>Por que funciona</h5>
-      <p><strong>Fluxo DIAGNÓSTICO:</strong> qualifica com 1 letra (M/F/T). Fluxo <strong>LISTA:</strong> constrói vínculo emocional antes da venda. Fluxo <strong>PARCERIA:</strong> filtra manualmente. Conversão esperada: 10-15% comentário → reunião no DIAGNÓSTICO; 70%+ de retenção no LISTA; 3-5 parcerias/trimestre no PARCERIA.</p>
+      <p>DIAGNÓSTICO qualifica com uma letra só (C, V ou P) e elimina conversa desnecessária antes da reunião. LISTA constrói vínculo emocional durante meses antes de qualquer venda acontecer. PARCERIA filtra manual porque é venda B2B maior e não combina com automação pesada. Conversão esperada: 10 a 15% de comentário virando reunião no DIAGNÓSTICO, mais de 70% de retenção no LISTA, de 3 a 5 parcerias por trimestre no PARCERIA.</p>
     </div>
   </div>
 </section>
@@ -1471,45 +1882,50 @@ Ou de resposta recusada:
     <div class="section-label">Parte 9 · Banco de Estáticos & Carrosséis</div>
     <h2 class="section-title">Pra postar todos os dias sem travar.</h2>
     <p class="section-intro">
-      20 posts estáticos + 8 carrosséis prontos. Cada um com texto de post, pilar editorial e <strong>prompt Gemini em inglês no padrão profissional</strong> (dimensão 1080x1350 de feed Instagram, estrutura padronizada skill design). Use quando não tiver reel novo ou pra reforçar ideia ao longo do dia.
+      20 posts estáticos e 8 carrosséis prontos pra girar. Cada um vem com texto principal, pilar editorial e prompt em inglês pronto pra colar no Gemini (1080x1350, padrão skill design). Serve pra dia sem reel novo e pra reforçar ideia ao longo da semana.
     </p>
 
     <h3>Template Base — identidade visual oficial do @oyuri.garcia</h3>
-    <p>Toda arte gerada deve obedecer esse sistema. Os prompts individuais já trazem tudo incluso — é só copiar e colar no Gemini (ou Nano Banana dentro dele).</p>
+    <p>Toda arte gerada obedece o mesmo sistema. Estilo cinematográfico, referência V4 Company. Nada de fundo chapado. Profundidade, atmosfera, iluminação dramática. Os prompts já vêm com essa camada incluída.</p>
 
     <div class="method-block">
-      <div class="method-name">🎨 IDENTIDADE VISUAL YG</div>
+      <div class="method-name">🎬 IDENTIDADE VISUAL CINEMATOGRÁFICA</div>
       <div class="grid grid-2" style="margin-top:20px;">
         <div class="card">
           <div class="card-kicker">Dimensões</div>
           <h4>Feed 1080x1350 (4:5)</h4>
-          <p>Padrão Instagram feed profissional. Stories separados em 1080x1920 (9:16) quando necessário.</p>
+          <p>Padrão Instagram feed. Stories separados em 1080x1920 quando necessário.</p>
         </div>
         <div class="card">
           <div class="card-kicker">Paleta</div>
-          <h4>Preto + Vermelho + Dourado</h4>
-          <p>Preto #0a0a0a (fundo) · Branco #FFFFFF (texto principal) · Vermelho #ff2e3f (acento de impacto) · Dourado #f5c542 (acento premium). NADA além disso.</p>
+          <h4>Preto profundo + Vermelho + Dourado</h4>
+          <p>Base: gradient radial <strong>#141414 centro → #050505 bordas</strong> (não preto chapado). Branco #FFFFFF texto. Vermelho #ff2e3f acento impacto. Dourado #f5c542 acento premium.</p>
         </div>
         <div class="card">
           <div class="card-kicker">Tipografia</div>
           <h4>Space Grotesk Black + Inter + JetBrains Mono</h4>
-          <p>Space Grotesk Black em títulos gigantes (70-120pt). Inter em corpo e itálicos. JetBrains Mono em headers técnicos e assinatura.</p>
+          <p>Títulos gigantes (70-120pt). Corpo em Inter. Headers técnicos em JetBrains Mono. Acentos coloridos ganham <strong>glow halo sutil</strong> (box-shadow estilo neon sutil).</p>
         </div>
         <div class="card">
-          <div class="card-kicker">Estilo</div>
-          <h4>Editorial minimalista</h4>
-          <p>Tipografia É o design. Sem ilustrações, sem 3D, sem gradientes complexos, sem emojis. Referências: Ícaro de Carvalho, Rod Vincenzi, Bruno Fraga, capa Monocle.</p>
+          <div class="card-kicker">Atmosfera cinematográfica</div>
+          <h4>Grain, vignette, rim light</h4>
+          <p><strong>Film grain 8%</strong> orgânico. <strong>Vignette</strong> escurecendo as 4 bordas. <strong>Rim light imaginário</strong> top-left criando halo nos acentos. Referência: V4 Company, Apple ads, Bloomberg Terminal, Monocle capa.</p>
         </div>
       </div>
     </div>
 
+    <div class="alert alert-warning" style="margin-top:24px;">
+      <h5>Upgrade visual: do editorial chapado pro cinematográfico V4</h5>
+      <p>A versão antiga era fundo preto chapado com tipografia sobre vazio. Funcionava mas sem impacto real. A versão atual tem profundidade via gradiente, vignette e grain, luz imaginária criando rim effect e acentos com glow sutil. Mesma tipografia, atmosfera de filme. Pra referência visual, olha o feed da <a class="ref-link" target="_blank" href="https://www.instagram.com/v4company/">@v4company ↗</a>. Mesma estrutura: profundidade sem virar 3D.</p>
+    </div>
+
     <h3>Como usar</h3>
     <ul class="clean">
-      <li>Cada prompt está em inglês (Gemini performa melhor em inglês)</li>
-      <li>Cola direto no Gemini/Nano Banana — estrutura já inclui paleta, tipografia, layout e assinatura</li>
-      <li>Posta 1 estático por dia no feed OU 2-3 no story alternando com reels</li>
-      <li>Assinatura "@oyuri.garcia" e header "YURI GARCIA / MARKETING + VENDAS" em JetBrains Mono aparecem automaticamente em todos</li>
-      <li>Se Gemini errar cor ou fonte, adiciona "STRICTLY follow the color palette and typography specs below" no topo do prompt</li>
+      <li>Todos os prompts tão em inglês porque Gemini entende melhor assim</li>
+      <li>Cola direto no Gemini ou Nano Banana, a estrutura já vem com paleta, tipografia, layout e assinatura</li>
+      <li>Posta 1 estático por dia no feed ou 2 a 3 no story alternando com reel</li>
+      <li>Assinatura @oyuri.garcia e header YURI GARCIA / MARKETING + VENDAS aparecem automaticamente em todos</li>
+      <li>Se o Gemini errar cor ou fonte, adiciona no topo do prompt: "STRICTLY follow the color palette and typography specs below"</li>
     </ul>
 
     <h3 style="margin-top:56px;">20 posts estáticos (frases-tese)</h3>
@@ -1522,38 +1938,42 @@ Ou de resposta recusada:
         <div><div class="spec-key">Pilar</div><div class="spec-val">Mentalidade</div></div>
         <div><div class="spec-key">CTA</div><div class="spec-val">—</div></div>
       </div>
-      <div class="roteiro-caption">Create a professional Instagram feed post, 1080x1350px (4:5 ratio), for Yuri Garcia, a Brazilian marketing and sales consultant. Editorial minimalist typographic poster.
+      <div class="roteiro-caption">Create a CINEMATIC Instagram feed post, 1080x1350px (4:5 ratio), for Yuri Garcia, a Brazilian marketing and sales consultant. Editorial typographic poster with cinema-grade atmosphere — think V4 Company visual style, Apple keynote slides, Bloomberg Terminal cinematic.
 
-BACKGROUND:
-Flat pure black #0a0a0a. Subtle film grain at 3% opacity for editorial feel. No gradients.
+BACKGROUND (cinematic depth, NOT flat):
+Deep black with subtle radial gradient: #141414 at center fading to #050505 at the edges. Strong vignette darkening all 4 corners by 30%. Heavy organic film grain at 8% opacity. Subtle dust particles barely visible (like a 35mm still from a film). Imagined atmospheric lighting from top-left creating very soft directional ambience (like a photo studio with one key light turned down).
 
 TOP HEADER (top-left, 80px margin):
-"YURI GARCIA / MARKETING + VENDAS" in JetBrains Mono, uppercase, 18px, letter-spacing 0.15em, white #FFFFFF with 40% opacity.
+"YURI GARCIA / MARKETING + VENDAS" in JetBrains Mono, uppercase, 18px, letter-spacing 0.15em, white #FFFFFF at 40% opacity.
 
-MAIN TYPOGRAPHY (center vertical, center horizontal, 4 stacked lines):
-Space Grotesk Black, uppercase, line-height 0.95, font-size 95pt scaled to 920px width:
+MAIN TYPOGRAPHY (4 stacked lines, centered, Space Grotesk Black, uppercase, line-height 0.95, font-size 95pt):
 
-Line 1: "MARKETING SEM COMERCIAL" — white #FFFFFF
-Line 2: "É CUSTO." — "É" white, "CUSTO" in red #ff2e3f
-(80px vertical breathing space)
-Line 3: "COMERCIAL SEM MARKETING" — white #FFFFFF
-Line 4: "É SORTE." — "É" white, "SORTE" in gold #f5c542
+Line 1: "MARKETING SEM COMERCIAL" — solid white #FFFFFF.
+Line 2: "É CUSTO." — "É" in white, "CUSTO" in red #ff2e3f with SOFT GLOW HALO (red #ff2e3f at 25% opacity, blur 40px, as if the letters were illuminated by red stage lighting).
+
+80px vertical breathing space.
+
+Line 3: "COMERCIAL SEM MARKETING" — solid white #FFFFFF.
+Line 4: "É SORTE." — "É" in white, "SORTE" in gold #f5c542 with SOFT GLOW HALO (gold at 25% opacity, blur 40px).
+
+RIM LIGHT EFFECT ON TEXT:
+White text has subtle light edge on top-left of each letter (2% white overlay, 1px), as if a soft key light from top-left caught the typography edges. Creates cinematic depth without looking 3D.
 
 HORIZONTAL RULE:
-Thin 1px line in red #ff2e3f, 80px from bottom, full width minus 80px margins on each side.
+Thin 1px line in red #ff2e3f at 60% opacity, 80px from bottom, full width minus 80px margins. Line itself has tiny glow at 15% opacity.
 
 BOTTOM SIGNATURE:
 Bottom-left: "— YURI GARCIA" in Inter Regular italic, 16px, white #FFFFFF.
-Bottom-right: "@oyuri.garcia" in JetBrains Mono, lowercase, 14px, letter-spacing 0.05em, white #FFFFFF at 50% opacity.
+Bottom-right: "@oyuri.garcia" in JetBrains Mono, lowercase, 14px, letter-spacing 0.05em, white at 50% opacity.
 
-STYLE REFERENCE:
-Monocle magazine cover meets Apple product typography. Ícaro de Carvalho minimal quote posts. Rod Vincenzi high-contrast statements.
+STYLE REFERENCE (mandatory):
+V4 Company Instagram aesthetic. Cinematic product photography atmosphere. Film grain like Kodak Portra 800 pushed +1 stop. Vignette like Christopher Nolan posters. Typography treatment like Monocle magazine cover but with atmospheric depth.
 
 COLOR PALETTE STRICTLY:
-Black #0a0a0a (bg), White #FFFFFF (primary text), Red #ff2e3f (one accent word), Gold #f5c542 (one accent word).
-NO green, NO blue, NO orange, NO gradients, NO 3D, NO illustrations, NO photos, NO emojis.
+Deep cinematic blacks (#050505 to #141414 gradient), White #FFFFFF, Red #ff2e3f (with glow), Gold #f5c542 (with glow).
+NO green, NO blue, NO orange, NO 3D, NO illustrations, NO photos, NO emojis. Yes to: grain, vignette, subtle glow.
 
-DELIVERABLE: 1080x1350px PNG ready for Instagram feed.</div>
+DELIVERABLE: 1080x1350px PNG, cinematic editorial poster quality.</div>
     </div>
 
     <!-- E2 -->
@@ -1640,30 +2060,38 @@ DELIVERABLE: 1080x1350px PNG.</div>
         <div><div class="spec-key">Pilar</div><div class="spec-val">Mentalidade</div></div>
         <div><div class="spec-key">CTA</div><div class="spec-val">LISTA ou DIAGNÓSTICO</div></div>
       </div>
-      <div class="roteiro-caption">Create a professional Instagram feed post, 1080x1350px (4:5), for Yuri Garcia. Manifesto-style typographic poster.
+      <div class="roteiro-caption">Create a CINEMATIC Instagram feed post, 1080x1350px (4:5), for Yuri Garcia. Manifesto typographic poster with cinema-grade atmosphere — V4 Company visual aesthetic, dramatic lighting, editorial depth.
 
-BACKGROUND: Flat pure black #0a0a0a.
+BACKGROUND (cinematic depth, NOT flat):
+Deep black with subtle radial gradient: #141414 at center fading to #050505 at the edges. Strong vignette darkening all 4 corners by 30%. Heavy organic film grain at 8% opacity throughout. Barely visible dust particles like a 35mm film still. Subtle atmospheric lighting from top-left (imagined soft key light).
 
 TOP HEADER: "YURI GARCIA / MARKETING + VENDAS" in JetBrains Mono, 18px, uppercase, letter-spacing 0.15em, white 40% opacity, top-left with 80px margin.
 
 MAIN TYPOGRAPHY (4 stacked lines, centered vertically, Space Grotesk Black, uppercase, line-height 1.0, font-size 85pt):
 
-Line 1: "SE SEU COMERCIAL" — white #FFFFFF
-Line 2: "NÃO VENDE SEM VOCÊ," — white #FFFFFF
-(120px vertical gap)
-Line 3: "VOCÊ NÃO TEM EMPRESA." — red #ff2e3f
-Line 4: "TEM CARGO." — white with thin 2px underline in gold #f5c542
+Line 1: "SE SEU COMERCIAL" — solid white #FFFFFF with subtle top-left rim light (2% white edge, creating depth).
+Line 2: "NÃO VENDE SEM VOCÊ," — same treatment.
+
+120px vertical gap (dramatic breathing space).
+
+Line 3: "VOCÊ NÃO TEM EMPRESA." — red #ff2e3f with SOFT GLOW HALO (red at 30% opacity, blur 45px, as if illuminated by red stage lighting). Each letter has subtle rim light on top-left edge.
+Line 4: "TEM CARGO." — white #FFFFFF with thin 3px underline in gold #f5c542. The gold underline has a tiny glow halo (gold 20% opacity, blur 8px).
+
+RIM LIGHT EFFECT:
+All text appears slightly lit from top-left, as if a photography studio key light caught the edges. Very subtle — creates cinematic depth without looking 3D.
 
 BOTTOM SIGNATURE:
 Bottom-left: "— YURI GARCIA" in Inter Regular italic, 16px, white.
 Bottom-right: "@oyuri.garcia" in JetBrains Mono 14px white 50% opacity.
 
-STYLE: Pure manifesto. No illustration. Typography fills the canvas with generous breathing space between blocks.
+STYLE REFERENCE (mandatory):
+V4 Company Instagram atmosphere. Cinematic depth like Christopher Nolan poster aesthetic. Film grain like Kodak Portra 800 pushed +1. Monocle magazine typography treatment but with atmospheric depth.
 
-COLOR PALETTE STRICTLY: Black #0a0a0a, White #FFFFFF, Red #ff2e3f, Gold #f5c542.
-NO other colors, NO gradients, NO illustrations, NO photos, NO emojis.
+COLOR PALETTE STRICTLY:
+Cinematic blacks (#050505 to #141414 gradient), White #FFFFFF, Red #ff2e3f (with glow halo), Gold #f5c542 (with subtle glow).
+NO other colors, NO 3D, NO illustrations, NO photos, NO emojis. YES to: film grain, vignette, subtle glow, rim light.
 
-DELIVERABLE: 1080x1350px PNG.</div>
+DELIVERABLE: 1080x1350px PNG, cinematic editorial poster quality.</div>
     </div>
 
     <!-- E5 -->
@@ -2638,25 +3066,25 @@ DELIVERABLE: 1080x1350px PNG.</div>
     <div class="section-label">Parte 10 · Calendário Editorial</div>
     <h2 class="section-title">30 dias completos, dia a dia.</h2>
     <p class="section-intro">
-      Ciclo 1 inteiro (Fundação) com 1 post no feed todo dia + stories. Sem abreviação que você precisa decifrar.
+      Ciclo 1 completo de fundação com 1 post por dia no feed e stories alimentando nas margens. Nada de sigla obscura. Clicando na referência de cada dia tu pula direto pro roteiro ou arte correspondente.
     </p>
 
     <h3>Legenda dos tipos</h3>
     <div class="grid grid-3">
       <div class="card">
         <div class="card-kicker">Tipo REEL</div>
-        <h4>Vídeo vertical 15-60s</h4>
-        <p>Tem storyboard completo frame-a-frame na <strong>Parte 4 (Roteiros)</strong> ou gancho numerado na <strong>Parte 5 (Ganchos)</strong>. Formato: você falando pra câmera + B-roll.</p>
+        <h4>Vídeo vertical 15 a 60s</h4>
+        <p>Storyboard frame a frame tá na Parte 4. Ganchos numerados pra reels livres estão na Parte 5. Formato padrão: tu falando pra câmera com B-roll quando fizer sentido.</p>
       </div>
       <div class="card">
         <div class="card-kicker">Tipo CARROSSEL</div>
-        <h4>8-10 slides sequenciais</h4>
-        <p>Tem estrutura completa + prompt Gemini na <strong>Parte 9 (Estáticos & Carrosséis)</strong>. Capa puxa a audiência, último slide fecha com CTA.</p>
+        <h4>8 a 10 slides sequenciais</h4>
+        <p>Estrutura completa e prompt Gemini prontos na Parte 9. Capa puxa a audiência, último slide sempre fecha com CTA. Sem slide sem função.</p>
       </div>
       <div class="card">
         <div class="card-kicker">Tipo ESTÁTICO</div>
         <h4>Imagem única tipográfica</h4>
-        <p>Frase-tese em arte fixa. Prompt Gemini pronto na <strong>Parte 9</strong>. Serve pra dia sem reel novo ou reforço de ideia.</p>
+        <p>Frase-tese em arte fixa. Prompt Gemini pronto na Parte 9. Serve pra dia sem reel gravado ou pra reforçar uma ideia que tá rodando na semana.</p>
       </div>
     </div>
 
@@ -2679,7 +3107,7 @@ DELIVERABLE: 1080x1350px PNG.</div>
 
     <!-- SEMANA 1 -->
     <h3 style="margin-top:56px;">Semana 1 · Fundação do perfil</h3>
-    <p style="color:var(--text-soft);">Apresenta a tese do Ciclo NG. Educa o público no método. Introduz o primeiro CTA pequeno de diagnóstico. 100% PME ainda.</p>
+    <p style="color:var(--text-soft);">Essa semana apresenta a tese do Ciclo NG e educa o público no método. O primeiro CTA pequeno de diagnóstico entra no meio, sem afobação. Conteúdo todo voltado pra PME por enquanto.</p>
 
     <div class="table-wrap">
       <table class="calendar-table">
@@ -2698,7 +3126,7 @@ DELIVERABLE: 1080x1350px PNG.</div>
 
     <!-- SEMANA 2 -->
     <h3 style="margin-top:56px;">Semana 2 · Cases + primeira oferta formal</h3>
-    <p style="color:var(--text-soft);">Primeiro reel de cold call real (credibilidade). Case com cifra. Abertura formal de vagas de diagnóstico. Primeiro reel pra aspirante no final da semana.</p>
+    <p style="color:var(--text-soft);">Essa semana entra o primeiro reel de cold call real, que sobe a credibilidade 10x. Case com cifra concreta, abertura formal das 5 vagas de diagnóstico e primeiro reel pro aspirante no domingo pra fechar.</p>
 
     <div class="table-wrap">
       <table class="calendar-table">
@@ -2717,7 +3145,7 @@ DELIVERABLE: 1080x1350px PNG.</div>
 
     <!-- SEMANA 3 -->
     <h3 style="margin-top:56px;">Semana 3 · Diversificação + aspirante mais forte</h3>
-    <p style="color:var(--text-soft);">Mistura mais temas. Testa formato análise de case famoso. Entra primeiro estático puramente pra aspirante. Segunda oferta de diagnóstico.</p>
+    <p style="color:var(--text-soft);">Essa semana diversifica tema e testa formato de análise de case famoso. Entra o primeiro estático dedicado ao aspirante e a segunda oferta pública de diagnóstico. O perfil começa a falar com mais gente em paralelo.</p>
 
     <div class="table-wrap">
       <table class="calendar-table">
@@ -2736,7 +3164,7 @@ DELIVERABLE: 1080x1350px PNG.</div>
 
     <!-- SEMANA 4 -->
     <h3 style="margin-top:56px;">Semana 4 · Consolidação + fechamento do ciclo 1</h3>
-    <p style="color:var(--text-soft);">Último reel de case + carrossel analítico. Primeiro reel de oferta LISTA pra aspirante. Domingo fecha ciclo 1 com o carrossel-jornada completo.</p>
+    <p style="color:var(--text-soft);">Última semana do ciclo 1. Último reel de case, carrossel analítico e o primeiro reel de oferta formal LISTA pro aspirante. O domingo fecha o ciclo inteiro com o carrossel-jornada de 10 slides. Ritmo estabelecido.</p>
 
     <div class="table-wrap">
       <table class="calendar-table">
@@ -2812,7 +3240,7 @@ DELIVERABLE: 1080x1350px PNG.</div>
   <div class="container">
     <div class="section-label">Parte 11 · Métricas</div>
     <h2 class="section-title">O que acompanhar toda sexta.</h2>
-    <p class="section-intro">6 métricas. Caderno na mão. 10 minutos por semana.</p>
+    <p class="section-intro">6 métricas que importam. Caderno na mão. 10 minutos por semana pra acompanhar. Sem dashboard complicado, só o que move o jogo.</p>
 
     <div class="metric-row">
       <div class="metric-name">Seguidores ganhos</div>
@@ -2866,22 +3294,22 @@ DELIVERABLE: 1080x1350px PNG.</div>
   <div class="container">
     <div class="section-label">Parte 12 · Armadilhas</div>
     <h2 class="section-title">O que vai te derrubar (e como evitar).</h2>
-    <p class="section-intro">Erros vistos em perfis médios + específicos de dupla audiência.</p>
+    <p class="section-intro">Tem erros comuns que matam perfil novo antes dele decolar. E tem outros específicos de quem toca dupla audiência. Vale passar o olho antes de gravar o primeiro reel.</p>
 
     <h3>Erros que matam perfil novo</h3>
-    <div class="alert alert-danger"><h5>Postar sem método batizado</h5><p>Estevão Souza (36k, high ticket) está travado. Sem método próprio, vira "mais um cara de vendas". Ciclo NG resolve.</p></div>
-    <div class="alert alert-danger"><h5>Grid sem identidade visual</h5><p>Gustavo Private (56k) posta reels bons, thumbs sem coerência. Padrão visual = reconhecimento.</p></div>
-    <div class="alert alert-danger"><h5>CTA genérico "link na bio"</h5><p>Otávio Passos (131k) faz isso. Os que escalam usam "comenta [palavra]". 10x mais conversão.</p></div>
+    <div class="alert alert-danger"><h5>Postar sem método batizado</h5><p>Estevão Souza (36k, high ticket) tá travado porque não tem método próprio. Virou "mais um cara falando de venda". O Ciclo NG resolve esse ponto: diferencia o teu conteúdo e vira referência citável em DM.</p></div>
+    <div class="alert alert-danger"><h5>Grid sem identidade visual</h5><p>Gustavo Private (56k) posta reel bom e thumb sem coerência entre as capas. O cérebro do feed reconhece padrão visual. Sem isso, tu some no scroll.</p></div>
+    <div class="alert alert-danger"><h5>CTA genérico "link na bio"</h5><p>Otávio Passos (131k) faz isso e perde conversão. Quem escala usa "comenta PALAVRA" porque puxa engajamento e dispara automação. Diferença chega em 10x na prática.</p></div>
 
     <h3>Erros específicos de dupla audiência</h3>
-    <div class="alert alert-warning"><h5>Misturar CTAs no mesmo reel</h5><p>Falar pra PME e aspirante no mesmo reel confunde os dois. Escolhe 1 por reel. Deixa a proporção dos ciclos guiar qual é o dominante da semana.</p></div>
-    <div class="alert alert-warning"><h5>Vender mentoria antes de ter autoridade real</h5><p>Aspirante compra de quem tem resultado. No ciclo 1, o conteúdo pro aspirante só ATRAI e acumula lista. Vender a mentoria em si precisa esperar o ciclo 3 ou depois.</p></div>
-    <div class="alert alert-warning"><h5>Prometer produto que não existe</h5><p>"Em construção" é honesto. "Abro inscrições semana que vem" sem ter estrutura é fraude. Lista de espera é o jogo certo.</p></div>
+    <div class="alert alert-warning"><h5>Misturar CTAs no mesmo reel</h5><p>Falar com PME e aspirante no mesmo vídeo deixa os dois sem saber se o conteúdo é pra eles. Um CTA por reel. A proporção dos ciclos decide qual domina a semana.</p></div>
+    <div class="alert alert-warning"><h5>Vender mentoria antes de ter autoridade</h5><p>Aspirante compra de quem tem resultado visível, não de quem tá começando. No ciclo 1, o conteúdo pro aspirante só atrai e acumula lista. Vender mesmo a mentoria só entra do ciclo 3 em diante.</p></div>
+    <div class="alert alert-warning"><h5>Prometer produto que não existe</h5><p>"Em construção" é honesto e funciona. "Abro inscrição semana que vem" sem ter estrutura pronta queima reputação em 30 dias. Lista de espera é o caminho certo enquanto o produto não tá pronto.</p></div>
 
     <h3>Coisas que funcionam fora do benchmark</h3>
-    <div class="alert alert-info"><h5>Gravação de cliente real (com permissão)</h5><p>Poucos fazem. Cliente seu dá credibilidade que "cara falando sozinho" não consegue.</p></div>
-    <div class="alert alert-info"><h5>Roleplay gravado</h5><p>Cola com vendedor, faz objeção, corrige ao vivo. Bruno Fraga faz. Você pode fazer.</p></div>
-    <div class="alert alert-info"><h5>Mini-série com cliente</h5><p>"Diário de Cliente X" em 5 partes cria retenção e dá sequência narrativa.</p></div>
+    <div class="alert alert-info"><h5>Gravação de cliente real (com permissão)</h5><p>Quase ninguém faz. Cliente teu falando no vídeo dá credibilidade que cara falando sozinho nunca alcança. Pedir autorização formal é o passo 1 e é mais simples do que parece.</p></div>
+    <div class="alert alert-info"><h5>Roleplay gravado</h5><p>Cola com um vendedor, ele simula objeção, tu corrige ao vivo. Bruno Fraga usou isso e viralizou. É gravar, não produzir.</p></div>
+    <div class="alert alert-info"><h5>Mini-série com cliente</h5><p>Diário de um cliente em 5 partes cria retenção no perfil. Ninguém larga narrativa no meio, então os 5 vídeos puxam audiência crescendo.</p></div>
   </div>
 </section>
 
@@ -2889,7 +3317,7 @@ DELIVERABLE: 1080x1350px PNG.</div>
 <section class="cta-footer">
   <div class="container">
     <h2>Estratégia pronta. <br><span style="color:var(--red)">O que eu produzo agora?</span></h2>
-    <p>Documento atual inclui: benchmark de 31 perfis · bio escolhida · Ciclo NG · 6 roteiros frame-a-frame · 30 ganchos (PME/ASP/DUAL) · 5 formatos de produção · 2 lead magnets estruturados · 3 fluxos de DM · banco de estáticos com prompts Gemini. Próximos entregáveis:</p>
+    <p>O documento já entrega: benchmark de 31 perfis, bio escolhida, Ciclo NG, 6 roteiros frame a frame, 30 ganchos marcados por audiência, 5 formatos de produção, 2 lead magnets estruturados, 3 fluxos de DM e o banco completo de estáticos com prompts Gemini. Próximos entregáveis na fila:</p>
     <div class="next-steps">
       <div class="next-step"><div class="next-step-num">01</div><div class="next-step-text"><strong>Artes visuais</strong> — logo + template thumb reel + template carrossel em Figma/Canva editável</div></div>
       <div class="next-step"><div class="next-step-num">02</div><div class="next-step-text"><strong>Mais 15 roteiros</strong> frame-a-frame (10 PME + 5 aspirante) pros dias 21 a 60</div></div>
@@ -3020,6 +3448,791 @@ DELIVERABLE: 1080x1350px PNG.</div>
     if (targetId) {
       refCell.innerHTML = '<a href="#' + targetId + '" class="ref-jump">' + text + '</a>';
     }
+  });
+
+  // ===== LEGENDAS DOS ESTÁTICOS E CARROSSÉIS =====
+  const LEGENDAS = {
+    'E01': `Tem gente que gasta 15k/mês em tráfego achando que vai vender mais. Tem gente que espera cliente aparecer por indicação achando que é autoridade.
+
+O primeiro tá só gerando custo. O segundo tá só contando com sorte.
+
+Empresa de verdade entende que marketing e comercial são duas pernas da mesma cadeira. Uma traz a demanda, a outra transforma em dinheiro. Se uma não trabalha, a outra também não resolve.
+
+É essa a tese do Ciclo NG. Posta DIAGNÓSTICO se tu quer que eu olhe o teu caso.`,
+
+    'E02': `Todo negócio que escala de verdade roda nesses 3 estágios em loop. Não é linha reta, é ciclo. E ninguém consegue pular um sem vazar dinheiro.
+
+CAPTAR é trazer a demanda certa. CONVERTER é o comercial fechando. CONSERVAR é o cliente voltando, pagando mais, indicando.
+
+A maioria dos empresários acha que o problema sempre é no primeiro. Gasta mais em ads quando o gargalo tá no comercial. Ou vive só de indicação sem escalar porque nunca estruturou o CAPTAR.
+
+Quando os 3 giram juntos, a empresa para de depender do dono. Vira máquina. Posta DIAGNÓSTICO que eu te mostro em qual dos 3 tu tá sangrando.`,
+
+    'E03': `Cold call morre nos primeiros 8 segundos. E não é porque o lead é frio. É porque a abertura é sempre a mesma ladainha.
+
+"Oi, tudo bem? Aqui é o Fulano da empresa Tal, a gente trabalha com..." No terceiro segundo o cliente já desligou mentalmente. Tu tá falando contigo mesmo pelos próximos 30.
+
+O que funciona é inverter a ordem. Nos primeiros 10 segundos, pergunta cirúrgica que toca uma dor reconhecível. Não apresenta a empresa, não pede reunião. Provoca.
+
+Se ele reconhece o problema, a conversa abre sozinha. Se não reconhece, desliga e tá tudo bem. É filtro.
+
+Posta SCRIPT que eu te mando o roteiro completo que treino com meus clientes.`,
+
+    'E04': `Observa teu comercial essa semana. Quantas vendas entraram sem tu encostar no deal?
+
+Se foi zero, tu não tem empresa. Tu tem um trampo bem pago com CNPJ no nome. Diretor comercial fantasiado de empresário.
+
+Empresa de verdade gera dinheiro quando o dono some. A tua some junto? Então é só cargo com responsabilidade trabalhista e alvará da prefeitura.
+
+Esse teto que tu bate todo mês, 500k, 1M, 2M, que tu xinga de mercado ruim, vendedor fraco, tráfego caro, é o seguinte: é tu no meio do funil travando tudo.
+
+A saída não é trabalhar mais. É parar de ser indispensável. Posta DIAGNÓSTICO. Eu volto.`,
+
+    'E05': `77% a mais de faturamento em 45 dias. Mesmo tráfego. Zero a mais em ads.
+
+Clínica em Novo Hamburgo, faturava 18k/mês com 8k de investimento em mídia. Margem apertada, dono sempre no vermelho.
+
+A gente não mexeu no criativo, nem no canal, nem na oferta. Mexeu no atendimento. Tempo de resposta caiu de 4 horas pra 5 minutos. Recepção ganhou roteiro. O time passou por 3 sessões de treino.
+
+45 dias depois a clínica faturou 32k. Com o mesmo tráfego que antes entregava 18. Só CONVERTER virado do avesso.
+
+Maior parte dos empresários vai continuar achando que precisa de mais ads. Posta DIAGNÓSTICO e eu te mostro se o teu é o mesmo caso.`,
+
+    'E06': `Todo mundo quer abrir agência. Poucos entendem que agência é empresa.
+
+A ilusão é: "compro um curso, faço 2 clientes, me viro". E até dá certo nos primeiros 6 meses. Tu confunde renda com empresa e acha que tá no caminho.
+
+Aí chega o décimo segundo mês. Cliente cancela. Precisa contratar alguém confiável. Precisa entender DRE, imposto, contrato. Precisa demitir. Precisa contratar de novo. Precisa ter processo que roda sem tu.
+
+Nada disso foi ensinado no curso que tu comprou. Porque curso vende renda, e o que tu quer é empresa. Coisas diferentes.
+
+Se tu tá nesse ponto ou pensando em começar, posta LISTA. A mentoria que tô montando vai exatamente nisso.`,
+
+    'E07': `Criativo que funciona não fala do produto. Fala do incômodo de quem tá rolando o feed.
+
+"Implante dentário a partir de R$2.500, 12x sem juros" é criativo de vitrine de shopping. Serve quando a pessoa já decidiu comprar.
+
+"Cansado de esconder o sorriso na foto de família?" é criativo de feed. Serve pra quem ainda não decidiu e tá rolando pra escapar da ansiedade.
+
+Mesma clínica, mesmo implante, mesmo preço. CTR triplica, conversão dobra, custo por venda despenca.
+
+A regra vale pra serviço, varejo, digital, qualquer nicho. Só tu precisa saber qual é a dor real, não o que tu imagina que é.
+
+Posta CRIATIVO que eu te mando o checklist de 7 pontos que eu aplico antes de subir qualquer anúncio.`,
+
+    'E08': `Empresário que reclama de cliente ruim esqueceu que foi ele quem vendeu pro cliente ruim.
+
+Todo cliente problemático tinha sinal na venda. Pechinchou demais. Demorou pra responder na negociação. Pediu "apenas esse ajustezinho" antes de assinar. Tu viu e fingiu que não viu porque precisava do dinheiro.
+
+Esse é o cliente que virou teu pesadelo de segunda-feira. Ocupa 70% da tua cabeça e paga 12% do faturamento.
+
+Filtro antes da venda é o que separa quem escala de quem sobrevive. Dizer não pra cliente ruim no começo é dizer sim pra margem no fim.`,
+
+    'E09': `Lead quente esfria em 5 minutos. Tua recepção responde em 4 horas. Faz a conta.
+
+Em 5 minutos, o cara já foi no perfil do concorrente, mandou mensagem em outro lugar, passou o problema pra segundo plano. Em 4 horas, ele esqueceu que clicou no anúncio.
+
+Tu pagou pelo tráfego. Tu pagou pelo criativo. E entregou o lead pro concorrente porque ninguém atende.
+
+80% dos negócios que eu olho perdem venda no tempo. Não é oferta, não é preço, não é criativo. É atendimento lento demais pra uma decisão rápida.
+
+É o erro mais caro e o mais fácil de arrumar. Posta DIAGNÓSTICO que eu meço o teu.`,
+
+    'E10': `O que me tirou do zero não foi talento. Foi repetir o ciclo sem desistir.
+
+Quando comecei o Grupo NG, não tinha método, não tinha portfólio, não tinha equipe, não tinha cliente. Vendia tráfego pra conhecido cobrando 500 e fazendo tudo sozinho.
+
+O que eu tinha era disposição pra refazer a mesma coisa 10 vezes até descobrir o que funcionava e o que não funcionava.
+
+3 anos depois cheguei em 8 clientes ativos, método estruturado, equipe crescendo. Não foi por genialidade. Foi porque não desisti no quinto mês, que é quando a maioria desiste.
+
+Se tu tá nesse quinto mês, posta LISTA. Tô montando uma mentoria justamente pra quem tá nesse ponto.`,
+
+    'E11': `90% dos negócios quebra no CONVERTER. Não no CAPTAR.
+
+O empresário sempre acha que o problema é tráfego. É mais fácil culpar o marketing do que assumir que o próprio comercial não fecha.
+
+A conta real é: 1000 leads entrando, 30 reuniões, 3 vendas. Gastar mais em ads pra chegar em 2000 leads dobra o custo. Subir as reuniões de 30 pra 100 com o mesmo tráfego triplica a venda sem gastar 1 real a mais.
+
+O problema quase nunca é trazer gente. É saber o que fazer quando a gente chega.
+
+Posta DIAGNÓSTICO que eu faço essa conta no teu caso.`,
+
+    'E12': `Demanda vezes conversa é igual a venda.
+
+Se um dos dois é zero, tudo é zero. Não importa quanto tu gaste no outro lado. 1000 leads chegando com zero conversa do comercial dá zero venda. 10 leads chegando com 90% de conversão dá 9 vendas.
+
+Matemática simples que a maioria ignora porque é mais fácil investir num lado só. Curso de tráfego tem de sobra. Curso de comercial pra serviço quase ninguém faz.
+
+Aí o empresário gasta 15k em ads, faz 3 vendas, e reclama que o mercado tá difícil. Não tá difícil. Tá mancando.
+
+Posta DIAGNÓSTICO que eu te mostro em qual dos dois lados tu tá zerando.`,
+
+    'E13': `Todo mundo quer escalar. Poucos querem estruturar.
+
+Estruturar é chato. É documentar processo, escrever SOP, montar CRM, treinar time, criar indicador que mede o que importa. Ninguém posta isso no Instagram, ninguém vende curso com isso.
+
+Escalar é o que dá dopamina. Número subindo no dashboard, lançamento, evento cheio, faturamento recorde do mês.
+
+Problema é que escalar sem estrutura amplifica o caos. Tu vende mais rápido do que consegue entregar. Tua equipe fica sobrecarregada. Cliente começa a reclamar. 3 meses depois, faturamento desaba.
+
+Estrutura primeiro. Escala depois. Essa é a parte chata que faz tudo funcionar.`,
+
+    'E14': `Diagnóstico rápido em 3 perguntas:
+
+Tá chegando lead consistente? Tá fechando venda com esses leads? Tá voltando cliente que já comprou antes?
+
+Se tu respondeu não ou "mais ou menos" pra pelo menos uma, a gente precisa conversar. Porque um dos 3 estágios tá travado e isso explica porque teu faturamento não anda.
+
+Respostas honestas, não aspiracionais. "Tá chegando lead" não é "de vez em quando chega". "Tá fechando venda" não é "tá vindo indicação".
+
+Posta DIAGNÓSTICO que eu faço essas 3 contigo em 30 min.`,
+
+    'E15': `Tu tem 2 caminhos possíveis e nenhum é errado. O problema é não escolher.
+
+Caminho 1 é contratar alguém que resolva pra ti. Agência entra, arruma o funil, roda campanha, treina teu comercial. Enquanto tu paga, resultado acontece.
+
+Caminho 2 é aprender a construir tu mesmo. Leva mais tempo, dá mais trabalho, mas o conhecimento fica. Serve pra quem quer abrir agência, virar consultor, criar algo próprio.
+
+Eu atendo os dois. Quem quer agência, posta DIAGNÓSTICO. Quem quer construir o próprio caminho, posta LISTA. Indecisão é o único jeito de não ir pra lugar nenhum.`,
+
+    'E16': `Follow-up não é chateação. É respeito pelo lead que já te deu atenção.
+
+Vendedor ruim manda "oi, conseguiu olhar a proposta?" toda terça e acha que tá fazendo o trabalho. Cliente bloqueia. Vira estatística de "lead frio" no CRM.
+
+Follow-up bom entrega valor a cada toque. Manda a proposta. 3 dias depois manda um case do teu setor. Uma semana depois manda um dado novo do mercado que impacta a decisão. Quando tu finalmente perguntar se fecha, ele já decidiu.
+
+A diferença entre vendedor chato e vendedor presente tá em uma coisa: o primeiro cobra, o segundo contribui.
+
+Posta SCRIPT que eu te mando a cadência que uso com meus clientes.`,
+
+    'E17': `Teu negócio não tem problema de venda. Tem problema de sistema. E sistema se constrói.
+
+Problema de venda é aquele cliente específico que não fechou. Tu resolve na conversa. Muda a abordagem e fecha o próximo.
+
+Problema de sistema é quando a maioria dos clientes não fecha. Tu não resolve na conversa. Resolve no processo. Script, CRM, cadência, treino.
+
+80% dos empresários que eu atendo chegam reclamando de problema de venda. Depois de olhar a planilha, descobrem que sempre foi problema de sistema fantasiado. Doeu mais assumir.
+
+Posta DIAGNÓSTICO que eu olho o teu e separo os dois.`,
+
+    'E18': `Momento certo não existe. O que existe é condição atual, risco aceitável, decisão tomada.
+
+Quem fica esperando sentir segurança pra começar nunca começa. Porque segurança não vem antes. Vem depois, na metade do caminho, quando tu percebe que aguenta mais do que achava.
+
+Todo empresário que eu respeito começou sem estar preparado. Descobriu o preparo no meio do fogo. Errou, ajustou, errou de novo, ajustou de novo.
+
+Quem espera o momento, vira espectador do movimento dos outros.
+
+Posta LISTA se tu já decidiu começar.`,
+
+    'E19': `Lead não é número. É uma conversa que ainda não aconteceu.
+
+No momento que tu olha lead como número, tudo vira planilha. Manda a mesma mensagem pra todo mundo. Trata igual. Perde nuance. Conversão despenca e tu culpa o tráfego.
+
+Lead é gente com dor específica, em um momento específico, buscando resposta específica. Quem escuta antes de falar fecha mais. Quem diagnostica antes de propor vende mais caro.
+
+Vendedor que trata lead como número vira número na estatística dos que não fecham.`,
+
+    'E20': `O ciclo gira. Ou tu gira junto, ou ele gira sem ti.
+
+CAPTAR traz lead. CONVERTER transforma em venda. CONSERVAR mantém cliente comprando e indicando. A indicação volta pra CAPTAR. Loop contínuo.
+
+Não é linha reta. Não dá pra pular etapa. Empresário que tenta, quebra. Empresário que empurra sozinho, cansa.
+
+Quem entra no ritmo do ciclo, escala. Posta DIAGNÓSTICO se tu quer que eu olhe o teu, ou LISTA se tu quer aprender a construir do zero.`,
+
+    'C01': `CAPTAR é o primeiro C do Ciclo NG. É onde a demanda nasce.
+
+Sem CAPTAR certo, CONVERTER não acontece. Sem CAPTAR qualificado, teu comercial sofre com lead errado o dia inteiro. Sem CAPTAR constante, CONSERVAR não tem razão de existir porque não tem base de cliente.
+
+Nos próximos slides tu vai ver 6 ajustes que dobram teu tráfego sem gastar mais. Desde nicho da oferta até pixel configurado direito. Coisa que a maioria das agências esquece e que muda o jogo pro teu anúncio parar de entregar lead ruim.
+
+Arrasta pra ver cada um aplicado. Se quer o checklist completo, posta DIAGNÓSTICO.`,
+
+    'C02': `CONVERTER é o segundo C do Ciclo NG. É onde 90% dos negócios vazam dinheiro.
+
+Lead chega. Ninguém fecha. Empresário culpa o tráfego, troca de agência, gasta mais em ads. E continua chegando lead que não fecha.
+
+Porque o problema nunca foi trazer gente. Foi saber o que fazer quando a gente chegou.
+
+Nos próximos slides tu vai ver 7 ajustes no comercial que sobem conversão sem mexer no marketing. Desde tempo de resposta até roteiro de fechamento sem vergonha. Coisa que eu aplico com os comerciais dos meus clientes e faz conversão sair de 3% pra 11%.
+
+Arrasta pra ver. Playbook completo quem posta SCRIPT recebe no direct.`,
+
+    'C03': `CONSERVAR é o terceiro C. O esquecido. E o mais lucrativo.
+
+80% dos empresários que eu olho gasta energia toda em CAPTAR. Vive caçando cliente novo porque nunca estruturou o jeito de manter quem já comprou.
+
+Só que cliente fidelizado compra de novo, indica, paga mais caro sem reclamar. Custa uma fração do que custa achar um cliente novo. A maioria ignora porque não tem brilho de crescimento, mas é onde mora margem.
+
+Nos próximos slides tu vai ver 6 táticas de LTV e indicação. Desde NPS até programa de indicação formal. Nada de mirabolante, só coisa que funciona.
+
+Arrasta. Posta DIAGNÓSTICO se quer que eu olhe teu LTV.`,
+
+    'C04': `Como construí o Grupo NG do zero, sem investidor, sem sócio, sem atalho.
+
+Comecei vendendo tráfego pra conhecido, cobrando 500 por mês, fazendo tudo sozinho. Nos primeiros 3 anos cometi uns 20 erros. 5 deles foram caros o bastante pra quase me derrubar.
+
+Nos próximos slides eu te conto esses 5 erros em detalhe. Desde tentar fazer tudo sozinho pensando que era agilidade até escalar estrutura antes de ter processo. Coisa que se tu tá começando agora ou tá preso no ano 1, tu vai se reconhecer.
+
+O ponto de virada também tá aí. Foi uma decisão específica que mudou tudo.
+
+Arrasta. Posta LISTA pra entrar na fila da mentoria que tô montando.`,
+
+    'C05': `7 mentiras do marketing digital que tu ainda acredita.
+
+"Preciso de mais seguidor pra vender." Não precisa. Conheço perfil com 3k de seguidor vendendo 200k por mês e perfil com 500k vendendo nada.
+
+"Preciso viralizar." Não precisa. Viral traz audiência errada que não compra. Consistência com gente certa paga contas.
+
+"Preciso tá no TikTok." Só se teu cliente tá lá. Se vende implante dentário pra adulto, TikTok não é prioridade.
+
+Tem mais 4 nos próximos slides. Cada uma eu desmonto com exemplo real. Arrasta pra ver.
+
+Posta DIAGNÓSTICO pra saber qual dessas tá te travando hoje.`,
+
+    'C06': `+77% de faturamento. Mesmo tráfego. Zero a mais em ads.
+
+Cliente meu, clínica em Novo Hamburgo. Faturava 18k/mês gastando 8k em mídia. Margem apertada, dono no limite.
+
+Não mexi no criativo. Não mexi no canal. Não mexi na oferta. Só olhei o atendimento e vi a recepção respondendo lead em 4 horas. Lead quente vira frio em 5 min. A clínica tava pagando ads pra entregar cliente pro concorrente.
+
+Implementei cadência de atendimento. Primeira resposta em até 5 minutos, dia e noite. Script de abertura pra recepção. 3 sessões de treino.
+
+45 dias depois, faturamento pulou pra 32k. Com o mesmo tráfego.
+
+Nos próximos slides, o caso completo. Arrasta. Posta DIAGNÓSTICO se quer a mesma análise no teu.`,
+
+    'C07': `Demanda vezes conversa é igual a venda.
+
+A equação que quase todo empresário ignora porque é mais fácil enxergar um lado só.
+
+Marketing tem número bonito no dashboard. Custo por lead, CTR, impressão, alcance. Tu olha, parece que tá indo bem.
+
+Comercial é opaco. Conversão é difícil de medir. Scripts não têm métrica. Ninguém documenta follow-up. Então tu ignora e fica no lado bonito.
+
+Quando um dos dois é zero, o outro não salva. 1000 leads sem comercial = 0 venda. 10 leads com comercial bom = 9 vendas. Matemática crua.
+
+Nos próximos slides eu mostro por que a maioria investe só num lado e como equilibrar.
+
+Arrasta. Posta DIAGNÓSTICO.`,
+
+    'C08': `Recap da semana. 3 Cs do Ciclo NG, revisitados.
+
+CAPTAR traz a demanda certa, com oferta clara e canal onde teu cliente tá.
+CONVERTER transforma o lead que entrou em dinheiro no caixa, com script, cadência e tempo de resposta afiado.
+CONSERVAR mantém quem já comprou pagando mais, comprando de novo, indicando pra outros.
+
+Os 3 rodam em ciclo, não em linha reta. CAPTAR alimenta CONVERTER. CONVERTER alimenta CONSERVAR. CONSERVAR devolve indicação pra CAPTAR. Quando um dos 3 para, o ciclo inteiro desacelera.
+
+Nos próximos slides, o diagnóstico de cada C com pergunta prática que tu consegue responder agora.
+
+Arrasta. Posta DIAGNÓSTICO (se tem negócio) ou LISTA (se tá construindo).`
+  };
+
+  // ===== TIPOGRAFIA CINEMATOGRÁFICA POR POST =====
+  const CINEMATIC_TYPOGRAPHY = {
+    'E01': {
+      briefing: 'Manifesto typographic poster — the founding thesis of Ciclo NG.',
+      typo: `MAIN TYPOGRAPHY (4 stacked lines, centered vertically, Space Grotesk Black, uppercase, line-height 1.0, font-size 90pt):
+
+Line 1: "MARKETING SEM COMERCIAL" — solid white #FFFFFF with subtle top-left rim light.
+Line 2: "É CUSTO." — "É" solid white, "CUSTO" in red #ff2e3f with SOFT GLOW HALO (red at 30% opacity, blur radius 45px).
+
+80px vertical breathing space.
+
+Line 3: "COMERCIAL SEM MARKETING" — solid white #FFFFFF with subtle rim light.
+Line 4: "É SORTE." — "É" solid white, "SORTE" in gold #f5c542 with SOFT GLOW HALO (gold at 25% opacity, blur radius 45px).`
+    },
+    'E02': {
+      briefing: 'Diagrammatic method poster — the 3 Cs of Ciclo NG.',
+      typo: `MAIN TYPOGRAPHY (3 stacked words, centered vertically, Space Grotesk Black, uppercase, line-height 1.3, font-size 120pt):
+
+Line 1: "CAPTAR" — red #ff2e3f with SOFT GLOW HALO (red at 30% opacity, blur radius 45px).
+Line 2: "CONVERTER" — solid white #FFFFFF with subtle rim light.
+Line 3: "CONSERVAR" — gold #f5c542 with SOFT GLOW HALO (gold at 25% opacity, blur radius 45px).
+
+Between each word, subtle circular arrow icon (12px, gray #555 at 50% opacity) pointing downward, suggesting the cycle repeats.
+
+SUBHEAD (centered, 80px below last word):
+"ou teu dinheiro vaza em um dos 3." in Inter Italic, 22pt, white at 70% opacity, lowercase.`
+    },
+    'E03': {
+      briefing: 'Dramatic data-hero poster about cold call timing failure.',
+      typo: `HERO NUMBER (centered, upper third):
+"8s" in Space Grotesk Black, red #ff2e3f with SOFT GLOW HALO (red at 35% opacity, blur radius 60px), font-size 380pt, occupies 45% of canvas vertical space.
+
+HEADLINE (below number, 60px gap, centered, Space Grotesk Bold, 42pt, uppercase, white with rim light):
+Line 1: "É O TEMPO QUE SUA COLD CALL"
+Line 2: "LEVA PRA MORRER."
+
+SUB-LINE (80px below, centered, Space Grotesk Black, 54pt, uppercase, white with rim light, letter-spacing 0.02em):
+"E VOCÊ SABE POR QUÊ."
+
+BOTTOM CTA (100px from bottom, left-aligned, 80px margin):
+"Comenta SCRIPT →" in Inter Regular, 22px, gold #f5c542 with subtle glow.`
+    },
+    'E04': {
+      briefing: 'Manifesto typographic poster about business vs. job title.',
+      typo: `MAIN TYPOGRAPHY (4 stacked lines, centered vertically, Space Grotesk Black, uppercase, line-height 1.0, font-size 85pt):
+
+Line 1: "SE SEU COMERCIAL" — solid white #FFFFFF with subtle top-left rim light.
+Line 2: "NÃO VENDE SEM VOCÊ," — same treatment.
+
+120px vertical gap (dramatic breathing space).
+
+Line 3: "VOCÊ NÃO TEM EMPRESA." — red #ff2e3f with SOFT GLOW HALO (red at 30% opacity, blur radius 45px).
+Line 4: "TEM CARGO." — white #FFFFFF with thin 3px underline in gold #f5c542 (underline has small glow halo at 20% opacity, blur 8px).`
+    },
+    'E05': {
+      briefing: 'Editorial case-study poster with dramatic number hero.',
+      typo: `TOP TAG (below top header, centered, 40px gap):
+"CASE · GRUPO NG · 2026" in JetBrains Mono, 16pt, uppercase, letter-spacing 0.25em, gold #f5c542 at 80% opacity.
+
+HERO NUMBER (centered, upper-middle):
+"+77%" in Space Grotesk Black, gold #f5c542 with SOFT GLOW HALO (gold at 35% opacity, blur radius 60px), font-size 420pt, letter-spacing -0.03em, occupies 50% of canvas.
+
+HEADLINE (below number, 80px gap, centered, Space Grotesk Bold, 58pt, uppercase, white with rim light):
+Line 1: "MESMO TRÁFEGO."
+Line 2: "ZERO A MAIS EM ADS."
+
+TAGLINE (80px below, italic, centered):
+"só ajustamos o CONVERTER." in Inter Italic, 22pt, white at 70% opacity — with "CONVERTER" in red #ff2e3f (not italic) with subtle red glow halo.`
+    },
+    'E06': {
+      briefing: 'Provocative manifesto poster for aspiring agency owners.',
+      typo: `PRIMARY LINE (centered, upper third):
+"todo mundo quer abrir agência." in Space Grotesk Medium Italic, 38pt, gray #888, lowercase.
+
+SECONDARY LINE (centered, middle, Space Grotesk Black, 75pt, uppercase, white with rim light, line-height 1.05):
+Line 1: "POUCOS ENTENDEM QUE"
+Line 2: "AGÊNCIA É EMPRESA."
+
+ACCENT ELEMENT (centered, 60px below):
+Horizontal dash 80px wide, 3px thick, gold #f5c542 with subtle glow halo.
+Below dash: "NÃO ATALHO." in Space Grotesk Black, 50pt, red #ff2e3f with SOFT GLOW HALO (blur 45px), uppercase, letter-spacing 0.05em.
+
+BOTTOM CTA (100px from bottom, left-aligned):
+"Comenta LISTA →" in Inter Regular, 22px, gold #f5c542 with subtle glow.`
+    },
+    'E07': {
+      briefing: 'Diagrammatic split-screen poster about dor vs. produto copywriting.',
+      typo: `MAIN LAYOUT (vertical split divided by thin 1px gold #f5c542 line with subtle glow, running through canvas center):
+
+LEFT HALF (540x1350):
+Small top label "ERRADO" in JetBrains Mono, 14pt, red #ff2e3f, uppercase, letter-spacing 0.2em, 120px from top.
+Centered below: "PRODUTO" in Space Grotesk Black, 120pt, gray #555 (muted, intentionally dull — NO glow).
+
+RIGHT HALF (540x1350):
+Small top label "CERTO" in JetBrains Mono, 14pt, gold #f5c542, uppercase, letter-spacing 0.2em, 120px from top.
+Centered below: "DOR" in Space Grotesk Black, 180pt, red #ff2e3f with SOFT GLOW HALO (blur 60px).
+
+BOTTOM FULL-WIDTH (below split, 180px from bottom, centered, Space Grotesk Bold, 28pt, uppercase, white with rim light):
+"CRIATIVO BOM BATE NO PROBLEMA, NÃO NA SOLUÇÃO."
+
+BOTTOM CTA: "Comenta CRIATIVO →" Inter Regular gold 20px, bottom-left.`
+    },
+    'E08': {
+      briefing: 'Book-quote style editorial reflection about business owners and bad clients.',
+      typo: `MAIN TYPOGRAPHY (centered vertically, 4 lines in 2 blocks, Space Grotesk Medium, 52pt, white #FFFFFF with subtle rim light, mixed case):
+
+Block 1 (upper):
+Line 1: "Empresário que reclama"
+Line 2: "de cliente ruim"
+
+Generous vertical gap 160px. Thin horizontal line in gold #f5c542, 80px wide, centered between blocks, with subtle glow halo.
+
+Block 2 (lower):
+Line 3: "esqueceu que foi ele"
+Line 4: "quem vendeu pro cliente ruim." — with "pro cliente ruim" in red #ff2e3f with SOFT GLOW HALO (blur 40px).`
+    },
+    'E09': {
+      briefing: 'Editorial data dashboard contrasting sales response times.',
+      typo: `BLOCK 1 (top third, dark red fill #c41e2d with subtle outer glow 20px red, 960px wide, 380px tall, centered):
+Inner label top-left: "LEAD QUENTE ESFRIA EM" in Space Grotesk Bold, white, 22pt, uppercase, letter-spacing 0.1em.
+Inner huge number centered: "5 MIN" in Space Grotesk Black, white, 220pt.
+
+60px gap between blocks.
+
+BLOCK 2 (middle, black fill #0a0a0a with 1px gold #f5c542 border, same size):
+Inner label top-left: "SUA RECEPÇÃO RESPONDE EM" in Space Grotesk Bold, gold, 22pt, uppercase, letter-spacing 0.1em.
+Inner huge number centered: "4h" in Space Grotesk Black, gold #f5c542 with subtle glow halo, 220pt.
+
+BOTTOM LINE (centered, 100px below block 2, Space Grotesk Black, 68pt, white with rim light, uppercase, letter-spacing 0.08em):
+"FAZ A CONTA."
+
+BOTTOM CTA: "Comenta DIAGNÓSTICO →" Inter Regular red #ff2e3f 20px, bottom-left.`
+    },
+    'E10': {
+      briefing: 'Personal confessional poster for aspirational audience — diary feel.',
+      typo: `TOP-RIGHT TAG: "— diário de quem construiu do zero" in Inter Italic, 15pt, gray #888, positioned top-right with 80px margin.
+
+MAIN TYPOGRAPHY (centered, 5 lines):
+
+Line 1: "o que me tirou do zero" — Space Grotesk Medium, 40pt, white with rim light, lowercase.
+Line 2: "não foi talento." — same.
+
+100px vertical gap.
+
+Line 3: "FOI REPETIR O CICLO" — Space Grotesk Black, 72pt, red #ff2e3f with SOFT GLOW HALO (blur 45px), uppercase.
+Line 4: "SEM DESISTIR." — Space Grotesk Black, 72pt, gold #f5c542 with SOFT GLOW HALO (blur 45px), uppercase.
+
+BOTTOM CTA: "Comenta LISTA →" Inter Regular gold 20px, bottom-left.`
+    },
+    'E11': {
+      briefing: 'Data-hero editorial poster about where businesses actually fail.',
+      typo: `HERO NUMBER (centered, upper-middle):
+"90%" in Space Grotesk Black, red #ff2e3f with SOFT GLOW HALO (red at 35% opacity, blur radius 60px), 480pt, occupies 45% of canvas.
+
+HEADLINE (below number, centered, Space Grotesk Bold, 56pt, white with rim light, uppercase):
+Line 1: "DOS NEGÓCIOS QUEBRAM"
+Line 2: "NO CONVERTER."
+
+SUB-LINE (80px below, italic, centered):
+"não no CAPTAR." in Inter Italic, 24pt, gold #f5c542 with subtle glow, lowercase.
+
+BOTTOM CTA: "Comenta DIAGNÓSTICO →" Inter Regular white 20px, bottom-left.`
+    },
+    'E12': {
+      briefing: 'Editorial equation poster — the core math of sales.',
+      typo: `HERO EQUATION (centered, single horizontal line, Space Grotesk Black, 100pt, uppercase, letter-spacing -0.01em):
+"DEMANDA" red #ff2e3f with SOFT GLOW HALO — " × " gold #f5c542 (size 120pt, larger) with glow — "CONVERSA" solid white with rim light — " = " gold #f5c542 (120pt) with glow — "VENDA" gold #f5c542 with SOFT GLOW HALO.
+
+140px vertical gap.
+
+SUB-HEADLINE (centered, 2 stacked lines):
+Line 1: "SE UM FATOR É ZERO," Space Grotesk Bold, 48pt, white with rim light, uppercase.
+Line 2: "TUDO É ZERO." with "ZERO" in red #ff2e3f with SOFT GLOW HALO, whole line in Space Grotesk Black 72pt (larger emphasis) uppercase.
+
+BOTTOM CTA: "Comenta DIAGNÓSTICO →" Inter Regular gold 20px, bottom-left.`
+    },
+    'E13': {
+      briefing: 'Cutting editorial sentence poster about scale vs. structure.',
+      typo: `MAIN TYPOGRAPHY (3 stacked lines, centered vertically, Space Grotesk Black, uppercase, line-height 1.1, font-size 78pt):
+
+Line 1: "TODO MUNDO QUER ESCALAR." — solid white with rim light.
+
+120px vertical gap.
+
+Line 2: "POUCOS QUEREM ESTRUTURAR." — red #ff2e3f with SOFT GLOW HALO (blur 45px).
+
+100px vertical gap.
+
+Line 3: "POR ISSO A MAIORIA QUEBRA." — gold #f5c542 with subtle glow halo, 48pt (smaller).`
+    },
+    'E14': {
+      briefing: 'Premium checklist poster for self-diagnosis in 3 questions.',
+      typo: `TOP TAG (below main top header, 60px gap, centered):
+"DIAGNÓSTICO EM 3 PERGUNTAS" in JetBrains Mono, 18pt, gold #f5c542 with subtle glow, uppercase, letter-spacing 0.2em.
+
+QUESTION LIST (centered vertically, 3 numbered lines, generous spacing 80px between each):
+
+Line 1: "1." in Space Grotesk Black, red #ff2e3f with glow halo, 60pt — followed by "TÁ CHEGANDO LEAD?" in Space Grotesk Bold, white with rim light, 60pt, uppercase. Below: "(CAPTAR)" in Inter Italic, 18pt, gold #f5c542.
+
+Line 2: "2." red with glow — "TÁ FECHANDO VENDA?" white with rim light. Below: "(CONVERTER)" gold italic.
+
+Line 3: "3." red with glow — "TÁ VOLTANDO CLIENTE?" white with rim light. Below: "(CONSERVAR)" gold italic.
+
+FOOTNOTE (centered, 100px below list):
+"se respondeu NÃO pra alguma, precisamos conversar." in Inter Italic, 22pt, gold #f5c542 with subtle glow, lowercase.
+
+BOTTOM CTA: "Comenta DIAGNÓSTICO →" Inter Regular red #ff2e3f 20px, bottom-left.`
+    },
+    'E15': {
+      briefing: 'Counter-statement manifesto poster — method over agency.',
+      typo: `MAIN TYPOGRAPHY (Space Grotesk Black, uppercase, 4 stacked lines, centered):
+
+Block 1 (upper):
+Line 1: "VOCÊ NÃO PRECISA" — solid white with rim light, 70pt.
+Line 2: "DE AGÊNCIA." — solid white with rim light, 70pt.
+
+Vertical gap 160px.
+
+Block 2 (lower):
+Line 3: "VOCÊ PRECISA" — gold #f5c542 with SOFT GLOW HALO (blur 45px), 70pt.
+Line 4: "DE MÉTODO." — red #ff2e3f with SOFT GLOW HALO (stronger, blur 55px), 80pt (larger for emphasis).
+
+BOTTOM CTA: "Comenta LISTA →" Inter Regular gold 20px, bottom-left.`
+    },
+    'E16': {
+      briefing: 'Word-hero editorial poster about sales follow-up.',
+      typo: `HERO WORD (centered, full width minus 80px margins):
+"FOLLOW-UP" in Space Grotesk Black, red #ff2e3f with SOFT GLOW HALO (red at 35% opacity, blur radius 60px), 220pt, uppercase, stretched edge-to-edge.
+
+STATEMENT BLOCK (centered, 100px gap below hero, white with rim light, uppercase, line-height 1.0):
+Line 1: "NÃO É CHATEAÇÃO." Space Grotesk Bold, 72pt.
+Line 2: "É RESPEITO." Space Grotesk Black, 72pt.
+
+TAGLINE (centered, 80px below, italic):
+"— pelo lead que já te deu atenção." Inter Italic, 20pt, gold #f5c542 with subtle glow, lowercase.
+
+BOTTOM CTA: "Comenta SCRIPT →" Inter Regular gold 20px, bottom-left.`
+    },
+    'E17': {
+      briefing: 'Corrective editorial poster with visual strikethrough.',
+      typo: `LEAD-IN LINE (centered, upper third):
+"TEU NEGÓCIO NÃO TEM" in Space Grotesk Bold, white with rim light, 36pt, uppercase.
+
+STRIKETHROUGH BLOCK (centered, 40px below):
+"PROBLEMA DE VENDA." in Space Grotesk Black, gray #555 (muted), 82pt, uppercase — with a 3px diagonal line in red #ff2e3f with subtle glow halo crossing through it from bottom-left to top-right at 15-degree angle.
+
+REPLACEMENT BLOCK (centered, 80px below):
+"PROBLEMA DE SISTEMA." in Space Grotesk Black, white with rim light, 82pt, uppercase.
+
+FOOTNOTE (80px below):
+"e sistema se constrói." Inter Italic, 22pt, gold #f5c542 with subtle glow, lowercase.
+
+BOTTOM CTA: "Comenta DIAGNÓSTICO →" Inter Regular red #ff2e3f 20px, bottom-left.`
+    },
+    'E18': {
+      briefing: 'Meditative minimalist poster — NO RED, only gold (deliberately quieter).',
+      typo: `MAIN TYPOGRAPHY (3 stacked lines, centered vertically with generous breathing, Space Grotesk, uppercase, line-height 1.15):
+
+Line 1: "PARAR DE ESPERAR" — Space Grotesk Bold, white with rim light, 72pt.
+Line 2: "O MOMENTO CERTO" — Space Grotesk Bold, white with rim light, 72pt.
+
+Vertical gap 180px (deliberate deep breath).
+
+Line 3: "É O MOMENTO CERTO." — Space Grotesk Black, gold #f5c542 with SOFT GLOW HALO (blur 50px), 88pt (larger emphasis).
+
+BOTTOM CTA: "Comenta LISTA →" Inter Regular gold 20px, bottom-left.
+
+IMPORTANT OVERRIDE: NO RED in this piece — deliberately quieter. Only black, white, and gold. The color palette at the end should say "Red NOT used in this piece" — skip red entirely.`
+    },
+    'E19': {
+      briefing: 'Reflective two-block editorial revelation about leads.',
+      typo: `BLOCK 1 (upper third, centered, Space Grotesk Black, 82pt, uppercase, white with rim light):
+"LEAD NÃO É NÚMERO."
+
+DIVIDER:
+Horizontal line 1px thick in red #ff2e3f with subtle glow halo, 300px wide, centered, 60px below block 1.
+
+BLOCK 2 (lower third, centered, 60px below divider, Space Grotesk Bold, 62pt, uppercase, gold #f5c542 with SOFT GLOW HALO):
+Line 1: "É CONVERSA"
+Line 2: "QUE AINDA NÃO ACONTECEU."`
+    },
+    'E20': {
+      briefing: 'Ritualistic weekly closing poster with circular motif.',
+      typo: `BACKGROUND OVERLAY: a large circular outline (stroke 1.5px, gold #f5c542 at 30% opacity with subtle glow halo) occupying 75% of canvas width, perfectly centered, no fill — suggests the CICLO visually without dominating.
+
+TOP TAG (top-center, above circle, below main top header):
+"SEMANA 3 / 90 · CICLO NG" in JetBrains Mono, 14pt, gray #888, uppercase, letter-spacing 0.2em.
+
+MAIN TYPOGRAPHY (centered inside the circle, 3 stacked lines, Space Grotesk Black, uppercase):
+
+Line 1: "O CICLO GIRA." — solid white with rim light, 72pt.
+
+60px gap.
+
+Line 2: "OU VOCÊ GIRA COM ELE," — solid white, 48pt.
+Line 3: "OU ELE GIRA SEM VOCÊ." — red #ff2e3f with SOFT GLOW HALO (blur 45px), 60pt (emphasis), uppercase.
+
+BOTTOM CTA (centered):
+"Comenta DIAGNÓSTICO (PME) · LISTA (aspirante)" in Inter Regular, 18pt, gold #f5c542 with subtle glow.`
+    },
+    'C01': {
+      briefing: 'Editorial carousel cover slide 1 of 8 — first pillar of Ciclo NG (CAPTAR).',
+      typo: `TOP-RIGHT INDICATOR: "1/3" in JetBrains Mono, 18pt, gold #f5c542 with subtle glow, bold, top-right with 80px margin.
+
+HERO WORD (centered, upper-middle):
+"CAPTAR" in Space Grotesk Black, red #ff2e3f with SOFT GLOW HALO (red at 35% opacity, blur radius 60px), 380pt, uppercase, occupies 55% of canvas.
+
+SUBHEAD (below hero, centered):
+"o primeiro C do Ciclo NG" in Inter Italic, 28pt, white with rim light, lowercase.
+
+PROMISE (80px below subhead, centered, Space Grotesk Bold, 32pt, uppercase, line-height 1.1):
+Line 1: "6 AJUSTES QUE DOBRAM TEU TRÁFEGO" — solid white with rim light.
+Line 2: "SEM GASTAR MAIS." — gold #f5c542 with SOFT GLOW HALO.
+
+BOTTOM INDICATORS:
+Bottom-left: "ARRASTE →" Inter Regular, gold #f5c542, 18pt, uppercase, letter-spacing 0.15em.
+Bottom-center: "1/8" JetBrains Mono 14pt white 50%.`
+    },
+    'C02': {
+      briefing: 'Editorial carousel cover slide 1 of 9 — second pillar (CONVERTER), the bottleneck.',
+      typo: `TOP-RIGHT INDICATOR: "2/3" in JetBrains Mono, 18pt, gold #f5c542 bold, top-right.
+
+HERO WORD (centered, upper-middle):
+"CONVERTER" in Space Grotesk Black, solid white #FFFFFF with rim light, 280pt, uppercase, occupies 55% of canvas.
+OVERLAY: 4px diagonal line in red #ff2e3f with SOFT GLOW HALO (blur 20px) crossing through the word from bottom-left to top-right, at 15-degree angle.
+
+SUBHEAD (below hero, centered):
+"o C onde 90% vaza dinheiro." in Inter Italic, 28pt, gold #f5c542 with subtle glow, lowercase.
+
+PROMISE (centered, 80px below):
+Line 1: "7 AJUSTES NO TEU" Space Grotesk Bold, 36pt, white with rim light, uppercase.
+Line 2: "COMERCIAL." red #ff2e3f with SOFT GLOW HALO.
+
+BOTTOM INDICATORS:
+Bottom-left: "ARRASTE →" Inter Regular gold 18pt uppercase.
+Bottom-center: "1/9" JetBrains Mono 14pt white 50%.`
+    },
+    'C03': {
+      briefing: 'Editorial carousel cover slide 1 of 8 — the forgotten pillar (CONSERVAR).',
+      typo: `TOP-RIGHT INDICATOR: "3/3" JetBrains Mono 18pt gold bold top-right.
+
+HERO WORD (centered):
+"CONSERVAR" in Space Grotesk Black, gold #f5c542 with SOFT GLOW HALO (gold at 35%, blur 60px), 280pt, uppercase.
+
+SUBHEAD (below hero, centered):
+"o C esquecido. e o mais lucrativo." in Inter Italic, 28pt, white at 70% opacity, lowercase.
+
+PROMISE (centered, 80px below):
+Line 1: "6 TÁTICAS DE LTV" Space Grotesk Bold 36pt white with rim light uppercase.
+Line 2: "E INDICAÇÃO." red #ff2e3f with SOFT GLOW HALO.
+
+BOTTOM INDICATORS: "ARRASTE →" gold bottom-left. "1/8" bottom-center.`
+    },
+    'C04': {
+      briefing: 'Personal diary carousel cover (slide 1 of 10) for aspirational audience.',
+      typo: `TOP HEADER OVERRIDE: replace "YURI GARCIA / MARKETING + VENDAS" with "YURI GARCIA / DIÁRIO DO CONSTRUTOR" — same styling (JetBrains Mono 18pt uppercase letter-spacing 0.15em white 40% opacity top-left).
+
+MAIN TYPOGRAPHY (centered vertically, 2 stacked lines, Space Grotesk Black, uppercase, line-height 1.0):
+Line 1: "COMO CONSTRUÍ" — solid white with rim light, 90pt.
+Line 2: "O GRUPO NG" — gold #f5c542 with SOFT GLOW HALO (blur 50px), 90pt.
+
+SUBHEAD (80px below, centered, italic):
+"(e os 5 erros caros que te evito.)" in Inter Italic, 26pt, red #ff2e3f with subtle glow, lowercase.
+
+DECORATIVE ELEMENT:
+Thin 1px horizontal line in gold #f5c542 with subtle glow halo, 120px wide, centered, 100px below subhead.
+
+BOTTOM TAG (centered):
+"pra quem quer construir no digital" in Inter Italic, 16pt, white 60% opacity.
+
+BOTTOM INDICATORS: "ARRASTE →" gold bottom-left. "1/10" bottom-center.`
+    },
+    'C05': {
+      briefing: 'Manifesto carousel cover slide 1 of 9 — 7 lies of digital marketing.',
+      typo: `HERO NUMBER (centered, upper third):
+"7" in Space Grotesk Black, red #ff2e3f with SOFT GLOW HALO (red at 40%, blur 70px), 520pt, occupies 40% of canvas.
+
+HEADLINE (centered below number):
+Line 1: "MENTIRAS" in Space Grotesk Black, solid white with rim light, 110pt, uppercase.
+Line 2: "DO MARKETING DIGITAL" in Space Grotesk Bold, white with rim light, 48pt, uppercase.
+
+SUBHEAD (80px below, italic):
+"que você ainda acredita." in Inter Italic, 24pt, gold #f5c542 with subtle glow, lowercase.
+
+BOTTOM INDICATORS: "ARRASTE →" gold bottom-left. "1/9" bottom-center.`
+    },
+    'C06': {
+      briefing: 'Case study carousel cover slide 1 of 8 with dramatic data headline.',
+      typo: `TOP TAG (below main top header, centered):
+"CASE · GRUPO NG · 2026" in JetBrains Mono, 16pt, gold #f5c542 with subtle glow, uppercase, letter-spacing 0.25em.
+
+HERO NUMBER (centered, upper-middle):
+"+77%" in Space Grotesk Black, gold #f5c542 with SOFT GLOW HALO (gold at 40%, blur 70px), 420pt, occupies 45% of canvas.
+
+HEADLINE (below number, centered, Space Grotesk Bold, 56pt, white with rim light, uppercase):
+Line 1: "SEM GASTAR 1 REAL"
+Line 2: "A MAIS EM TRÁFEGO."
+
+SUBHEAD (80px below, italic):
+"o que eu mudei." in Inter Italic, 24pt, red #ff2e3f with subtle glow, lowercase.
+
+BOTTOM INDICATORS: "ARRASTE →" gold bottom-left. "1/8" bottom-center.`
+    },
+    'C07': {
+      briefing: 'Mathematical equation carousel cover slide 1 of 7.',
+      typo: `HERO EQUATION (centered, single horizontal line, Space Grotesk Black, 90pt, uppercase, letter-spacing -0.01em):
+"DEMANDA" red #ff2e3f with SOFT GLOW HALO — " × " gold #f5c542 (size 110pt, larger) with glow — "CONVERSA" solid white with rim light — " = " gold #f5c542 (110pt) with glow — "VENDA" gold #f5c542 with SOFT GLOW HALO.
+
+140px vertical gap.
+
+SUB-HEADLINE (centered, 2 stacked lines):
+Line 1: "SE UM FATOR É ZERO," Space Grotesk Bold, 48pt, white with rim light, uppercase.
+Line 2: "TUDO É ZERO." Space Grotesk Black, 72pt (larger emphasis), gold #f5c542 with SOFT GLOW HALO, uppercase.
+
+BOTTOM INDICATORS: "ARRASTE →" gold bottom-left. "1/7" bottom-center.`
+    },
+    'C08': {
+      briefing: 'Ritualistic weekly recap carousel cover slide 1 of 6 with circular motif.',
+      typo: `BACKGROUND OVERLAY: large circular outline (stroke 1.5px, gold #f5c542 at 25% opacity with subtle glow) occupying 80% of canvas width, centered, no fill.
+
+TOP TAG (top-center, above circle):
+"RECAP · SEMANA X · CICLO NG" in JetBrains Mono, 14pt, gray #888, uppercase, letter-spacing 0.2em.
+
+MAIN TYPOGRAPHY (centered inside the circular overlay, 3 stacked words, Space Grotesk Black, uppercase, line-height 1.3, font-size 110pt):
+
+Line 1: "CAPTAR" — red #ff2e3f with SOFT GLOW HALO.
+Line 2: "CONVERTER" — solid white with rim light.
+Line 3: "CONSERVAR" — gold #f5c542 with SOFT GLOW HALO.
+
+Between each word, tiny circular arrow icon (10px, gray #555 at 50% opacity) pointing downward.
+
+SUBHEAD (80px below last word):
+"os 3 Cs que mantém teu dinheiro." in Inter Italic, 26pt, white with rim light, lowercase.
+
+BOTTOM INDICATORS: "ARRASTE →" gold bottom-left. "1/6" bottom-center.`
+    }
+  };
+
+  function buildCinematicPrompt(code) {
+    const d = CINEMATIC_TYPOGRAPHY[code];
+    if (!d) return null;
+    return `Create a CINEMATIC Instagram feed post, 1080x1350px (4:5), for Yuri Garcia. ${d.briefing} Cinema-grade atmosphere, V4 Company visual aesthetic, dramatic lighting, editorial depth.
+
+BACKGROUND (cinematic depth, NOT flat):
+Deep black with subtle radial gradient: #141414 at center fading to #050505 at the edges. Strong vignette darkening all 4 corners by 30%. Heavy organic film grain at 8% opacity throughout. Barely visible dust particles like a 35mm film still. Subtle atmospheric lighting from top-left (imagined soft key light).
+
+TOP HEADER:
+"YURI GARCIA / MARKETING + VENDAS" in JetBrains Mono, 18pt, uppercase, letter-spacing 0.15em, white at 40% opacity, top-left with 80px margin from edges.
+
+${d.typo}
+
+RIM LIGHT EFFECT:
+All white text appears slightly lit from top-left, as if a photography studio key light caught the edges. Very subtle — creates cinematic depth without looking 3D.
+
+BOTTOM SIGNATURE:
+Bottom-left: "— YURI GARCIA" in Inter Regular italic, 16pt, white #FFFFFF.
+Bottom-right: "@oyuri.garcia" in JetBrains Mono, lowercase, 14pt, letter-spacing 0.05em, white at 50% opacity.
+
+STYLE REFERENCE (mandatory atmosphere):
+V4 Company Instagram aesthetic. Cinematic depth like Christopher Nolan movie posters. Film grain quality like Kodak Portra 800 pushed +1 stop. Monocle magazine typography treatment but with atmospheric depth. Bloomberg Terminal meets cinema.
+
+COLOR PALETTE STRICTLY:
+Cinematic blacks (#050505 to #141414 radial gradient), White #FFFFFF, Red #ff2e3f (with glow halo), Gold #f5c542 (with subtle glow).
+NO other colors, NO 3D rendering, NO illustrations, NO photos, NO emojis. YES to: film grain, vignette, subtle glow halos, rim light on text edges.
+
+DELIVERABLE: 1080x1350px PNG, cinematic editorial poster quality.`;
+  }
+
+  // Injeta legenda + substitui prompt cinematográfico em cada estático/carrossel
+  document.querySelectorAll('#estaticos .formato').forEach(function(el) {
+    var nameEl = el.querySelector('.formato-name');
+    if (!nameEl) return;
+    var m = nameEl.textContent.match(/^\s*(E\d+|C\d+)/);
+    if (!m) return;
+    var code = m[1].toUpperCase();
+    var legenda = LEGENDAS[code];
+    var cinematicPrompt = buildCinematicPrompt(code);
+
+    var prompt = el.querySelector('.roteiro-caption');
+    if (!prompt) return;
+
+    // Substitui o conteúdo do prompt pela versão cinematográfica
+    if (cinematicPrompt) {
+      prompt.textContent = cinematicPrompt;
+    }
+
+    if (!legenda) return;
+
+    // Wrap prompt com label
+    var promptLabel = document.createElement('p');
+    promptLabel.style.cssText = 'font-size:11px; text-transform:uppercase; letter-spacing:0.1em; color:var(--text-muted); font-weight:700; margin:20px 0 8px;';
+    promptLabel.textContent = 'PROMPT GEMINI · CINEMATOGRÁFICO';
+
+    // Cria details com legenda
+    var details = document.createElement('details');
+    details.className = 'legenda';
+    details.innerHTML = '<summary>Ver legenda do post</summary><div class="legenda-text"></div>';
+    details.querySelector('.legenda-text').textContent = legenda;
+
+    // Insere antes do prompt: details + promptLabel
+    prompt.parentNode.insertBefore(details, prompt);
+    prompt.parentNode.insertBefore(promptLabel, prompt);
   });
 
   // Reset
