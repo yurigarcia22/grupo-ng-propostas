@@ -1257,8 +1257,28 @@
             <div class="check-item">Ajustes ilimitados durante o mês</div>
           </div>
         </div>
-        <div>
-          <div class="modulo-card rec">
+        <div style="display:flex; align-items:center; justify-content:center;">
+          <div id="btn-revelar-wrap" style="text-align:center;">
+            <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">Pronto para ver o investimento?</p>
+            <button id="btn-revelar" onclick="revelarInvestimento()" style="
+              background: linear-gradient(135deg, var(--blue), var(--cyan));
+              color:#fff;
+              border:none;
+              border-radius:12px;
+              padding:18px 40px;
+              font-size:17px;
+              font-weight:800;
+              font-family:'Inter',sans-serif;
+              letter-spacing:-0.3px;
+              cursor:pointer;
+              box-shadow: 0 8px 32px rgba(37,99,235,0.4);
+              transition: transform .15s, box-shadow .15s;
+            " onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 12px 40px rgba(37,99,235,0.55)';"
+               onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px rgba(37,99,235,0.4)';">
+              Ver Investimento
+            </button>
+          </div>
+          <div id="card-investimento" class="modulo-card rec" style="display:none; opacity:0; transition: opacity .5s ease;">
             <div class="rec-tag">Plano recomendado</div>
             <h4 style="font-size:18px; font-weight:800; margin-bottom:8px;">Plano Growth Loop</h4>
             <div style="margin: 8px 0 16px;">
@@ -1403,6 +1423,14 @@
   });
 
   update();
+
+  function revelarInvestimento() {
+    const btn = document.getElementById('btn-revelar-wrap');
+    const card = document.getElementById('card-investimento');
+    btn.style.display = 'none';
+    card.style.display = 'block';
+    requestAnimationFrame(() => { card.style.opacity = '1'; });
+  }
 </script>
 </body>
 </html>
