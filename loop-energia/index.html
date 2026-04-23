@@ -1290,6 +1290,22 @@
               <p style="font-size:12px; color:var(--muted); margin-bottom:8px;"><strong style="color:var(--blue);">Sem fidelidade.</strong> Contrato mensal. Sai quando quiser.</p>
               <p style="font-size:12px; color:var(--muted);"><strong style="color:var(--blue);">Sem taxa de setup.</strong> Primeiro mês já é de implementação.</p>
             </div>
+            <button onclick="ocultarInvestimento()" style="
+              margin-top:16px;
+              background:transparent;
+              color:var(--muted);
+              border:1px solid var(--border);
+              border-radius:8px;
+              padding:8px 20px;
+              font-size:12px;
+              font-family:'Inter',sans-serif;
+              cursor:pointer;
+              width:100%;
+              transition: border-color .15s, color .15s;
+            " onmouseover="this.style.borderColor='var(--blue)'; this.style.color='var(--blue)';"
+               onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--muted)';">
+              Ocultar
+            </button>
           </div>
         </div>
       </div>
@@ -1430,6 +1446,16 @@
     btn.style.display = 'none';
     card.style.display = 'block';
     requestAnimationFrame(() => { card.style.opacity = '1'; });
+  }
+
+  function ocultarInvestimento() {
+    const btn = document.getElementById('btn-revelar-wrap');
+    const card = document.getElementById('card-investimento');
+    card.style.opacity = '0';
+    setTimeout(() => {
+      card.style.display = 'none';
+      btn.style.display = 'block';
+    }, 500);
   }
 </script>
 </body>
