@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planejamento Loop Energia — Grupo NG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --blue:    #3b82f6;
+    --cyan:    #06b6d4;
+    --amber:   #f59e0b;
+    --yellow:  #eab308;
+    --dark:    #0D1117;
+    --dark2:   #161B22;
+    --dark3:   #21262D;
+    --border:  #30363D;
+    --text:    #E6EDF3;
+    --muted:   #8B949E;
+    --white:   #FFFFFF;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  #counter {
+    position: fixed;
+    bottom: 24px; right: 32px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    position: fixed;
+    bottom: 20px;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .nav-btn:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+  #btn-prev { right: 120px; }
+  #btn-next { right: 68px; }
+
+  #dots {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--blue); width: 20px; border-radius: 3px; }
+
+  #slides { width: 100%; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+    padding: 60px 80px;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .slide-inner { max-width: 1100px; width: 100%; }
+
+  /* COVER */
+  .cover {
+    background: radial-gradient(ellipse at 30% 50%, #0a0f1e 0%, var(--dark) 70%);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(234,179,8,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.35);
+    color: var(--blue);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .cover h1 {
+    font-size: 78px;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+  .cover h1 span {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover h1 .sun {
+    background: linear-gradient(135deg, var(--yellow), var(--amber));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover .subtitle {
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cover-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ctag {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 16px;
+  }
+  .slide-title {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+  }
+  .slide-title span {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-title .sun {
+    background: linear-gradient(135deg, var(--yellow), var(--amber));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 30px;
+    max-width: 720px;
+  }
+  .divider {
+    width: 48px; height: 4px;
+    background: linear-gradient(90deg, var(--blue), var(--cyan));
+    border-radius: 2px;
+    margin: 20px 0;
+  }
+
+  /* CARDS */
+  .cards { display: grid; gap: 14px; }
+  .cards-2 { grid-template-columns: repeat(2,1fr); }
+  .cards-3 { grid-template-columns: repeat(3,1fr); }
+  .cards-4 { grid-template-columns: repeat(4,1fr); }
+
+  .card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(59,130,246,0.4); }
+  .card.highlight {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(6,182,212,0.04));
+    border-color: rgba(59,130,246,0.28);
+  }
+  .card.sun {
+    background: linear-gradient(135deg, rgba(234,179,8,0.1), rgba(245,158,11,0.04));
+    border-color: rgba(234,179,8,0.28);
+  }
+  .card-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .card .card-num {
+    font-size: 44px; font-weight: 900; line-height: 1; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* LIST ITEMS */
+  .list { display: flex; flex-direction: column; gap: 12px; }
+  .list-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .list-item:hover { border-color: rgba(59,130,246,0.3); }
+  .li-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0; margin-top: 2px;
+  }
+  .li-icon.blue  { background: rgba(59,130,246,0.14); }
+  .li-icon.cyan  { background: rgba(6,182,212,0.14); }
+  .li-icon.amber { background: rgba(245,158,11,0.14); }
+  .li-icon.red   { background: rgba(239,68,68,0.14); }
+  .list-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .list-item p  { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+
+  /* TWO COL */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; align-items: start;
+  }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step  { display: flex; align-items: flex-start; gap: 14px; }
+  .step-num {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; flex-shrink: 0; color: #fff;
+  }
+  .step-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .step-content p  { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+  /* PILLS */
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .pill { padding: 5px 12px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+  .pill.blue  { background: rgba(59,130,246,0.13);  color: var(--blue);  border: 1px solid rgba(59,130,246,0.3); }
+  .pill.cyan  { background: rgba(6,182,212,0.13);   color: var(--cyan);  border: 1px solid rgba(6,182,212,0.3); }
+  .pill.amber { background: rgba(245,158,11,0.13);  color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .pill.red   { background: rgba(239,68,68,0.13);   color: #ef4444;      border: 1px solid rgba(239,68,68,0.3); }
+
+  /* QUOTE */
+  .quote-block {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--blue);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 22px;
+    margin: 12px 0;
+  }
+  .quote-block p { font-size: 15px; font-style: italic; line-height: 1.6; }
+  .quote-block .author { font-size: 11px; color: var(--muted); margin-top: 8px; font-style: normal; }
+
+  /* BIG STAT */
+  .stat-row { display: flex; gap: 14px; }
+  .big-stat {
+    flex: 1; text-align: center; padding: 22px 16px;
+    background: var(--dark2); border: 1px solid var(--border); border-radius: 14px;
+  }
+  .big-stat .number {
+    font-size: 48px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .big-stat .label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* FASE HERO */
+  .fase-hero {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(6,182,212,0.04));
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .fase-hero .num {
+    font-size: 60px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .fase-hero h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .fase-hero p  { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 720px; }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13.5px; color: var(--text); line-height: 1.5;
+  }
+  .check-item::before {
+    content: "✓"; color: var(--blue); font-weight: 800; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* DORE */
+  .dor-big {
+    background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(245,158,11,0.04));
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 18px;
+  }
+  .dor-big .dor-icon { font-size: 38px; margin-bottom: 10px; }
+  .dor-big h2 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+  .dor-big p  { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 720px; }
+
+  /* RESULT BADGE */
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: var(--blue);
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    margin-top: 14px;
+  }
+
+  /* MODULO CARD / INVESTIMENTO */
+  .modulo-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .modulo-card.rec {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(6,182,212,0.04));
+    border-color: rgba(59,130,246,0.35);
+  }
+  .modulo-card .rec-tag {
+    display: inline-block;
+    background: var(--blue); color: #fff;
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 10px;
+  }
+
+  /* CLOSE */
+  .close-slide { text-align: center; }
+  .close-slide h2 {
+    font-size: 60px; font-weight: 900; line-height: 1;
+    letter-spacing: -2px; margin-bottom: 22px;
+  }
+  .close-slide h2 span {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .close-slide p {
+    font-size: 19px; color: var(--muted);
+    max-width: 520px; margin: 0 auto 36px; line-height: 1.6;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    color: #fff; padding: 14px 32px; border-radius: 12px;
+    font-size: 15px; font-weight: 800; border: none; cursor: pointer;
+  }
+
+  /* METODOLOGIA FASES */
+  .metodologia-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .meto-item {
+    text-align: center;
+    padding: 18px 14px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: all 0.2s;
+  }
+  .meto-item .meto-icon {
+    font-size: 28px; margin-bottom: 10px;
+  }
+  .meto-item h4 { font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+  .meto-item p  { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  /* ========= MOBILE RESPONSIVO ========= */
+  @media (max-width: 768px) {
+    body { overflow-y: auto; height: auto; }
+    #slides { height: auto; position: relative; }
+
+    .slide {
+      position: relative;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: all !important;
+      padding: 36px 18px 90px;
+      height: auto;
+      min-height: 100svh;
+      display: none;
+      align-items: flex-start;
+    }
+    .slide.active { display: flex; }
+
+    #dots { bottom: 16px; }
+    .nav-btn { bottom: 12px; }
+    #btn-prev { right: 100px; }
+    #btn-next { right: 52px; }
+    #counter { bottom: 18px; right: 16px; }
+
+    .cover h1 { font-size: 40px; letter-spacing: -1.5px; }
+    .cover .subtitle { font-size: 14px; }
+    .cover-tags { gap: 7px; }
+    .ctag { font-size: 11px; padding: 6px 11px; }
+
+    .slide-title { font-size: 28px; letter-spacing: -0.5px; }
+    .slide-desc  { font-size: 14px; margin-bottom: 20px; }
+    .section-label { font-size: 10px; }
+
+    .cards-3, .cards-4, .cards-2 { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; gap: 18px; }
+    .stat-row { flex-direction: column; gap: 10px; }
+    .big-stat .number { font-size: 40px; }
+
+    .fase-hero { padding: 18px; }
+    .fase-hero .num { font-size: 40px; }
+    .fase-hero h2 { font-size: 18px; }
+    .fase-hero p  { font-size: 13px; }
+
+    .dor-big { padding: 18px; }
+    .dor-big .dor-icon { font-size: 28px; }
+    .dor-big h2 { font-size: 18px; }
+    .dor-big p  { font-size: 13px; }
+
+    .close-slide h2 { font-size: 32px; }
+    .close-slide p  { font-size: 15px; }
+
+    .card { padding: 16px 18px; }
+    .list-item { padding: 13px 15px; }
+    .quote-block p { font-size: 13px; }
+
+    .metodologia-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 400px) {
+    .cover h1 { font-size: 32px; }
+    .slide-title { font-size: 24px; }
+    .fase-hero .num { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+<div id="counter"></div>
+
+<div id="slides">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <div class="badge">&#9889; Grupo NG &nbsp;&#183;&nbsp; Planejamento Estrategico</div>
+      <h1>Plano de<br/><span>Crescimento</span><br/><span class="sun">Loop Energia</span></h1>
+      <p class="subtitle">Metodologia NG aplicada: a engenharia para transformar orcamento em contrato e previsibilidade em faturamento.</p>
+      <div class="cover-tags">
+        <div class="ctag">&#128205; Goiania, GO</div>
+        <div class="ctag">&#128197; Reuniao: 23/04/2026</div>
+        <div class="ctag">&#127919; Meta: R$ 30MM em 2026</div>
+        <div class="ctag">&#127775; 17 anos de mercado</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: SOBRE GRUPO NG ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Sobre nos</div>
+      <div class="slide-title">Quem e o <span>Grupo NG</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Nao somos mais uma agencia. Somos um braco estrategico que entra dentro da sua empresa para estruturar quatro pilares do crescimento: pessoas, financeiro, midia e tecnologia. Operando lado a lado com o dono, com transparencia total e sem letrinhas miudas.</p>
+      <div class="cards cards-4">
+        <div class="card highlight">
+          <div class="card-num">30+</div>
+          <h3>Clientes ativos</h3>
+          <p>Empresas em crescimento que contam com a gente mensalmente.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">5</div>
+          <h3>Estados atendidos</h3>
+          <p>MG, SP, RS, BA e PE. Atendimento presencial e remoto.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">4</div>
+          <h3>Pilares de atuacao</h3>
+          <p>Pessoas, financeiro, midia e tecnologia: metodologia propria.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">100%</div>
+          <h3>Transparencia</h3>
+          <p>Relatorio diario, acesso direto as contas, sem fidelidade.</p>
+        </div>
+      </div>
+      <div class="card highlight" style="margin-top:16px; padding:18px 22px;">
+        <p style="font-size:12px; color:var(--muted); margin-bottom:10px; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Alguns dos nossos clientes</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <div class="pill blue">Francisco Imoveis</div>
+          <div class="pill cyan">Cruzeiro do Sul</div>
+          <div class="pill amber">CCAA</div>
+          <div class="pill blue">AES Odontologia</div>
+          <div class="pill cyan">CS Integra (SP)</div>
+          <div class="pill amber">Nutrigil</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: DIAGNOSTICO LOOP ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Diagnostico</div>
+      <div class="slide-title">O <span>cenario atual</span> da Loop Energia</div>
+      <div class="divider"></div>
+      <p class="slide-desc">17 anos de mercado, estrutura solida, atuacao em 6 estados e meta ambiciosa de R$ 30MM. A Loop tem o ativo tecnico e comercial para escalar. O que falta e estrutura de captacao e processo que traduza volume em previsibilidade.</p>
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-icon">&#128197;</div>
+          <h3>17 anos de mercado</h3>
+          <p>Sede em Goiania, atendendo Mato Grosso, Maranhao, Tocantins, Piaui, Bahia e Goias.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#9889;</div>
+          <h3>De solar para solucoes completas</h3>
+          <p>Mais que placas: baterias, inversores, geradores. Parcerias com Intelbras, MAC, PHB.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">R$ 30MM</div>
+          <h3>Meta 2026</h3>
+          <p>Ja vendido: R$ 11MM (37%). Posicao solida, mas dependente de grandes projetos.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128200;</div>
+          <h3>Ticket medio discrepante</h3>
+          <p>21 vendas totalizando R$ 11MM. Uma venda unica de R$ 8MM distorce o ticket medio real.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128101;</div>
+          <h3>Time comercial enxuto</h3>
+          <p>2 internos + 3 externos autonomos. Apos desligamento de 3 pessoas, time interno esta reduzido.</p>
+        </div>
+        <div class="card sun">
+          <div class="card-icon">&#128104;&zwj;&#128187;</div>
+          <h3>Diretor polivalente</h3>
+          <p>Luvanio acumula engenharia, programacao, vendas e midia. CRM proprio desenvolvido internamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: MAPA DE DORES ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Mapeamento</div>
+      <div class="slide-title">As <span>5 dores</span> que travaram o crescimento</div>
+      <div class="divider"></div>
+      <div class="list">
+        <div class="list-item">
+          <div class="li-icon red">&#128681;</div>
+          <div><h4>Comercial e o maior gargalo</h4><p>Queda de prospeccao interna apos desligamentos. Vendedores externos sem vinculo de gestao. Orcamentos chegam, contratos nao saem.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#127919;</div>
+          <div><h4>Marketing com trauma de agencia</h4><p>Agencia anterior usava as mesmas artes para varias empresas solar. Time interno dispensado por nao ter resultado. "Gato escaldado tem medo de agua fria".</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">&#128203;</div>
+          <div><h4>Base de clientes sem nutricao</h4><p>CRM proprio em fase de teste. Base de orcamentos nao fechados nao e trabalhada. Base dos 3 vendedores que sairam esta estagnada.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#128101;</div>
+          <div><h4>Dependencia do Luvanio</h4><p>Diretor tecnico acumula todos os papeis: melhor engenheiro, vendedor, programador e cara da midia. Um gargalo na escala.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">&#128231;</div>
+          <div><h4>Falta de clareza de processo</h4><p>Ausencia de playbook comercial. Cada vendedor faz do seu jeito. Follow-ups sem cadencia definida. Dificil cobrar o que nao esta padronizado.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 5: URGENCIA DO TIMING ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Timing</div>
+      <div class="slide-title">Por que o momento <span class="sun">e agora</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">O segundo semestre de 2026 traz Copa do Mundo e eleicoes. Dois eventos que, juntos, movem bilhoes em anuncios no Meta e Google. Nao e concorrencia de mercado. E concorrencia de atencao. E isso encarece leads.</p>
+      <div class="two-col">
+        <div>
+          <div class="quote-block">
+            <p>"Acho que a partir de julho o ano vai dar uma estagnada, porque o povo vai pensar em Copa, e depois vem politica."</p>
+            <div class="author">Nathalia, reuniao 16/04</div>
+          </div>
+        </div>
+        <div class="card highlight">
+          <h3 style="font-size:14px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">&#128293; Projecao com numero real</h3>
+          <p style="font-size:14px; color:var(--text); line-height:1.7;">Dentsu projeta <strong style="color:var(--amber);">+9,1% no mercado publicitario BR em 2026</strong>, o maior do mundo. Estimativa de alta de <strong style="color:var(--amber);">20-35% no CPM do Meta</strong> em jun-jul (Copa) e set-out (eleicao). Leilao politico desloca anunciantes tradicionais e voce paga a conta.</p>
+        </div>
+      </div>
+      <div class="cards cards-3" style="margin-top:18px;">
+        <div class="card">
+          <h3 style="color:var(--blue);">Abril - Julho 2026</h3>
+          <p><strong style="color:var(--text);">Momento de captura.</strong> CPL baixo, atencao disponivel. Captar volume e nutrir base para os meses dificeis.</p>
+        </div>
+        <div class="card sun">
+          <h3 style="color:var(--amber);">Julho - Novembro 2026</h3>
+          <p><strong style="color:var(--text);">Momento de concorrencia.</strong> CPL dobra. Quem nao captou antes vai pagar o dobro por cada lead.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--cyan);">Dezembro 2026+</h3>
+          <p><strong style="color:var(--text);">Momento de colheita.</strong> Base nutrida gera vendas com menor dependencia de novo anuncio.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 6: OBJETIVOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Objetivos</div>
+      <div class="slide-title">O que vamos <span>construir juntos</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Tres metas mensuraveis para os proximos 90 dias. Nada de "aumentar vendas": numeros claros, indicadores objetivos e data de entrega.</p>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-icon">&#128228;</div>
+          <h3 style="color:var(--blue);">1. Maquina de captacao</h3>
+          <p style="margin-bottom:10px;">Substituir a dependencia de indicacao e porta-a-porta por um fluxo previsivel de leads qualificados via Meta e Google Ads.</p>
+          <div class="pills">
+            <div class="pill blue">Previsibilidade</div>
+            <div class="pill cyan">Escala</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128269;</div>
+          <h3>2. Qualificacao cirurgica</h3>
+          <p style="margin-bottom:10px;">Garantir que apenas leads com orcamento real, decisao e intencao de compra nos proximos 90 dias cheguem ao vendedor tecnico.</p>
+          <div class="pills">
+            <div class="pill cyan">SPIN Selling</div>
+            <div class="pill amber">BANT</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128200;</div>
+          <h3>3. Controle de base</h3>
+          <p style="margin-bottom:10px;">Ativar a base dos 3 vendedores desligados + todos os orcamentos nao fechados. Transformar CRM em ferramenta de receita, nao so registro.</p>
+          <div class="pills">
+            <div class="pill amber">Nutricao</div>
+            <div class="pill blue">Reativacao</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 7: METODOLOGIA NG ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Metodologia NG</div>
+      <div class="slide-title">A jornada em <span>5 fases</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Toda venda consultiva de alto ticket segue uma jornada. Nao existe atalho. O que existe e engenharia: cada fase tem ferramentas, metricas e responsavel. E o que transforma marketing em receita.</p>
+      <div class="metodologia-grid">
+        <div class="meto-item">
+          <div class="meto-icon">&#128269;</div>
+          <h4 style="color:var(--blue);">01. Descoberta</h4>
+          <p>Como o cliente te encontra: Inbound + Outbound</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#128293;</div>
+          <h4 style="color:var(--blue);">02. Atencao</h4>
+          <p>Oferta, criativo e roteiro que param o scroll</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#129300;</div>
+          <h4 style="color:var(--blue);">03. Consideracao</h4>
+          <p>Prova social, autoridade, diferencial</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#9989;</div>
+          <h4 style="color:var(--blue);">04. Acao</h4>
+          <p>Pessoas, processo e tecnologia que vendem</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#128150;</div>
+          <h4 style="color:var(--blue);">05. Apologia</h4>
+          <p>Fazer o cliente virar promotor e recomprar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 8: DESCOBERTA - INBOUND ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 01 — Descoberta</div>
+      <div class="fase-hero">
+        <div class="num">01A</div>
+        <h2>Inbound: atrair quem ja tem a dor</h2>
+        <p>Captar o cliente que ja esta procurando solucao. Custo menor por lead, qualificacao natural, pronto para conversar. E o pilar de volume no curto prazo.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-weight:700;">Meta Ads (Instagram / Facebook)</h3>
+          <div class="checklist">
+            <div class="check-item">Campanhas de conversao para formularios Lead Ads</div>
+            <div class="check-item">Publicos lookalike baseados em clientes fechados</div>
+            <div class="check-item">Segmentacao por cidade/renda/comportamento</div>
+            <div class="check-item">Criativos adaptados para residencial vs agro/comercial</div>
+            <div class="check-item">Reels + Stories + Feed com ofertas diferentes</div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:13px; color:var(--cyan); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-weight:700;">Google Ads (Pesquisa + YouTube)</h3>
+          <div class="checklist">
+            <div class="check-item">Palavras-chave de fundo de funil: "energia solar Goiania"</div>
+            <div class="check-item">"Quanto custa usina solar para conta de R$ 500"</div>
+            <div class="check-item">"Energia solar para fazenda" (foco agro MATOPIBA)</div>
+            <div class="check-item">Anuncios no YouTube para rebater fake news do setor</div>
+            <div class="check-item">Remarketing para quem visitou o site</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 9: DESCOBERTA - OUTBOUND ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 01 — Descoberta</div>
+      <div class="fase-hero">
+        <div class="num">01B</div>
+        <h2>Outbound: ir atras dos projetos grandes</h2>
+        <p>Inbound captura pequeno e medio. Os R$ 8MM vem de Outbound inteligente: inteligencia de mercado para identificar empresas com gatilhos de compra e cadencia estruturada para chegar ao decisor.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-icon">&#127775;</div>
+          <h3>Inteligencia de mercado</h3>
+          <p>Mapear empresas em gatilho de compra: expansao, nova unidade, alta de conta de luz, mudanca de sede.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128231;</div>
+          <h3>Cadencia Email + WhatsApp</h3>
+          <p>Sequencia de 7 toques em 21 dias combinando email tecnico, WhatsApp direto e cold call estruturado.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128222;</div>
+          <h3>Cold call com setter</h3>
+          <p>SDR faz o passa-por-secretaria. O vendedor tecnico so entra quando a reuniao esta agendada e qualificada.</p>
+        </div>
+      </div>
+      <div class="card highlight" style="margin-top:16px; padding:18px 22px;">
+        <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px;">&#128293; Foco Outbound: Agro MATOPIBA</h3>
+        <p style="font-size:14px; color:var(--text); line-height:1.6;">A Loop ja prova tese no agro da Bahia (projeto R$ 8MM). Vamos mapear grandes produtores em Mato Grosso, Maranhao, Tocantins e Piaui com contas de energia acima de R$ 15k/mes. E ai que estao os projetos que movem o ticket medio para cima.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 10: ATENCAO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 02 — Atencao</div>
+      <div class="fase-hero">
+        <div class="num">02</div>
+        <h2>A estrutura de 4 parametros do criativo</h2>
+        <p>A falha da maioria das agencias e fazer o mesmo anuncio para todo mundo. Nossa metodologia define cada anuncio em 4 dimensoes: Oferta, Formato, Rede e Medicao. Sem atalho, sem molde.</p>
+      </div>
+      <div class="cards cards-4">
+        <div class="card highlight">
+          <h3 style="color:var(--blue);">01. Oferta</h3>
+          <p><strong style="color:var(--text);">O que dizer.</strong> Ex: "Se voce paga mais de R$ 500 de conta de luz, com uma usina solar voce pode reduzir para R$ 50".</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--cyan);">02. Formato</h3>
+          <p><strong style="color:var(--text);">Como dizer.</strong> Video com a equipe, imagem estilo caixinha de perguntas, stories, depoimento, tour pela instalacao.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--amber);">03. Rede</h3>
+          <p><strong style="color:var(--text);">Onde dizer.</strong> Meta (Instagram/FB) para dor residencial, Google para demanda ativa, LinkedIn para decisor corporativo.</p>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--blue);">04. Medicao</h3>
+          <p><strong style="color:var(--text);">Como saber se funciona.</strong> Relatorio diario no WhatsApp as 9h, todo dia. Sem esperar 30 dias para saber o que nao esta dando certo.</p>
+        </div>
+      </div>
+      <div class="quote-block" style="margin-top:18px;">
+        <p>"A ideia e fugir do institucionalismo. Video de celular com a equipe, imagem como caixinha de perguntas, roteiro que parece conversa. Isso converte mais que logomarca na foto."</p>
+        <div class="author">Metodologia NG de criativos</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 11: CONSIDERACAO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 03 — Consideracao</div>
+      <div class="fase-hero">
+        <div class="num">03</div>
+        <h2>Fazer o cliente confiar antes de entrar na reuniao</h2>
+        <p>Energia solar e venda consultiva. O cliente chega com medo de fake news e desconfianca. O trabalho de consideracao e pre-construir confianca para que quando o vendedor chegue, 70% da venda ja esteja feita.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-icon">&#127942;</div>
+          <h3>Autoridade em numeros</h3>
+          <p>17 anos de mercado. Projetos de R$ 8MM. Atuacao em 6 estados. Isso destroi a objecao "nunca ouvi falar".</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#129309;</div>
+          <h3>Selos de parceria</h3>
+          <p>Intelbras, MAC, PHB. Mostrar logos de marcas reconhecidas que a Loop representa oficialmente.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128269;</div>
+          <h3>Cases de uso diversos</h3>
+          <p>Do residencial de R$ 30k ao agro de R$ 8MM. Provar que atende qualquer porte sem perder padrao.</p>
+        </div>
+      </div>
+      <div class="cards cards-2" style="margin-top:14px;">
+        <div class="card sun">
+          <h3>&#127909; Depoimento em video</h3>
+          <p>Cliente real gravando antes e depois da instalacao. Mostrando a conta de luz antes e a conta depois. Prova social incontestavel.</p>
+        </div>
+        <div class="card sun">
+          <h3>&#128218; Conteudo anti-fake news</h3>
+          <p>Posts educativos desmistificando: "Precisa de sol direto?", "E se vender a casa?", "E manutencao?". Lead chega a reuniao ja convencido.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE NOVO: GATILHOS DE VENDA 2026 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Argumentos de mercado</div>
+      <div class="slide-title">Os <span class="sun">gatilhos</span> que 2026 esta entregando de bandeja</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Nunca houve momento tao favoravel para a mensagem de "troque a conta de luz pelo sol". Tres eventos regulatorios de 2026 viram argumento direto de venda. Usar isso na copy e no roteiro do SDR aumenta taxa de conversao.</p>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-icon">&#127745;</div>
+          <h3 style="color:var(--blue);">Tarifa Branca obrigatoria</h3>
+          <p><strong style="color:var(--text);">A partir de 2026</strong>, clientes acima de 1.000 kWh/mes caem automaticamente na Tarifa Branca. 2,5 milhoes de UCs afetadas no Brasil. E uma cornada no bolso do cliente pro qual o solar e a saida.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128308;</div>
+          <h3 style="color:var(--amber);">Bandeira vermelha 2025</h3>
+          <p><strong style="color:var(--text);">Cliente sem solar pagou R$ 166</strong> em bandeiras. Cliente com solar pagou R$ 12. Diferenca real, argumento objetivo. "Voce pagou quanto a mais em 2025?" abre toda conversa.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128267;</div>
+          <h3 style="color:var(--cyan);">Lei 15.269/2025 — BESS</h3>
+          <p><strong style="color:var(--text);">Mercado de baterias saltou de R$ 700MM para R$ 2,2 bi em 2025</strong>. Upsell de 40-80% no ticket. Solar + bateria vira padrao em 2026. Loop ja tem Intelbras e parcerias para entrar nisso.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px; padding:18px 22px;">
+        <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px;">Exemplo de tratamento de objecao classica</h3>
+        <p style="font-size:13px; color:var(--text); line-height:1.7; margin-bottom:10px;"><strong style="color:var(--amber);">Cliente:</strong> "Ta muito caro."</p>
+        <p style="font-size:13px; color:var(--text); line-height:1.7;"><strong style="color:var(--blue);">SDR Loop:</strong> "Caro comparado a que? Sua conta em 25 anos vai custar R$ [X] para a Equatorial. O sistema custa R$ [Y] e se paga em 40 meses. O caro mesmo e continuar pagando aluguel de energia para a concessionaria o resto da vida."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 12: ACAO OVERVIEW ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 04 — Acao</div>
+      <div class="fase-hero">
+        <div class="num">04</div>
+        <h2>A maquina comercial em 3 pilares</h2>
+        <p>Marketing gera lead. Venda converte. Entre um e outro, tem um abismo chamado processo comercial. A fase de Acao estrutura os 3 pilares que transformam orcamento em contrato: Pessoas, Processos e Tecnologia.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-icon">&#128101;</div>
+          <h3 style="color:var(--blue);">A. Pessoas</h3>
+          <p>Estrutura Setter/Closer. Luvanio volta a ser so o Closer. SDR qualifica e agenda.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128221;</div>
+          <h3 style="color:var(--cyan);">B. Processos</h3>
+          <p>Playbook de vendas documentado. Cadencia de follow-up padronizada. Scripts testados.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128187;</div>
+          <h3 style="color:var(--amber);">C. Tecnologia</h3>
+          <p>CRM proprio com funil visual. Relatorio diario. Indicadores por vendedor em tempo real.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 13: ACAO A - PESSOAS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 04 — Pessoas</div>
+      <div class="slide-title">A estrutura <span>Setter + Closer</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Luvanio hoje faz tudo: melhor engenheiro, vendedor, programador, midia. Isso trava a escala. A logica Setter/Closer resolve: cada papel com responsabilidade clara e metrica propria.</p>
+      <div class="two-col">
+        <div class="card highlight">
+          <h3 style="color:var(--blue); margin-bottom:10px;">&#128241; Setter (SDR)</h3>
+          <p style="font-size:13px; color:var(--text); margin-bottom:12px;"><strong>Funcao:</strong> qualificar e agendar. Nao vende, nao da orcamento, nao explica alicota.</p>
+          <div class="checklist">
+            <div class="check-item">Primeiro contato no WhatsApp em ate 10 minutos apos o lead</div>
+            <div class="check-item">Aplicar BANT: Orcamento, Autoridade, Necessidade, Timing</div>
+            <div class="check-item">Filtrar curiosos e leads fora do perfil</div>
+            <div class="check-item">Agendar reuniao tecnica com o Closer</div>
+            <div class="check-item">Meta: 20 reunioes agendadas por semana</div>
+          </div>
+        </div>
+        <div class="card highlight">
+          <h3 style="color:var(--cyan); margin-bottom:10px;">&#128188; Closer (Vendedor Tecnico)</h3>
+          <p style="font-size:13px; color:var(--text); margin-bottom:12px;"><strong>Funcao:</strong> fechar. So entra na reuniao quando o lead ja esta qualificado.</p>
+          <div class="checklist">
+            <div class="check-item">Recebe o brief completo do SDR antes da reuniao</div>
+            <div class="check-item">Reuniao consultiva usando metodologia SPIN</div>
+            <div class="check-item">Proposta tecnica alinhada com dor real do cliente</div>
+            <div class="check-item">Fechamento ou proxima etapa clara</div>
+            <div class="check-item">Meta: 30% de conversao reuniao -&gt; contrato</div>
+          </div>
+        </div>
+      </div>
+      <div class="result-badge">&#128293; Luvanio libera tempo tecnico e entra so para fechar. Outros vendedores tecnicos podem ser treinados no mesmo padrao.</div>
+      <div class="card" style="margin-top:16px; padding:18px 22px;">
+        <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px;">Exemplo real de script BANT do SDR</h3>
+        <p style="font-size:13px; color:var(--text); line-height:1.7; margin-bottom:8px;"><strong style="color:var(--blue);">Need:</strong> "Qual o valor medio da sua conta hoje?"</p>
+        <p style="font-size:13px; color:var(--text); line-height:1.7; margin-bottom:8px;"><strong style="color:var(--cyan);">Authority:</strong> "A decisao e so sua ou tem socio/esposa(o) envolvido?"</p>
+        <p style="font-size:13px; color:var(--text); line-height:1.7; margin-bottom:8px;"><strong style="color:var(--amber);">Budget:</strong> "Ja pensou em investir a vista ou prefere financiamento? Trabalhamos com BV, Santander, Sol Agora e Solfacil."</p>
+        <p style="font-size:13px; color:var(--text); line-height:1.7;"><strong style="color:var(--blue);">Timing:</strong> "Pensando em instalar ainda esse semestre ou e pesquisa inicial?"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 14: ACAO B - PROCESSOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 04 — Processos</div>
+      <div class="slide-title">O <span>playbook comercial</span> da Loop</div>
+      <div class="divider"></div>
+      <p class="slide-desc">O que nao esta escrito, nao existe. O playbook e a biblia do comercial: todo vendedor, novo ou antigo, opera a mesma linha. Sem "cada um faz do seu jeito". Sem "vou esquecendo".</p>
+      <div class="cards cards-2">
+        <div class="card">
+          <h3 style="color:var(--blue);">&#128203; Documentacao completa</h3>
+          <p style="margin-bottom:8px;">Script de abertura no WhatsApp, passagem de gatekeeper, perguntas SPIN, tratamento de objecoes classicas.</p>
+          <div class="pills">
+            <div class="pill blue">Script</div>
+            <div class="pill cyan">SPIN</div>
+            <div class="pill amber">Objecoes</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--cyan);">&#128336; Cadencia de 7 toques</h3>
+          <p style="font-size:12.5px; margin-bottom:6px;"><strong style="color:var(--text);">D+1:</strong> audio recapitulando a dor + material tecnico</p>
+          <p style="font-size:12.5px; margin-bottom:6px;"><strong style="color:var(--text);">D+3:</strong> case de cliente similar de Goiania</p>
+          <p style="font-size:12.5px; margin-bottom:6px;"><strong style="color:var(--text);">D+7:</strong> video do Luvanio desmontando fake news</p>
+          <p style="font-size:12.5px; margin-bottom:6px;"><strong style="color:var(--text);">D+15:</strong> gatilho de reajuste Equatorial</p>
+          <p style="font-size:12.5px; margin-bottom:6px;"><strong style="color:var(--text);">D+30:</strong> simulacao atualizada</p>
+          <p style="font-size:12.5px; margin-bottom:6px;"><strong style="color:var(--text);">D+60:</strong> depoimento em video</p>
+          <p style="font-size:12.5px;"><strong style="color:var(--text);">D+90:</strong> ultima chamada honesta</p>
+        </div>
+      </div>
+      <div class="card highlight" style="margin-top:14px; padding:18px 22px;">
+        <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px;">Objecoes classicas do setor solar tratadas no playbook</h3>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <div class="pill red">"Ouvi dizer que nao compensa"</div>
+          <div class="pill red">"Vou pensar"</div>
+          <div class="pill red">"Esta muito caro"</div>
+          <div class="pill red">"Ja tenho orcamento de outra empresa"</div>
+          <div class="pill red">"E se vender a casa?"</div>
+          <div class="pill red">"E manutencao?"</div>
+          <div class="pill red">"E se quebrar?"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 15: ACAO C - TECNOLOGIA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 04 — Tecnologia</div>
+      <div class="slide-title">O <span>CRM da Loop</span> virando maquina de receita</div>
+      <div class="divider"></div>
+      <p class="slide-desc">A Loop ja tem algo que poucas empresas tem: um CRM proprio, desenvolvido pelo diretor. Vamos potencializar o que ja existe. O que muda nao e a ferramenta, e o processo rodando dentro dela.</p>
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-weight:700;">Funil visual por etapa</h3>
+          <div class="list">
+            <div class="list-item">
+              <div class="li-icon blue">1</div>
+              <div><h4>Lead novo</h4><p>Entrada do formulario ou cold call</p></div>
+            </div>
+            <div class="list-item">
+              <div class="li-icon blue">2</div>
+              <div><h4>Contato feito</h4><p>SDR ja fez primeiro toque</p></div>
+            </div>
+            <div class="list-item">
+              <div class="li-icon cyan">3</div>
+              <div><h4>Qualificado (BANT ok)</h4><p>Pronto para agendar reuniao</p></div>
+            </div>
+            <div class="list-item">
+              <div class="li-icon cyan">4</div>
+              <div><h4>Reuniao agendada</h4><p>Data e horario confirmados</p></div>
+            </div>
+            <div class="list-item">
+              <div class="li-icon amber">5</div>
+              <div><h4>Proposta enviada</h4><p>Closer apresentou solucao</p></div>
+            </div>
+            <div class="list-item">
+              <div class="li-icon amber">6</div>
+              <div><h4>Contrato fechado</h4><p>Cliente assinou</p></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:13px; color:var(--cyan); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-weight:700;">Indicadores diarios para Luvanio</h3>
+          <div class="checklist">
+            <div class="check-item">Leads novos hoje por canal</div>
+            <div class="check-item">Reunioes agendadas para a semana</div>
+            <div class="check-item">Propostas enviadas aguardando resposta</div>
+            <div class="check-item">Valor total em propostas abertas (pipeline)</div>
+            <div class="check-item">Leads sem contato ha mais de 48h (alerta vermelho)</div>
+            <div class="check-item">Taxa de conversao por etapa e por vendedor</div>
+          </div>
+          <div class="result-badge" style="margin-top:16px;">&#128293; Todo dia as 9h, relatorio no WhatsApp</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 16: APOLOGIA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Fase 05 — Apologia</div>
+      <div class="fase-hero">
+        <div class="num">05</div>
+        <h2>Cliente fechado e ativo de crescimento</h2>
+        <p>Energia solar tem LTV alto: cada cliente fechado pode indicar vizinhos, familiares, parceiros de negocio. Mas so indica se voce pedir, estruturar e recompensar. Apologia transforma cliente em vendedor.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-icon">&#128257;</div>
+          <h3>Cross-sell de solucoes</h3>
+          <p>Cliente que fez solar e candidato natural para bateria, gerador ou inversor. Regua automatica de oferta pos-venda.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#129309;</div>
+          <h3>Programa de indicacao</h3>
+          <p>Cliente recebe beneficio claro (desconto em manutencao, bonus em conta) por indicacao que vira contrato.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#127775;</div>
+          <h3>Parceiros B2B</h3>
+          <p>Formalizar parcerias com construtoras, arquitetos, imobiliarias e bancos locais que atendem o mesmo cliente final.</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px; padding:18px 22px;">
+        <p style="font-size:14px; color:var(--text); line-height:1.7;">A Nathalia citou em reuniao que <strong>o time externo mais antigo vende mais que o interno novo</strong>. Isso nao e coincidencia: sao pessoas com rede construida ao longo do tempo. A Apologia estrutura essa rede para nao depender da pessoa fisica.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 17: TIMELINE ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Cronograma</div>
+      <div class="slide-title">Os primeiros <span>90 dias</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Estrutura nao se constroi de uma semana. Mas em 90 dias a Loop sai do ciclo "gato escaldado" e entra em uma operacao previsivel com dado, processo e resultado.</p>
+      <div class="cards cards-3">
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="background:linear-gradient(135deg,var(--blue),var(--cyan)); color:#fff; padding:5px 12px; border-radius:100px; font-size:11px; font-weight:800;">Mes 1</div>
+          </div>
+          <h3 style="font-size:15px; margin-bottom:8px;">Estruturacao</h3>
+          <div class="checklist">
+            <div class="check-item">Diagnostico profundo do comercial</div>
+            <div class="check-item">Playbook e scripts documentados</div>
+            <div class="check-item">CRM configurado com funil visual</div>
+            <div class="check-item">Primeiros criativos e campanhas no ar</div>
+            <div class="check-item">SDR contratado e treinado</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="background:linear-gradient(135deg,var(--blue),var(--cyan)); color:#fff; padding:5px 12px; border-radius:100px; font-size:11px; font-weight:800;">Mes 2</div>
+          </div>
+          <h3 style="font-size:15px; margin-bottom:8px;">Tracao</h3>
+          <div class="checklist">
+            <div class="check-item">CPL estabilizado na faixa alvo</div>
+            <div class="check-item">Cadencia de outbound em 3 estados</div>
+            <div class="check-item">Primeiras reunioes Setter/Closer</div>
+            <div class="check-item">Base reativada: primeiros retornos</div>
+            <div class="check-item">Ajuste fino nos criativos vencedores</div>
+          </div>
+        </div>
+        <div class="card highlight">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+            <div style="background:linear-gradient(135deg,var(--blue),var(--cyan)); color:#fff; padding:5px 12px; border-radius:100px; font-size:11px; font-weight:800;">Mes 3</div>
+          </div>
+          <h3 style="font-size:15px; margin-bottom:8px;">Escala</h3>
+          <div class="checklist">
+            <div class="check-item">Budget escalado em 20-30%/semana</div>
+            <div class="check-item">Publicos lookalike ativos</div>
+            <div class="check-item">Time comercial calibrado</div>
+            <div class="check-item">Relatorio mensal completo com ROI</div>
+            <div class="check-item">Plano para os proximos 90 dias</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE NOVO: BENCHMARKS REAIS DO SETOR ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Benchmarks do setor</div>
+      <div class="slide-title">Os <span>numeros reais</span> que vamos perseguir</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Nao e promessa, e media do setor solar no Brasil. Dados publicos de Solfacil, ABSOLAR, Canal Solar e Safeleads. Luvanio pode conferir qualquer um.</p>
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-num" style="font-size:36px;">R$ 35-90</div>
+          <h3>CPL residencial</h3>
+          <p>Custo por lead Meta Ads para conta de luz acima de R$ 300. Goias roda abaixo da media global por alta intencao.</p>
+        </div>
+        <div class="card">
+          <div class="card-num" style="font-size:36px;">R$ 150-400</div>
+          <h3>CPL agro/comercial</h3>
+          <p>Ticket alto justifica. Google Search funciona melhor que Meta para esse perfil. Foco em lead qualificado.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num" style="font-size:36px;">30-45%</div>
+          <h3>Lead -&gt; Proposta</h3>
+          <p>Taxa esperada com SDR qualificado. Sem SDR: cai para 10-15%. A estrutura Setter/Closer faz essa diferenca.</p>
+        </div>
+      </div>
+      <div class="cards cards-3" style="margin-top:12px;">
+        <div class="card">
+          <div class="card-num" style="font-size:36px;">15-25%</div>
+          <h3>Proposta -&gt; Contrato</h3>
+          <p>Residencial bem trabalhado. Top performers chegam a 35-45% com cadencia de follow-up estruturada.</p>
+        </div>
+        <div class="card">
+          <div class="card-num" style="font-size:36px;">4x-8x</div>
+          <h3>ROAS residencial</h3>
+          <p>Retorno esperado sobre investimento em anuncios. Agro e comercial passam de 10x pelo ticket alto.</p>
+        </div>
+        <div class="card sun">
+          <div class="card-num" style="font-size:36px; background: linear-gradient(135deg, var(--yellow), var(--amber)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">+30%</div>
+          <h3>Resposta em 24h</h3>
+          <p>Integradoras que enviam proposta em 24h aumentam fechamento em ate 30%. E velocidade processada.</p>
+        </div>
+      </div>
+      <div class="card highlight" style="margin-top:14px; padding:18px 22px;">
+        <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:10px;">&#129504; Conta da Meta R$ 30MM para 2026</h3>
+        <p style="font-size:14px; color:var(--text); line-height:1.6;">Ticket medio R$ 40k (mix residencial + agro) = <strong>750 contratos no ano</strong> = <strong>~63 contratos por mes</strong>. Com conversao de 25% proposta -&gt; contrato, precisamos <strong>~250 propostas/mes</strong>. Com 30% lead -&gt; proposta, <strong>~830 leads qualificados/mes</strong>. Ai esta a matematica da meta.</p>
+      </div>
+      <p style="font-size:11px; color:var(--muted); margin-top:14px; font-style:italic;">Fontes: Solfacil, ABSOLAR, Canal Solar, Safeleads, Dentsu, WTW. Benchmarks 2025-2026.</p>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 18: PROJECAO + INVESTIMENTO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Investimento</div>
+      <div class="slide-title">O que voce <span>recebe</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Um projeto completo de crescimento, sem fidelidade, com transparencia total e acompanhamento semanal. Preco justo para o tamanho do trabalho e para o tamanho da Loop.</p>
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; font-weight:700;">O que esta incluido</h3>
+          <div class="checklist">
+            <div class="check-item">Estrategia e planejamento mensal</div>
+            <div class="check-item">Gestao de Meta Ads e Google Ads</div>
+            <div class="check-item">Producao de criativos (imagens e videos)</div>
+            <div class="check-item">Estrutura e treinamento comercial (SDR + Closer)</div>
+            <div class="check-item">Playbook e scripts customizados</div>
+            <div class="check-item">Configuracao e otimizacao do CRM</div>
+            <div class="check-item">Relatorio diario no WhatsApp</div>
+            <div class="check-item">Reuniao semanal com Luvanio e Nathalia</div>
+            <div class="check-item">Ajustes ilimitados durante o mes</div>
+          </div>
+        </div>
+        <div>
+          <div class="modulo-card rec">
+            <div class="rec-tag">Plano recomendado</div>
+            <h4 style="font-size:18px; font-weight:800; margin-bottom:8px;">Plano Growth Loop</h4>
+            <div style="margin: 8px 0 16px;">
+              <span style="font-size:44px; font-weight:900; background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 3.000</span>
+              <span style="font-size:13px; color:var(--muted); font-weight:500;">/mes</span>
+            </div>
+            <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">+ investimento em anuncios (direto nas plataformas Meta e Google). Valor sugerido inicial: R$ 3.000/mes em midia.</p>
+            <div style="padding-top:14px; border-top:1px solid var(--border);">
+              <p style="font-size:12px; color:var(--muted); margin-bottom:8px;"><strong style="color:var(--blue);">Sem fidelidade.</strong> Contrato mensal. Sai quando quiser.</p>
+              <p style="font-size:12px; color:var(--muted);"><strong style="color:var(--blue);">Sem taxa de setup.</strong> Primeiro mes ja e de implementacao.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 19: PROXIMOS PASSOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Proximos passos</div>
+      <div class="slide-title">O caminho <span>daqui pra frente</span></div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Reuniao tecnica com Luvanio</h4>
+              <p>Nathalia pediu para o diretor entrar. A reuniao pode se aprofundar em estrategia de trafego, processo comercial e uso do CRM proprio da Loop.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Alinhamento de prioridades</h4>
+              <p>Definir com qual frente comecar: comercial, midia ou ambos simultaneamente. Priorizar a dor que move mais receita no curto prazo.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Kickoff e onboarding</h4>
+              <p>Acesso as contas (Meta, Google), levantamento da base do CRM, definicao de ICP, primeiras cadencias de outbound.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Primeiros 30 dias</h4>
+              <p>Campanhas no ar, SDR treinado, playbook pronto, CRM ajustado, relatorio diario funcionando.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card highlight" style="padding:24px;">
+          <p style="font-size:12px; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Referencia: clientes similares</p>
+          <div class="list" style="gap:10px;">
+            <div class="list-item" style="padding:14px 16px;">
+              <div class="li-icon blue">&#127966;</div>
+              <div><h4 style="font-size:13px;">Francisco Imoveis</h4><p style="font-size:12px;">Time comercial + geracao de clientes</p></div>
+            </div>
+            <div class="list-item" style="padding:14px 16px;">
+              <div class="li-icon cyan">&#127979;</div>
+              <div><h4 style="font-size:13px;">Cruzeiro do Sul</h4><p style="font-size:12px;">Processo comercial + midia digital</p></div>
+            </div>
+            <div class="list-item" style="padding:14px 16px;">
+              <div class="li-icon amber">&#128200;</div>
+              <div><h4 style="font-size:13px;">CS Integra (SP)</h4><p style="font-size:12px;">Consultoria + processo financeiro</p></div>
+            </div>
+          </div>
+          <p style="font-size:12px; color:var(--muted); margin-top:14px;">Consultoria e venda tecnica consultiva sao a nossa pratica. Ticket alto, ciclo longo, decisor multiplo: voce esta em boa companhia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 20: FECHAMENTO ====== -->
+  <div class="slide" style="background: radial-gradient(ellipse at 50% 50%, #0a0f1e 0%, var(--dark) 70%);">
+    <div class="slide-inner close-slide">
+      <div class="badge" style="margin-bottom:20px;">&#9889; Grupo NG</div>
+      <h2>Vamos construir<br/><span>a maquina juntos?</span></h2>
+      <p>A Loop Energia tem 17 anos de tecnica. Tem produto, estrutura e mercado. O que falta e o sistema. E sistema a gente constroi rapido quando fala a mesma lingua.</p>
+      <div class="cover-tags" style="justify-content:center; margin-bottom:36px;">
+        <div class="ctag">&#128222; Yuri Garcia</div>
+        <div class="ctag">&#128205; Divinopolis, MG</div>
+        <div class="ctag">&#9889; Grupo NG</div>
+      </div>
+      <button class="btn-primary" onclick="goTo(0)">&#8592; Voltar ao inicio</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+  const dotsEl   = document.getElementById('dots');
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'exit');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('exit');
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    const pct = ((current + 1) / total) * 100;
+    progress.style.width = pct + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    update();
+  }
+
+  document.getElementById('btn-prev').onclick = () => goTo(current - 1);
+  document.getElementById('btn-next').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     goTo(current - 1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
+  });
+
+  update();
+</script>
+</body>
+</html>
