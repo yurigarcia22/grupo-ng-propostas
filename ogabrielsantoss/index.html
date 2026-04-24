@@ -1,0 +1,929 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Insights @ogabrielsantoss | Grupo NG</title>
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0f1419;
+    --surface2: #161d26;
+    --surface3: #1c2535;
+    --border: #1f2d3d;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent-ng: #7c3aed;
+    --accent-ng-light: #a78bfa;
+    --accent-cli: #0ea5e9;
+    --accent-cli-light: #7dd3fc;
+    --gold: #f59e0b;
+    --gold-light: #fcd34d;
+    --green: #10b981;
+    --red: #ef4444;
+    --tag-bg: rgba(124,58,237,0.15);
+    --tag-border: rgba(124,58,237,0.3);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, #0d0221 0%, #0a1628 40%, #0c1f3a 100%);
+    padding: 64px 24px 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(124,58,237,0.15), transparent);
+    pointer-events: none;
+  }
+  .hero-eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-ng-light); margin-bottom: 12px; font-weight: 600; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 12px; }
+  .hero h1 span { background: linear-gradient(135deg, var(--accent-ng-light), var(--accent-cli-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-sub { color: #94a3b8; font-size: 1rem; max-width: 600px; margin: 0 auto 32px; }
+
+  .hero-stats { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 8px; }
+  .hstat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 16px 24px; text-align: center; min-width: 100px; }
+  .hstat .n { font-size: 2rem; font-weight: 900; color: #fff; line-height: 1; }
+  .hstat .l { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+  .hstat.ng .n { color: var(--accent-ng-light); }
+  .hstat.cli .n { color: var(--accent-cli-light); }
+  .hstat.gold .n { color: var(--gold-light); }
+
+  /* ─── NAV ─── */
+  .sticky-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,12,16,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex; gap: 0; overflow-x: auto;
+  }
+  .sticky-nav a {
+    display: block; padding: 14px 20px;
+    font-size: 0.82rem; font-weight: 600; text-decoration: none;
+    color: var(--muted); white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .sticky-nav a:hover { color: var(--text); }
+  .sticky-nav a.ng { border-bottom-color: var(--accent-ng-light); color: var(--accent-ng-light); }
+  .sticky-nav a.cli { border-bottom-color: var(--accent-cli-light); color: var(--accent-cli-light); }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+
+  /* ─── SECTION HEADERS ─── */
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 32px 0 24px; margin-bottom: 8px;
+  }
+  .section-header .icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .section-header.ng .icon { background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.3); }
+  .section-header.cli .icon { background: rgba(14,165,233,0.2); border: 1px solid rgba(14,165,233,0.3); }
+  .section-header h2 { font-size: 1.5rem; font-weight: 800; color: #fff; line-height: 1.2; }
+  .section-header .badge { font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
+  .section-header.ng .badge { background: rgba(124,58,237,0.2); color: var(--accent-ng-light); border: 1px solid rgba(124,58,237,0.3); }
+  .section-header.cli .badge { background: rgba(14,165,233,0.2); color: var(--accent-cli-light); border: 1px solid rgba(14,165,233,0.3); }
+  .section-header p { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+
+  /* ─── DIVIDER ─── */
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 8px 0 32px; }
+
+  /* ─── INSIGHT CARDS ─── */
+  .insights-grid { display: flex; flex-direction: column; gap: 20px; }
+
+  .insight-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .insight-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+
+  .card-top {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 20px 24px 0;
+  }
+  .card-number {
+    font-size: 0.65rem; font-weight: 900; text-transform: uppercase;
+    letter-spacing: 2px; padding: 6px 10px; border-radius: 8px;
+    flex-shrink: 0; margin-top: 3px;
+  }
+  .ng-card .card-number { background: rgba(124,58,237,0.2); color: var(--accent-ng-light); border: 1px solid rgba(124,58,237,0.25); }
+  .cli-card .card-number { background: rgba(14,165,233,0.2); color: var(--accent-cli-light); border: 1px solid rgba(14,165,233,0.25); }
+
+  .card-title { font-size: 1.1rem; font-weight: 800; color: #fff; line-height: 1.3; }
+  .card-subtitle { font-size: 0.85rem; color: var(--muted); margin-top: 3px; }
+
+  .card-body { padding: 16px 24px 20px; }
+
+  .card-lesson {
+    font-size: 0.95rem; color: #cbd5e1; line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .quote-block {
+    background: var(--surface2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin: 16px 0;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: var(--gold-light);
+    line-height: 1.6;
+  }
+  .quote-block strong { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); margin-bottom: 6px; font-style: normal; }
+
+  .action-box {
+    background: linear-gradient(135deg, rgba(16,185,129,0.08), rgba(16,185,129,0.04));
+    border: 1px solid rgba(16,185,129,0.2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 14px;
+  }
+  .action-box .action-label {
+    font-size: 0.68rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--green); margin-bottom: 6px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .action-box ul { padding-left: 18px; }
+  .action-box li { font-size: 0.875rem; color: #a7f3d0; line-height: 1.65; }
+  .action-box li + li { margin-top: 4px; }
+  .action-box p { font-size: 0.875rem; color: #a7f3d0; line-height: 1.65; }
+
+  /* ─── PRIORITY BADGE ─── */
+  .priority-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .priority-badge.urgent { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); }
+  .priority-badge.high { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.3); }
+  .priority-badge.medium { background: rgba(16,185,129,0.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+
+  /* ─── SUMMARY TABLE ─── */
+  .summary-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+  .summary-section h3 { font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 16px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .summary-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .summary-item .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+  .summary-item .dot.ng { background: var(--accent-ng-light); }
+  .summary-item .dot.cli { background: var(--accent-cli-light); }
+  .summary-item p { font-size: 0.82rem; color: #94a3b8; line-height: 1.5; }
+  .summary-item strong { display: block; font-size: 0.82rem; color: #e2e8f0; margin-bottom: 2px; }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    text-align: center; padding: 40px 24px;
+    color: var(--muted); font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+
+  @media (max-width: 640px) {
+    .card-top { flex-direction: column; gap: 8px; }
+    .hero h1 { font-size: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Swipe File Inteligente · Grupo NG</div>
+  <h1>O que <span>@ogabrielsantoss</span><br>sabe que você precisa aplicar</h1>
+  <p class="hero-sub">232 reels transcritos, analisados e destilados nos insights mais valiosos — separados por onde você aplica cada um.</p>
+  <div class="hero-stats">
+    <div class="hstat"><div class="n">232</div><div class="l">Reels analisados</div></div>
+    <div class="hstat ng"><div class="n">10</div><div class="l">Insights Grupo NG</div></div>
+    <div class="hstat cli"><div class="n">10</div><div class="l">Insights Clinicas</div></div>
+    <div class="hstat gold"><div class="n">20</div><div class="l">Acoes práticas</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <a href="#resumo">Resumo</a>
+  <a href="#grupo-ng" class="ng">&#9670; Grupo NG</a>
+  <a href="#clínicas" class="cli">&#9670; Clinicas</a>
+</nav>
+
+<div class="container">
+
+  <!-- RESUMO EXECUTIVO -->
+  <div id="resumo"></div>
+  <div class="section-header ng" style="padding-top:40px">
+    <div class="icon">&#128197;</div>
+    <div>
+      <h2>O que ele ensina, no fundo</h2>
+      <p>A filosofia central por trás de todos os reels</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="summary-section">
+    <h3>Filosofia central — vale pra agência e pra clínica</h3>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="dot ng"></div>
+        <div><strong>Protocolo bate procedimento</strong><p>Vender uma etapa e cobrar avulso e atestado de burrice. Quem vende protocolo/tratamento fatura 3 a 10x mais pela mesma hora de trabalho.</p></div>
+      </div>
+      <div class="summary-item">
+        <div class="dot ng"></div>
+        <div><strong>Metodologia não depende do dono</strong><p>Se o negócio para quando você para, você tem um emprego, não uma empresa. Playbook + time treinado = escala real.</p></div>
+      </div>
+      <div class="summary-item">
+        <div class="dot cli"></div>
+        <div><strong>Tem dinheiro parado na base</strong><p>O problema não e falta de lead novo. E o cemiterio de leads e pacientes que entraram e foram ignorados ou mal atendidos.</p></div>
+      </div>
+      <div class="summary-item">
+        <div class="dot cli"></div>
+        <div><strong>Quem qualifica e você, não o tráfego</strong><p>Agencia não faz milagre. Influencer não faz milagre. Quem qualifica o paciente e o seu processo — do Insta até a consulta.</p></div>
+      </div>
+      <div class="summary-item">
+        <div class="dot ng"></div>
+        <div><strong>Conteudo denso atrai cliente rico</strong><p>Dica de 60s atrai curioso. Conselho profundo atrai quem compra. O rico detecta futil de longe e não tem paciencia pra isso.</p></div>
+      </div>
+      <div class="summary-item">
+        <div class="dot cli"></div>
+        <div><strong>Velocidade no WhatsApp = dinheiro</strong><p>Responder em menos de 10 minutos aumenta conversao em até 80%. WhatsApp lento e cemiterio de dinheiro.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       GRUPO NG
+  ═══════════════════════════════════════ -->
+  <div id="grupo-ng" style="padding-top: 20px;"></div>
+  <div class="section-header ng">
+    <div class="icon">&#128293;</div>
+    <div>
+      <div class="badge" style="margin-bottom:6px">Aplicar internamente</div>
+      <h2>Grupo NG — O que você precisa mudar agora</h2>
+      <p>Insights extraidos dos reels sobre gestão de agência, vendas, time e modelo de negócio</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="insights-grid">
+
+    <!-- 1 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">01</div>
+        <div>
+          <div class="priority-badge urgent">&#128308; Urgente</div>
+          <div class="card-title">Pare de ser agência. Vire consultoria com ecossistema.</div>
+          <div class="card-subtitle">Modelo de negócio — o mais importante de todos os reels</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Modelo de agência não escala. Quatro socios com tres empresas faturando 40 mil juntas e zero sentido. O teto e baixo demais e o trabalho e alto demais. A transicao certa e: consultoria como entrada (front-end) de um ecossistema onde você ganha em equity, LTV, e multiplos produtos. A consultoria não e o negócio — ela e a porta de entrada.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 11/03/2026</strong>
+          "Vocês sao quatro socios que ganham 7 mil reais cada. 7 mil reais quem ganha e meu SDR, velho. Vocês nunca vao bater 300 mil com o modelo que vocês tem hoje, jamais."
+        </div>
+        <div class="quote-block">
+          <strong>Do reel — 02/03/2026</strong>
+          "A minha consultoria se tornou um front para o meu ecossistema. Hoje eu tenho tipo 73 as minhas individuais que se tornam entrada para um ecossistema que se retroalimenta, e eu tenho equity em 5, 6, 7 empresas."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Mapear os servicos atuais do Grupo NG e identificar qual e o "front" (porta de entrada)</li>
+            <li>Criar ofertas de continuidade para cada fase do cliente: tráfego → gestão → consultoria → treinamento comercial → equity</li>
+            <li>Calcular o LTV atual por cliente e projetar o LTV com ecossistema</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">02</div>
+        <div>
+          <div class="priority-badge urgent">&#128308; Urgente</div>
+          <div class="card-title">Vender uma vez só pro mesmo cliente e atestado de burrice</div>
+          <div class="card-subtitle">LTV — receita escondida na base de clientes atual</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Seu cliente sempre vai ter novas dores em cada fase de crescimento. Se você ajudou ele de 0 a 50k, ele agora tem problemas de 50k a 100k — e eles ainda envolvem marca, gestão e vendas. Se você não vende de novo pro mesmo cliente, e porque o seu servico não foi bem prestado, ou porque você não criou oferta para a próxima fase dele.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 19/02/2026</strong>
+          "Vender uma vez só para o cliente e um atestado de burrice. Seu cliente sempre vai ter novas dores. Em 2026, ser o conselheiro confiavel do seu cliente e a unica forma de estar dentro do jogo."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Listar todos os clientes ativos e mapear qual e a próxima dor de cada um</li>
+            <li>Criar uma oferta especifica para quem já e cliente (upsell / nova etapa)</li>
+            <li>Implementar reuniao trimestral de "evolucao" com clientes para identificar próxima necessidade</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">03</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">Conteudo de dica atrai pobre. Conselho atrai rico.</div>
+          <div class="card-subtitle">Posicionamento e conteudo do Grupo NG nas redes</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          O algoritmo mudou. O cliente que tem dinheiro para pagar high ticket e inteligente, maduro, e tem repulsa de conteudo futeo e de diquinha. Ele quer conselho profundo sobre como escalar o que já tem, não um "3 passos para..." de 60 segundos. Conteudo superficial só atrai curioso — não comprador.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 26/02/2026</strong>
+          "E por isso que o seu Instagram só atrai gente pobre. O rico, o cliente que você procura, ele e inteligente. O conteudo que atrai ele não e conteudo de dica, e conteudo de conselho. E conteudo mais profundo, mais denso. Ele detecta fácil quem e de mentira e quem e futil."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Rever os reels do Grupo NG: estão dando dica rápida ou conselho profundo com metodologia?</li>
+            <li>Criar conteudo que demonstra processo, framework, e resultado real de clientes</li>
+            <li>Parar de fazer conteudo de "top 3 erros" e comecar a fazer conteudo de "por que seu modelo de agência nunca vai escalar"</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">04</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">Seu time de vendas e amigo demais. Cobrar e cultura.</div>
+          <div class="card-subtitle">Gestão de time — SDR, pre-venda e closer</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Time que não cobra um ao outro não cresce. Se o padrao do SDR e marcar 15 calls por dia e hoje marcou 10, tem que ser questionado na hora. Lead indicado de meio-dia precisa ser ligado antes das 13h. Camaradagem no time não e ser amigo — e cobrar o crescimento mutuo. Quem e SDR precisa saber que um lead parado e dinheiro jogado fora pelo time inteiro.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 14/01/2026</strong>
+          "O cara marcou a ligação meio-dia. Você me ligou treze horas para o cara. Aih eu ralei o dia todo, vou passar te mandando um cara pronto para compra e você me da uma dessa? Não tem como não, velho!"
+        </div>
+        <div class="quote-block">
+          <strong>Do reel — 17/01/2026</strong>
+          "Vocês sao muito amigos um do outro, velho. Cobra o cara! Se hoje marcou 5, você tem que ficar irritado, irmao. Cobrem um ao outro o crescimento."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Definir meta diaria de contatos por pessoa (ex: SDR = 15 calls/dia) e acompanhar no daily</li>
+            <li>Regra: lead novo precisa ser contatado em no maximo 2 horas</li>
+            <li>Implementar daily de 15 minutos onde cada um reporta números — não história</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">05</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">Comunicação alinhada do anúncio ao close — mesma lingua</div>
+          <div class="card-subtitle">Processo comercial — do tráfego até o fechamento</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Se o anúncio fala uma coisa e o SDR fala outra e o closer fala outra, o lead fica perdido e não compra. Toda a equipe — do criativo ao closer — precisa falar o mesmo tema de comunicação por periodo. No primeiro trimestre: "ano comecando, fevereiro curto, mercado caindo" — essa e a dor que todo mundo usa no SPIN, na implicação, no fechamento.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 06/02/2026</strong>
+          "Closers, pre-vendas, captação. Eu preciso que todos falem a mesma lingua. A nossa lingua e primeiro trimestre. Quando vocês ficarem viajando de escala... gente, a fala agora não e escalar. Se vocês ficarem falando de novembro, de junho, o cara vai ficar todo perdido."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Definir o tema de comunicação de cada trimestre e passar para todo o time comercial e criativo</li>
+            <li>Criar briefing mensal alinhando: qual e a dor do momento do mercado que todo o time vai usar</li>
+            <li>Revisar os scripts de SDR e closer para garantir que usam o mesmo contexto que os anúncios</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">06</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">O básico bem feito bate qualquer inovação</div>
+          <div class="card-subtitle">Operação — processo e playbook</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Quando o processo esta redondo e o time fica inventando, o resultado cai. A unica coisa que o time precisa fazer e executar o playbook com disciplina — todos os dias, sem exceção. Quem inventa antes de dominar o básico esta sabotando o resultado.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 06/03/2026</strong>
+          "Não quero que vocês inventem a roda. O processo esta redondo. O playbook esta estruturado. Eu só quero que vocês facam o básico bem-feito. 3 bilhoes e meio nesse mes vai vir com o básico bem-feito."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Documentar o playbook atual de vendas e atendimento em um unico lugar acessivel ao time</li>
+            <li>Nas reunioes, perguntar primeiro "o processo foi seguido?" antes de buscar solucoes novas</li>
+            <li>Criar checklist diário de atividades minimas por funcao</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">07</div>
+        <div>
+          <div class="priority-badge medium">&#128994; Media prioridade</div>
+          <div class="card-title">Sair da entrega: metodologia > presenca do dono</div>
+          <div class="card-subtitle">Escala e sustentabilidade do negócio</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Se o resultado depende da sua hora, o negócio não escala. Primeiro passo: playbookar a metodologia. Segundo: contratar pessoas com fit. Terceiro: treinar na metodologia. Quarto: acompanhar até o time entregar o mesmo resultado (ou melhor) que o dono entregava. só assim o negócio High Ticket fica sustentavel.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 10/03/2026</strong>
+          "O dono vai sair da entrega quando criar uma metodologia que não depende da hora dele. Quando playbookar, contratar pessoas com fit, capacitar ainda mais. Treinou o time? Acompanha e vai vendo que o time esta entregando os mesmos resultados. Aih ele tem o negócio sustentavel."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Listar todas as entregas que dependem de você pessoalmente hoje</li>
+            <li>Para cada uma: documentar o processo em video ou texto</li>
+            <li>Definir qual membro do time vai absorver cada entrega com prazo de transicao</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">08</div>
+        <div>
+          <div class="priority-badge medium">&#128994; Media prioridade</div>
+          <div class="card-title">Resolve o problema rápido — raiz depois</div>
+          <div class="card-subtitle">Velocidade de iteração e tomada de decisão</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Empresas que chegam a 50 milhoes por ano não sao as que analisam mais — sao as que iteram mais rápido. Quando tem um problema: primeiro resolve o sintoma, depois investiga a raiz, depois define quem vai resolver, depois define prazo. Não inversamente.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 12/03/2026</strong>
+          "Resolve o problema rápido. Raiz do problema depois. Quem vai fazer depois. Prazo depois. Feito diariamente, isso leva a empresa para 50 milhoes por ano. Acerta rápido, melhora rápido."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Criar cultura de "plano de ação de 48h" para qualquer problema que aparece</li>
+            <li>Na reuniao semanal: listar problemas → atribuir responsável → definir prazo → checar na próxima semana</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">09</div>
+        <div>
+          <div class="priority-badge urgent">&#128308; Urgente</div>
+          <div class="card-title">Resposta rápida = conversao. Cada hora que passa, você perde.</div>
+          <div class="card-subtitle">Atendimento comercial — leads e clientes</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Pesquisa citada no reel: responder cliente em menos de 10 minutos aumenta conversao em até 80%. Esse princípio vale para o time do Grupo NG da mesma forma que para as secretárias de clínica. Lead que chegou agora e mais valioso do que lead de ontem. Ser quem resolve quando ninguem resolve e o que te torna indispensavel — e quem e indispensavel define o preco.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 13/02/2026</strong>
+          "Cliente que paga alto, paga por resposta rápida. Paga pra quem atende quando ninguem atende, pra quem resolve quando ninguem resolve. Aih você se torna indispensavel. E quem e indispensavel define o preco."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Definir SLA de resposta para leads: maximo 2 horas em horario comercial</li>
+            <li>Para clientes ativos: maximo 4 horas para qualquer mensagem urgente</li>
+            <li>Testar o próprio atendimento como cliente oculto uma vez por mes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="insight-card ng-card">
+      <div class="card-top">
+        <div class="card-number">10</div>
+        <div>
+          <div class="priority-badge medium">&#128994; Media prioridade</div>
+          <div class="card-title">Disciplina em um habito muda todos os outros</div>
+          <div class="card-subtitle">Cultura e lideranca — como o Gabriel pensa</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Um dos reels mais pessoais do Gabriel: a academia ensinou que habitos se repetem. Quem tem disciplina em um ambiente, desenvolve disciplina em todos os outros. Para um lider de empresa: a consistência no processo de vendas, no conteudo, no atendimento — ela não vem da motivação, vem da disciplina de habito. E isso que separa quem chegou de quem ainda esta chegando.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 10/03/2026</strong>
+          "A disciplina em um lugar pode te mudar completamente a vida. Vai te fazer a ter disciplina em todos os outros. Cara, eu preciso treinar todos os dias. Cara, eu também preciso cuidar dos meus clientes mais todos os dias."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que fazer</div>
+          <ul>
+            <li>Definir 3 habitos não-negociáveis diários para o time (ex: daily de 15min, 1 conteudo/dia, 1 follow-up/dia)</li>
+            <li>Cobrar esses habitos antes de cobrar resultado — habito gera resultado, não o contrario</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /insights-grid NG -->
+
+
+  <!-- ═══════════════════════════════════════
+       CLINICAS
+  ═══════════════════════════════════════ -->
+  <div id="clínicas" style="padding-top: 48px;"></div>
+  <div class="section-header cli">
+    <div class="icon">&#127973;</div>
+    <div>
+      <div class="badge" style="margin-bottom:6px">Aplicar nos seus clientes</div>
+      <h2>Clinicas e Saude — O que levar para seus clientes médicos</h2>
+      <p>Metodologia completa de vendas, posicionamento e retencao de pacientes</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <div class="insights-grid">
+
+    <!-- 1 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">01</div>
+        <div>
+          <div class="priority-badge urgent">&#128308; Urgente</div>
+          <div class="card-title">Protocolo vs procedimento isolado — mesma hora, 10x mais dinheiro</div>
+          <div class="card-subtitle">Modelo de negócio da clínica — o mais transformador</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Se o médico cobra R$500 ou R$1.000 por consulta isolada, esta desperdiçando a sua hora. Com o mesmo paciente, na mesma hora de trabalho, vendendo um protocolo completo (bioestimulador + preenchimento + toxina + corporal), o ticket vai para R$10.000 a R$15.000. O problema não e o paciente — e que o médico não aprendeu a vender tratamento. Não e possível transformar o rosto de alguem com terco superior avulso. Resultado real vem de jornada, não de procedimento isolado.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 11/03/2026</strong>
+          "Tem gente que gosta de ganhar R$500 a consulta. Eu gosto de ganhar R$15.000 pela mesma hora de trabalho. Vender protocolo e melhor não só pra você, mas pro paciente. Você só consegue entregar resultado com tratamento."
+        </div>
+        <div class="quote-block">
+          <strong>Do reel — 15/03/2026</strong>
+          "Se você não ta fazendo 300 mil por mes, você não ta vendendo plano de tratamento. Ponto final."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que recomendar ao cliente médico</div>
+          <ul>
+            <li>Criar o protocolo de tratamento com 3 a 4 etapas claras e preco por etapa e por pacote</li>
+            <li>Parar de aceitar marcação de procedimento avulso — posicionar como "não trabalho com procedimento isolado"</li>
+            <li>Treinar a secretária para já comunicar protocolo desde o primeiro contato no WhatsApp</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">02</div>
+        <div>
+          <div class="priority-badge urgent">&#128308; Urgente</div>
+          <div class="card-title">As 5 listas de pacientes — tem dinheiro parado na clínica</div>
+          <div class="card-subtitle">Reativação e monetização da base existente</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Antes de gastar mais em tráfego, o médico precisa olhar para o que já tem. Ha dinheiro parado em cinco tipos de pacientes que ele já tem — e que não estão sendo trabalhados. Cada lista tem uma ação diferente e um potencial de receita enorme.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 22/01/2026</strong>
+          "Você não precisa ficar gastando rios de dinheiro em tráfego pago. Se você tiver um negócio estruturado, tem dinheiro parado na mesa que você não viu ainda."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; As 5 listas e as ações</div>
+          <ul>
+            <li><strong>Lista 1 — Antigos (&gt;6 meses sem voltar):</strong> campanha de reativação com oferta especifica</li>
+            <li><strong>Lista 2 — Atuais (&lt;6 meses):</strong> oferta para próxima etapa do protocolo</li>
+            <li><strong>Lista 3 — VIPs (gastaram R$15-20k):</strong> evento exclusivo, tratamento diferenciado, pedido de indicação</li>
+            <li><strong>Lista 4 — Leads que não marcaram:</strong> cadencia de follow-up (3 contatos em 7 dias)</li>
+            <li><strong>Lista 5 — Especiais (cirurgia sem retorno, eventos):</strong> convite personalizado</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">03</div>
+        <div>
+          <div class="priority-badge urgent">&#128308; Urgente</div>
+          <div class="card-title">WhatsApp da clínica e um cemiterio de dinheiro</div>
+          <div class="card-subtitle">Atendimento — secretária como pre-venda</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          O médico investe em tráfego, conteudo, influencers — mas se a secretária demora 3 horas para responder, ou não tem script de qualificação, todo esse investimento e desperdiçado. A secretária e a pre-vendedora da clínica. O script precisa qualificar o paciente, comunicar protocolo (não preco avulso) e já gerar ancoragem de valor antes da consulta.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 03/03/2026</strong>
+          "Você fez um baita anúncio, um baita marketing. Mas se dentro do seu WhatsApp a secretária não esta convertendo, você ta perdendo dinheiro. Seu WhatsApp tem sido um cemiterio de dinheiro."
+        </div>
+        <div class="quote-block">
+          <strong>Do reel — 26/01/2026</strong>
+          "Pesquisas dizem que se você responder de 5 a 10 minutos, você tem chance de converter em até 80%. Se você demora tres horas, um dia para responder, aonde você vai parar?"
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que implementar</div>
+          <ul>
+            <li>Criar script de WhatsApp em 3 etapas: recepcao → qualificação → marcação (com linguagem de protocolo)</li>
+            <li>Implementar regra de resposta maxima: 10 minutos em horario comercial</li>
+            <li>Fazer cliente oculto mensal: enviar mensagem fingindo ser paciente e medir tempo e qualidade da resposta</li>
+            <li>Tela do WhatsApp aberta e ativa o tempo todo durante o horario de funcionamento</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">04</div>
+        <div>
+          <div class="priority-badge urgent">&#128308; Urgente</div>
+          <div class="card-title">Metodologia de atendimento na consulta — 5 etapas que vendem</div>
+          <div class="card-subtitle">Consulta médica como processo de vendas etico</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Se o paciente chega na linha de negociação e levanta objecoes (marido, cartao, cachorro), o erro não foi na negociação — foi nas etapas anteriores. A consulta precisa seguir uma metodologia que gera consciencia de tratamento antes de falar preco. Quem saiu de casa, pagou consulta e gastou gasolina, esta disposto a fechar — se a metodologia foi feita certa.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 14/03/2026</strong>
+          "Todas as vezes que você ve muita objecao em negociação, foi porque a metodologia de atendimento falhou. A objecao na negociação e sintoma do erro la atrás."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; As 5 etapas da metodologia</div>
+          <ul>
+            <li><strong>1. Abertura:</strong> recepcao calorosa, fazer o paciente se sentir esperado e importante</li>
+            <li><strong>2. Conexao:</strong> criar rapport antes de falar de procedimento</li>
+            <li><strong>3. Mapeamento:</strong> perguntas que revelam as dores profundas (não só o sintoma superficial)</li>
+            <li><strong>4. Direcionamento:</strong> apresentar o protocolo como solucao para as dores mapeadas</li>
+            <li><strong>5. Linha de negociação:</strong> condicao especial para fechar no mesmo dia — quem não fecha no dia raramente fecha depois</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">05</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">Follow-up: a cadencia que recupera pacientes perdidos</div>
+          <div class="card-subtitle">Recuperação de leads e pacientes que sumiu</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Um paciente que entrou em contato e sumiu não e um paciente perdido — e um paciente que não foi buscado. As vezes ele esqueceu de responder. As vezes a vida aconteceu. Uma segunda, terceira mensagem estrategica pode recuperar uma cirurgia de R$20.000. A maioria das clínicas não faz nenhum follow-up estruturado.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 27/01/2026</strong>
+          "O paciente veio no seu Instagram, no seu Zap querendo uma cirurgia. Simplesmente sumiu. Talvez uma ligação iria te dar uma cirurgia de 20 mil reais. Tem muito dinheiro parado aih que a gente não chamou."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; Cadencia de follow-up recomendada</div>
+          <ul>
+            <li>Dia 1: mensagem de boas-vindas + pergunta sobre o interesse</li>
+            <li>Dia 3: segundo contato — compartilhar antes/depois de um caso parecido</li>
+            <li>Dia 7: terceiro contato — ligar (não só mensagem)</li>
+            <li>Depois de 30 dias sem resposta: entrar na lista de "leads frios" para campanhas futuras</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">06</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">Paciente modelo — estrategia de semeadura que fura bolhas</div>
+          <div class="card-subtitle">Captação organica e posicionamento premium</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Paciente modelo não e paciente gratuito — e investimento estrategico. Escolhe um formador de opiniao por semana (personal, dona de salao, influencer local, professora de academia, pastor), entra ele no protocolo completo (não botox avulso), faz storytelling, coleta antes/depois, e pede 3 indicações do perfil ideal. Em 5 meses furou 5 bolhas sociais diferentes — todo BH/SP/Rio sabe quem você e.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 12/03/2026</strong>
+          "Se eu tivesse abrindo uma clínica, ia fazer paciente modelo por dia. Ia pegar um do ambiente religioso, outro do personal, outro do salao, outro da loja de roupa. Em cinco meses, todo mundo sabe quem eu sou. Porque eu furei bolha. Tem que fazer paciente modelo, bicho."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; Como montar o processo semeadura</div>
+          <ul>
+            <li>Escolher 1 formador de opiniao por semana de nichos diferentes</li>
+            <li>Fazer protocolo completo (não procedimento avulso) — o resultado precisa ser impressionante</li>
+            <li>Gravar antes, durante e depois — criar storytelling de 5 dias no Instagram</li>
+            <li>No contrato: exigir post de collab, story com tag, e indicação de 3 pacientes do perfil ideal</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">07</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">Evento Ouro — não faca Botox Day pelo amor de Deus</div>
+          <div class="card-subtitle">Eventos na clínica — como fazer certo</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          Botox Day atrai paciente de preco, vicia os pacientes atuais a esperar promocao, e destroi o posicionamento premium. O Evento Ouro tem a mesma estrutura de evento mas com comunicação completamente diferente: o objetivo não e vender procedimento, e iniciar planos de tratamento. A comunicação e de jornada, não de preco.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 16/03/2026</strong>
+          "Botox Day e a maior furada que você vai fazer na sua clínica. Vai atrair o paciente que só quer saber de preco, que não vai entrar no plano de tratamento. E você vai viciar os pacientes que você tem. Quem vem por preco vai embora por preco."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; Como transformar evento em Evento Ouro</div>
+          <ul>
+            <li>Comunicação pre-evento: "inicio de tratamento" não "preco especial"</li>
+            <li>Pre-consulta rápida antes do evento para qualificar quem vem</li>
+            <li>No dia: aplicar metodologia de atendimento mesmo no evento (mapeamento + protocolo)</li>
+            <li>Meta do evento: número de planos iniciados, não número de procedimentos feitos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">08</div>
+        <div>
+          <div class="priority-badge high">&#128992; Alta prioridade</div>
+          <div class="card-title">Conteudo pelos 3Ds: Dores, Desejos e Duvidas</div>
+          <div class="card-subtitle">Instagram da clínica — nunca mais ficar sem o que postar</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          O médico não precisa de criatividade para criar conteudo — precisa de um sistema. Os 3Ds (Dores, Desejos e Duvidas) geram conteudo para o ano todo. 10 dores + 10 desejos + 10 duvidas = 30 temas. Cada tema pode ser feito em 3 formatos diferentes = 90 conteudos. O conteudo precisa falar sobre tratamento, não procedimento avulso.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 21/03/2026</strong>
+          "Se você falar sobre dor, desejo e duvida, você vai ter postagem pro resto do seu ano. 10 dores, 10 desejos, 10 duvidas. Você pode fazer variações desse conteudo. Você não vai ficar sem ter o que postar."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; Como montar o banco de conteudo</div>
+          <ul>
+            <li>Sentar com o médico e listar: 10 principais dores dos pacientes, 10 desejos (o que eles querem), 10 duvidas mais frequentes</li>
+            <li>Para cada item: criar versao em selfie falando, versao em estudo de caso com antes/depois, versao educativa</li>
+            <li>Todo conteudo deve conectar o tema a jornada de tratamento — nunca a procedimento avulso</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">09</div>
+        <div>
+          <div class="priority-badge medium">&#128994; Media prioridade</div>
+          <div class="card-title">Não julgue o bolso do paciente — você não conhece ele</div>
+          <div class="card-subtitle">Mentalidade de vendas — erro classico de médico</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          O maior sabotador das vendas de um médico e ele mesmo. Olha para o paciente, acha que não tem dinheiro, e já reduz o preco antes de nem apresentar. Em vendas, você escuta e conduz — não supoe. O paciente tem um bolso que não e o seu. Quem precifica pelo próprio bolso esta deixando dinheiro na mesa todo santo dia.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 07/02/2026</strong>
+          "Vocês precificam na hora da consulta o bolso do cliente porque a gente e preconceituoso. Olhou assim e falou, esse cabelo, esse negócio... Quem disse que o cliente tem o bolso que você achou? O paciente tem um bolso que não e o teu bolso. A tua mente e o que te ferra."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O que trabalhar com o médico</div>
+          <ul>
+            <li>Exercicio: fazer o médico listar os ultimos 5 pacientes que "achou que não ia pagar" — checar se de fato não pagaram</li>
+            <li>Regra: nunca oferecer desconto antes do paciente pedir — apresentar sempre o protocolo completo primeiro</li>
+            <li>Treinamento: escutar para entender a dor, não para adivinhar o orçamento</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="insight-card cli-card">
+      <div class="card-top">
+        <div class="card-number">10</div>
+        <div>
+          <div class="priority-badge medium">&#128994; Media prioridade</div>
+          <div class="card-title">Parceria com influencer: fechar como paciente, não como mídia</div>
+          <div class="card-subtitle">Marketing de influencia — como fazer gerar ROI real</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <p class="card-lesson">
+          A maioria das clínicas fecha influencer para "postar uma vez". Isso não gera resultado. O certo e fechar o influencer como paciente — ele entra no protocolo completo, cria uma narrativa de 5 dias (antes, buscando médico, chegando, durante, depois), e isso gera conteudo organico, credibilidade e demanda real.
+        </p>
+        <div class="quote-block">
+          <strong>Do reel — 27/01/2026</strong>
+          "Como fechar parceria com influencer que vai gerar resultado de verdade? Não fechando ele como influencer, fechando ele como paciente. Faz a narrativa, o storytelling. Gente, meu rosto ta caindo, to procurando um doutor. Isso e storytelling de tres, cinco dias."
+        </div>
+        <div class="action-box">
+          <div class="action-label">&#9989; O contrato certo com influencer</div>
+          <ul>
+            <li>Influencer entra no protocolo completo (não procedimento avulso)</li>
+            <li>Obrigações: story no dia, post antes/depois, reels durante o tratamento, collab com o médico</li>
+            <li>O influencer precisa se pagar: calcular se o retorno em pacientes cobre o custo do protocolo</li>
+            <li>Criar storytelling de 5 a 7 dias — não um post unico</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /insights-grid CLI -->
+
+</div><!-- /container -->
+
+<div class="footer">
+  Grupo NG &bull; Analise @ogabrielsantoss &bull; 232 reels &bull; AssemblyAI &bull; Abril 2026
+</div>
+
+</body>
+</html>
