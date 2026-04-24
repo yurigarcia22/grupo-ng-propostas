@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treinamento Comercial — A&S Sorriso</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --green:   #10b981;
+    --emerald: #34d399;
+    --teal:    #06b6d4;
+    --amber:   #f59e0b;
+    --red:     #ef4444;
+    --dark:    #0D1117;
+    --dark2:   #161B22;
+    --dark3:   #21262D;
+    --border:  #30363D;
+    --text:    #E6EDF3;
+    --muted:   #8B949E;
+    --white:   #FFFFFF;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  #counter {
+    position: fixed;
+    bottom: 24px; right: 32px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  .nav-btn {
+    position: fixed;
+    bottom: 20px;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .nav-btn:hover { background: var(--green); border-color: var(--green); color: #fff; }
+  #btn-prev { right: 120px; }
+  #btn-next { right: 68px; }
+
+  #dots {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--green); width: 20px; border-radius: 3px; }
+
+  #slides { width: 100%; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+    padding: 60px 80px;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .slide-inner { max-width: 1100px; width: 100%; }
+
+  /* COVER */
+  .cover {
+    background: radial-gradient(ellipse at 30% 50%, #060e0b 0%, var(--dark) 70%);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(16,185,129,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.35);
+    color: var(--green);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .cover h1 {
+    font-size: 78px;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+  .cover h1 span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover h1 .amber {
+    background: linear-gradient(135deg, var(--amber), #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover .subtitle {
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cover-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ctag {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+  .slide-title {
+    font-size: 44px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+  }
+  .slide-title span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-title .amber {
+    background: linear-gradient(135deg, var(--amber), #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 30px;
+    max-width: 720px;
+  }
+  .divider {
+    width: 48px; height: 4px;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    border-radius: 2px;
+    margin: 20px 0;
+  }
+
+  /* CARDS */
+  .cards { display: grid; gap: 14px; }
+  .cards-2 { grid-template-columns: repeat(2,1fr); }
+  .cards-3 { grid-template-columns: repeat(3,1fr); }
+  .cards-4 { grid-template-columns: repeat(4,1fr); }
+
+  .card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(16,185,129,0.4); }
+  .card.highlight {
+    background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.04));
+    border-color: rgba(16,185,129,0.28);
+  }
+  .card.amber-card {
+    background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(249,115,22,0.04));
+    border-color: rgba(245,158,11,0.28);
+  }
+  .card.red-card {
+    background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(245,158,11,0.04));
+    border-color: rgba(239,68,68,0.2);
+  }
+  .card-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .card .card-num {
+    font-size: 44px; font-weight: 900; line-height: 1; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* LIST ITEMS */
+  .list { display: flex; flex-direction: column; gap: 12px; }
+  .list-item {
+    display: flex; align-items: flex-start; gap: 14px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .list-item:hover { border-color: rgba(16,185,129,0.3); }
+  .li-icon {
+    width: 38px; height: 38px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px; flex-shrink: 0; margin-top: 2px;
+  }
+  .li-icon.green  { background: rgba(16,185,129,0.14); }
+  .li-icon.teal   { background: rgba(6,182,212,0.14); }
+  .li-icon.amber  { background: rgba(245,158,11,0.14); }
+  .li-icon.red    { background: rgba(239,68,68,0.14); }
+  .list-item h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .list-item p  { font-size: 12.5px; color: var(--muted); line-height: 1.55; }
+
+  /* TWO COL */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; align-items: start;
+  }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 12px; }
+  .step  { display: flex; align-items: flex-start; gap: 14px; }
+  .step-num {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800; flex-shrink: 0; color: #fff;
+  }
+  .step-content h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .step-content p  { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+  /* PILLS */
+  .pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .pill { padding: 5px 12px; border-radius: 100px; font-size: 11px; font-weight: 600; }
+  .pill.green  { background: rgba(16,185,129,0.13);  color: var(--green);  border: 1px solid rgba(16,185,129,0.3); }
+  .pill.teal   { background: rgba(6,182,212,0.13);   color: var(--teal);   border: 1px solid rgba(6,182,212,0.3); }
+  .pill.amber  { background: rgba(245,158,11,0.13);  color: var(--amber);  border: 1px solid rgba(245,158,11,0.3); }
+  .pill.red    { background: rgba(239,68,68,0.13);   color: #ef4444;       border: 1px solid rgba(239,68,68,0.3); }
+
+  /* QUOTE */
+  .quote-block {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green);
+    border-radius: 0 12px 12px 0;
+    padding: 18px 22px;
+    margin: 12px 0;
+  }
+  .quote-block p { font-size: 15px; font-style: italic; line-height: 1.6; }
+  .quote-block .author { font-size: 11px; color: var(--muted); margin-top: 8px; font-style: normal; }
+
+  /* BIG STAT */
+  .stat-row { display: flex; gap: 14px; }
+  .big-stat {
+    flex: 1; text-align: center; padding: 22px 16px;
+    background: var(--dark2); border: 1px solid var(--border); border-radius: 14px;
+  }
+  .big-stat .number {
+    font-size: 48px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .big-stat .label { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+  /* FASE HERO */
+  .fase-hero {
+    background: linear-gradient(135deg, rgba(16,185,129,0.1), rgba(6,182,212,0.04));
+    border: 1px solid rgba(16,185,129,0.25);
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+  }
+  .fase-hero .num {
+    font-size: 60px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .fase-hero h2 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .fase-hero p  { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 720px; }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    font-size: 13.5px; color: var(--text); line-height: 1.5;
+  }
+  .check-item::before {
+    content: "✓"; color: var(--green); font-weight: 800; flex-shrink: 0; margin-top: 1px;
+  }
+
+  /* DOR BIG */
+  .dor-big {
+    background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(245,158,11,0.04));
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 18px;
+    padding: 24px 28px;
+    margin-bottom: 18px;
+  }
+  .dor-big .dor-icon { font-size: 38px; margin-bottom: 10px; }
+  .dor-big h2 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+  .dor-big p  { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 720px; }
+
+  /* RESULT BADGE */
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid rgba(16,185,129,0.25);
+    color: var(--green);
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    margin-top: 14px;
+  }
+
+  /* METODOLOGIA FASES */
+  .metodologia-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .meto-item {
+    text-align: center;
+    padding: 18px 14px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: all 0.2s;
+  }
+  .meto-item .meto-icon { font-size: 28px; margin-bottom: 10px; }
+  .meto-item h4 { font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+  .meto-item p  { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  /* WHATSAPP BUBBLE */
+  .wa-bubble-wrap {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .wa-header {
+    background: #0a5c4a;
+    padding: 10px 16px;
+    font-size: 11px; font-weight: 700;
+    color: #a8f0d8; display: flex; align-items: center; gap: 6px;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .wa-body { padding: 16px; }
+  .wa-msg {
+    background: #152d21; border-radius: 0 12px 12px 12px;
+    padding: 12px 16px; font-size: 13px; line-height: 1.65;
+    color: #d0f0e0; max-width: 90%; display: inline-block;
+  }
+
+  /* CLOSE */
+  .close-slide { text-align: center; }
+  .close-slide h2 {
+    font-size: 60px; font-weight: 900; line-height: 1;
+    letter-spacing: -2px; margin-bottom: 22px;
+  }
+  .close-slide h2 span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .close-slide p {
+    font-size: 19px; color: var(--muted);
+    max-width: 520px; margin: 0 auto 36px; line-height: 1.6;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    color: #fff; padding: 14px 32px; border-radius: 12px;
+    font-size: 15px; font-weight: 800; border: none; cursor: pointer;
+  }
+
+  /* ========= MOBILE RESPONSIVO ========= */
+  @media (max-width: 768px) {
+    body { overflow-y: auto; height: auto; }
+    #slides { height: auto; position: relative; }
+
+    .slide {
+      position: relative;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: all !important;
+      padding: 36px 18px 90px;
+      height: auto;
+      min-height: 100svh;
+      display: none;
+      align-items: flex-start;
+    }
+    .slide.active { display: flex; }
+
+    #dots { bottom: 16px; }
+    .nav-btn { bottom: 12px; }
+    #btn-prev { right: 100px; }
+    #btn-next { right: 52px; }
+    #counter { bottom: 18px; right: 16px; }
+
+    .cover h1 { font-size: 40px; letter-spacing: -1.5px; }
+    .cover .subtitle { font-size: 14px; }
+    .cover-tags { gap: 7px; }
+    .ctag { font-size: 11px; padding: 6px 11px; }
+
+    .slide-title { font-size: 28px; letter-spacing: -0.5px; }
+    .slide-desc  { font-size: 14px; margin-bottom: 20px; }
+    .section-label { font-size: 10px; }
+
+    .cards-3, .cards-4, .cards-2 { grid-template-columns: 1fr; }
+    .two-col { grid-template-columns: 1fr; gap: 18px; }
+    .stat-row { flex-direction: column; gap: 10px; }
+    .big-stat .number { font-size: 40px; }
+
+    .fase-hero { padding: 18px; }
+    .fase-hero .num { font-size: 40px; }
+    .fase-hero h2 { font-size: 18px; }
+    .fase-hero p  { font-size: 13px; }
+
+    .dor-big { padding: 18px; }
+    .dor-big h2 { font-size: 18px; }
+    .dor-big p  { font-size: 13px; }
+
+    .close-slide h2 { font-size: 32px; }
+    .close-slide p  { font-size: 15px; }
+
+    .card { padding: 16px 18px; }
+    .list-item { padding: 13px 15px; }
+    .quote-block p { font-size: 13px; }
+
+    .metodologia-grid { grid-template-columns: repeat(3,1fr); }
+  }
+
+  @media (max-width: 400px) {
+    .cover h1 { font-size: 32px; }
+    .slide-title { font-size: 24px; }
+    .fase-hero .num { font-size: 34px; }
+    .metodologia-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+<div id="counter"></div>
+
+<div id="slides">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <div class="badge">&#129463; Grupo NG &nbsp;&#183;&nbsp; Treinamento Comercial</div>
+      <h1>Treinamento<br/><span>Comercial</span><br/><span class="amber">A&amp;S Sorriso</span></h1>
+      <p class="subtitle">Da recepção ao fechamento: protocolos, scripts e estratégias para transformar cada contato em resultado.</p>
+      <div class="cover-tags">
+        <div class="ctag">&#128205; Clínica Odontológica</div>
+        <div class="ctag">&#128197; Abril de 2026</div>
+        <div class="ctag">&#127919; Recepção + Sócia</div>
+        <div class="ctag">&#10024; Grupo NG Estratégia</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: O QUE VAMOS COBRIR ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Visão geral</div>
+      <div class="slide-title">O que vamos <span>cobrir hoje</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Cinco blocos práticos. Sem teoria desnecessária — tudo o que está aqui você consegue aplicar a partir de segunda-feira.</p>
+      <div class="metodologia-grid">
+        <div class="meto-item">
+          <div class="meto-icon">&#129504;</div>
+          <h4 style="color:var(--green);">01. Mindset</h4>
+          <p>Por que a forma de apresentar define se o paciente fecha</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#129309;</div>
+          <h4 style="color:var(--green);">02. Protocolo</h4>
+          <p>Os 6 passos de atendimento que geram indicação</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#128172;</div>
+          <h4 style="color:var(--green);">03. WhatsApp</h4>
+          <p>Scripts prontos para cada momento da jornada</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#128203;</div>
+          <h4 style="color:var(--green);">04. As 5 Listas</h4>
+          <p>Gerar receita com a base que você já tem</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#128200;</div>
+          <h4 style="color:var(--green);">05. Métricas</h4>
+          <p>O que medir toda semana para crescer</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#9989;</div>
+          <h4 style="color:var(--green);">06. Checklist</h4>
+          <p>Rotina diária da atendente em 3 blocos</p>
+        </div>
+      </div>
+      <div class="quote-block" style="margin-top:20px;">
+        <p>"O paciente pode esquecer o que o dentista fez. Ele nunca esquece como foi tratado."</p>
+        <div class="author">Princípio base deste treinamento</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: DIAGNÓSTICO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Diagnóstico</div>
+      <div class="slide-title">O <span>cenário atual</span> da A&amp;S Sorriso</div>
+      <div class="divider"></div>
+      <p class="slide-desc">A clínica tem estrutura, equipe e atendimento de qualidade. O que falta é processo comercial que transforme o bom atendimento em receita previsível e crescimento por indicação.</p>
+      <div class="cards cards-2">
+        <div class="card">
+          <div class="card-icon">&#129309;</div>
+          <h3>Ponto forte: atendimento humano</h3>
+          <p>A equipe cuida dos pacientes com atenção real. Isso é o ativo mais valioso — e é o que o treinamento vai transformar em diferencial comercial.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128200;</div>
+          <h3>Ponto forte: base de pacientes</h3>
+          <p>Há pacientes ativos, inativos e leads que já demonstraram interesse. Essa base, trabalhada com processo, gera receita sem gastar com anúncio.</p>
+        </div>
+        <div class="card red-card">
+          <div class="card-icon">&#9200;</div>
+          <h3 style="color:var(--red);">Gargalo: resposta lenta no WhatsApp</h3>
+          <p>Leads que chegam e não recebem resposta em até 10 minutos têm chance de conversão próxima de zero. Cada hora de demora é um paciente no concorrente.</p>
+        </div>
+        <div class="card red-card">
+          <div class="card-icon">&#128176;</div>
+          <h3 style="color:var(--red);">Gargalo: preço sem contexto de tratamento</h3>
+          <p>Quando a atendente responde só o valor de um procedimento, o paciente compara pelo preço — e você sempre perde essa batalha. O valor precisa vir antes do número.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: DORES QUE TRAVAM ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Mapeamento</div>
+      <div class="slide-title">As <span>4 dores</span> que deixam dinheiro na mesa</div>
+      <div class="divider"></div>
+      <div class="list">
+        <div class="list-item">
+          <div class="li-icon red">&#128681;</div>
+          <div><h4>Ausência de follow-up estruturado</h4><p>Pacientes que foram à consulta e não fecharam raramente recebem uma segunda abordagem. Com cadência de 3 toques em 7 dias, parte deles fecha sem precisar de desconto.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#127919;</div>
+          <div><h4>Recepção tratada como ponto de informação</h4><p>A atendente não é uma secretária que passa horário. Ela é a primeira vendedora da clínica. Cada contato — WhatsApp, ligação ou balcão — é uma oportunidade de iniciar um tratamento.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">&#128203;</div>
+          <div><h4>Base de pacientes dormentes sem abordagem</h4><p>Pacientes que fizeram tratamento há mais de 6 meses e nunca mais foram contatados. A lista já está na agenda — só falta abordagem estruturada para reativar.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#129300;</div>
+          <div><h4>Suposição financeira sobre o paciente</h4><p>A atendente — e às vezes a dentista — reduz o valor antes de apresentar o tratamento, baseada na aparência do paciente. Isso deixa receita real na mesa todo dia.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 5: MINDSET COMERCIAL ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 01 — Mindset</div>
+      <div class="fase-hero">
+        <div class="num">01</div>
+        <h2>A grande virada: protocolo vs. procedimento</h2>
+        <p>A maior mudança de receita de uma clínica acontece quando a equipe para de vender procedimentos isolados e começa a apresentar jornadas de tratamento completas.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-num" style="font-size:32px;">R$ 500</div>
+          <h3>Procedimento isolado</h3>
+          <p>Ticket médio de um atendimento avulso. O paciente compara pelo preço e escolhe pelo mais barato.</p>
+        </div>
+        <div class="card" style="display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--green);">
+          &#8594;
+        </div>
+        <div class="card highlight">
+          <div class="card-num" style="font-size:32px;">R$ 8.000</div>
+          <h3>Protocolo completo</h3>
+          <p>Ticket médio de um tratamento apresentado como jornada. A mesma sala, a mesma hora, o mesmo dentista.</p>
+        </div>
+      </div>
+      <div class="result-badge">&#128293; A diferença não está no procedimento — está em como você apresenta o valor antes de falar o número.</div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 6: ERROS QUE CUSTAM RECEITA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 01 — Mindset</div>
+      <div class="slide-title">Os erros que <span class="amber">custam receita</span> todo dia</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="list">
+          <div class="list-item">
+            <div class="li-icon red">&#10060;</div>
+            <div>
+              <h4>Dar preço antes de mostrar valor</h4>
+              <p>Quando a resposta para "quanto custa um clareamento?" é só um número, o paciente compara e decide sem entender o que recebe.</p>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="li-icon red">&#10060;</div>
+            <div>
+              <h4>Assumir que o paciente não pode pagar</h4>
+              <p>Reduzir o tratamento antes de apresentá-lo, baseado na aparência ou no jeito de falar. Apresente sempre o completo primeiro.</p>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="li-icon red">&#10060;</div>
+            <div>
+              <h4>Encerrar sem agendar o retorno</h4>
+              <p>Paciente que sai sem data marcada tem 60% menos chance de voltar. A próxima consulta deve ser agendada ainda na recepção.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="quote-block">
+            <p>"Se você responder em até 10 minutos, tem chance de converter em até 80%. Se demorar mais de 1 hora, o paciente já está em outra clínica."</p>
+            <div class="author">Dados de mercado odontológico</div>
+          </div>
+          <div class="card highlight" style="margin-top:14px;">
+            <h3 style="color:var(--green); margin-bottom:10px;">Como deve ser</h3>
+            <div class="checklist">
+              <div class="check-item">Qualificar o paciente com perguntas antes de passar preço</div>
+              <div class="check-item">Apresentar o tratamento completo como solução para a dor</div>
+              <div class="check-item">Falar o investimento depois que o valor já está claro</div>
+              <div class="check-item">Sair do contato com próxima etapa definida</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 7: PROTOCOLO OVERVIEW ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 02 — Protocolo</div>
+      <div class="slide-title">O protocolo de <span>atendimento</span> em 6 passos</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Consistência cria confiança. Esses 6 passos garantem que todo paciente — do primeiro ao décimo ano — viva a mesma experiência de qualidade.</p>
+      <div class="metodologia-grid">
+        <div class="meto-item">
+          <div class="meto-icon">&#128075;</div>
+          <h4 style="color:var(--green);">01. Recepção</h4>
+          <p>De pé, pelo nome, contato visual</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#9749;</div>
+          <h4 style="color:var(--green);">02. Conforto</h4>
+          <p>Café ou água oferecidos ativamente</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#9200;</div>
+          <h4 style="color:var(--green);">03. Tempo</h4>
+          <p>Comunicar a espera e atualizar se mudar</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#128694;</div>
+          <h4 style="color:var(--green);">04. Acompanhar</h4>
+          <p>Levar pessoalmente até a sala</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#128140;</div>
+          <h4 style="color:var(--green);">05. Despedida</h4>
+          <p>Verificar conforto + próximo agendamento</p>
+        </div>
+        <div class="meto-item">
+          <div class="meto-icon">&#11088;</div>
+          <h4 style="color:var(--green);">06. Avaliação</h4>
+          <p>QR Code Google no momento certo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 8: PASSOS 1 A 3 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 02 — Protocolo</div>
+      <div class="fase-hero">
+        <div class="num">01–03</div>
+        <h2>Chegada: os primeiros 3 minutos definem tudo</h2>
+        <p>A primeira impressão é formada nos primeiros 30 segundos. Os passos 1 a 3 criam o estado emocional que o paciente vai carregar durante toda a consulta.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <h3 style="color:var(--green);">&#128075; Passo 1 — Recepção de pé</h3>
+          <p style="margin-bottom:10px;">Levante quando o paciente entrar e chame pelo nome. Isso diz: "você era esperado". Nunca receba sentada ou sem contato visual.</p>
+          <div class="quote-block" style="margin:0; border-radius:8px; padding:12px 14px;">
+            <p style="font-size:12px;">"Olá, Ana! Seja bem-vinda à A&amp;S Sorriso. A doutora te aguarda em uns 10 minutinhos."</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>&#9749; Passo 2 — Conforto ativo</h3>
+          <p style="margin-bottom:10px;">Não deixe o café em cima da mesa e espere pedirem. Leve até o paciente ou gesticule em direção à estação. É um gesto pequeno com impacto enorme na memória emocional.</p>
+          <div class="pills">
+            <div class="pill green">Café</div>
+            <div class="pill teal">Água</div>
+            <div class="pill amber">Chá</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>&#9200; Passo 3 — Comunicar tempo de espera</h3>
+          <p style="margin-bottom:10px;">Nunca deixe o paciente esperando sem informação. Incerteza gera ansiedade. Comunicação gera confiança. Se o tempo mudar, atualize.</p>
+          <div class="quote-block" style="margin:0; border-radius:8px; padding:12px 14px;">
+            <p style="font-size:12px;">"A doutora está finalizando. Deve te chamar em uns 10 minutos, tá?"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 9: PASSOS 4 A 6 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 02 — Protocolo</div>
+      <div class="fase-hero">
+        <div class="num">04–06</div>
+        <h2>Saída: o que o paciente vai lembrar</h2>
+        <p>A memória emocional de uma consulta é formada principalmente nos momentos de chegada e saída. Os passos 4 a 6 transformam o término da visita em semente de fidelidade e indicação.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card">
+          <h3>&#128694; Passo 4 — Acompanhar até a sala</h3>
+          <p style="margin-bottom:10px;">Não aponte o corredor. Levante e acompanhe. Para pacientes de primeira vez, faça um mini-tour: banheiro, recepção, onde chamar se precisar.</p>
+          <div class="pills"><div class="pill green">1ª vez</div><div class="pill teal">Tour rápido</div></div>
+        </div>
+        <div class="card highlight">
+          <h3 style="color:var(--green);">&#128140; Passo 5 — Despedida com verificação</h3>
+          <p style="margin-bottom:10px;">Ao saírem, pergunte como está se sentindo. Agende o retorno antes de se despedir — paciente sem data tem 60% menos chance de voltar.</p>
+          <div class="quote-block" style="margin:0; border-radius:8px; padding:12px 14px;">
+            <p style="font-size:12px;">"Como você está? Qualquer dúvida em casa, pode mandar mensagem aqui no WhatsApp. Vamos já marcar seu retorno?"</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>&#11088; Passo 6 — Avaliação Google</h3>
+          <p style="margin-bottom:10px;">Melhor momento: logo após o pagamento, com o paciente satisfeito. QR Code impresso no balcão. Respostas a avaliações: 15 min/semana, toda semana.</p>
+          <div class="quote-block" style="margin:0; border-radius:8px; padding:12px 14px;">
+            <p style="font-size:12px;">"Sua avaliação ajuda outras pessoas a conhecerem a clínica. Leva 1 minutinho!"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 10: AMBIENTE QUE VENDE ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 02 — Protocolo</div>
+      <div class="slide-title">O ambiente que <span>vende</span> antes de qualquer palavra</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Antes de a atendente abrir a boca, o paciente já formou uma impressão. Música, aroma, organização e sinalização trabalham silenciosamente a favor — ou contra — a clínica.</p>
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-icon">&#127925;</div>
+          <h3>Música Ambiente</h3>
+          <p>Spotify: jazz, bossa nova ou clássico, volume baixo. Reduz ansiedade e percepção de tempo de espera.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#127807;</div>
+          <h3>Aroma Discreto</h3>
+          <p>Difusor elétrico com lavanda, eucalipto ou baunilha. Cria memória sensorial positiva associada à clínica.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128250;</div>
+          <h3>TV Personalizada</h3>
+          <p>Loop no Canva com fotos da equipe, dicas e depoimentos. Apresenta a clínica antes da consulta começar.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128101;</div>
+          <h3 style="color:var(--green);">Painel da Equipe</h3>
+          <p>Fotos e especialidades de cada profissional visíveis na recepção. Reduz barreiras emocionais antes do atendimento.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128203;</div>
+          <h3 style="color:var(--green);">Checklist de Abertura</h3>
+          <p>Balcão organizado, café pronto, música ligada, TV funcionando, agenda revisada — antes do primeiro paciente.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128246;</div>
+          <h3>WiFi Sinalizado</h3>
+          <p>Nome da rede e senha em placa visível. Gesto pequeno percebido como cuidado com o conforto do paciente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 11: WHATSAPP REGRAS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 03 — WhatsApp</div>
+      <div class="fase-hero">
+        <div class="num">03</div>
+        <h2>WhatsApp como central comercial</h2>
+        <p>O WhatsApp não é só para responder perguntas. É o canal de relacionamento mais próximo com seus pacientes — e a maior oportunidade comercial que a clínica tem hoje.</p>
+      </div>
+      <div class="two-col">
+        <div class="card highlight">
+          <h3 style="color:var(--green); margin-bottom:12px;">&#10003; Regras de ouro</h3>
+          <div class="checklist">
+            <div class="check-item"><strong>10 minutos</strong> — tempo máximo de resposta em horário comercial</div>
+            <div class="check-item"><strong>Nunca</strong> passe preço isolado sem contexto de tratamento</div>
+            <div class="check-item"><strong>Sempre</strong> termine com uma pergunta ou call to action</div>
+            <div class="check-item"><strong>Sempre</strong> use o nome do paciente na saudação</div>
+            <div class="check-item"><strong>Nunca</strong> deixe uma conversa aberta sem resposta por mais de 1 hora</div>
+          </div>
+        </div>
+        <div class="card red-card">
+          <h3 style="color:var(--red); margin-bottom:12px;">&#10060; O que nunca fazer</h3>
+          <div class="list">
+            <div class="list-item" style="padding:10px 14px;">
+              <div class="li-icon red" style="width:28px;height:28px;font-size:13px;">✗</div>
+              <div><h4 style="font-size:13px;">Responder só "Oi" sem dar informação útil</h4></div>
+            </div>
+            <div class="list-item" style="padding:10px 14px;">
+              <div class="li-icon red" style="width:28px;height:28px;font-size:13px;">✗</div>
+              <div><h4 style="font-size:13px;">Mandar áudio longo para paciente novo</h4></div>
+            </div>
+            <div class="list-item" style="padding:10px 14px;">
+              <div class="li-icon red" style="width:28px;height:28px;font-size:13px;">✗</div>
+              <div><h4 style="font-size:13px;">Dar preço antes de qualquer qualificação</h4></div>
+            </div>
+            <div class="list-item" style="padding:10px 14px;">
+              <div class="li-icon red" style="width:28px;height:28px;font-size:13px;">✗</div>
+              <div><h4 style="font-size:13px;">Esquecer o follow-up de leads sem resposta</h4></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 12: SCRIPTS WHATSAPP ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 03 — WhatsApp</div>
+      <div class="slide-title"><span>Scripts</span> prontos para usar</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Copie, salve no celular e adapte com o nome do paciente. A consistência da linguagem é o que cria a identidade da clínica no WhatsApp.</p>
+      <div class="cards cards-3">
+        <div class="wa-bubble-wrap">
+          <div class="wa-header">&#128222; Primeiro contato com lead</div>
+          <div class="wa-body">
+            <div class="wa-msg">Olá, [Nome]! Tudo bem? 😊<br><br>Sou [nome], da A&amp;S Sorriso. Vi que você entrou em contato e quero te ajudar!<br><br>Me conta: o que está buscando? A nossa dentista faz avaliação <strong>gratuita</strong> — você já sai com um plano personalizado. Quando fica melhor pra você?</div>
+          </div>
+        </div>
+        <div class="wa-bubble-wrap">
+          <div class="wa-header">&#128197; Confirmação (1 dia antes)</div>
+          <div class="wa-body">
+            <div class="wa-msg">Olá, [Nome]! 😊<br><br>Passando para confirmar sua consulta na A&amp;S Sorriso <strong>amanhã às [horário]</strong>.<br><br>Qualquer imprevisto, é só nos avisar que a gente reagenda sem problema. Te esperamos!</div>
+          </div>
+        </div>
+        <div class="wa-bubble-wrap">
+          <div class="wa-header">&#128172; Pós-consulta (dia seguinte)</div>
+          <div class="wa-body">
+            <div class="wa-msg">Olá, [Nome]! Como está se sentindo após a consulta de ontem? 😊<br><br>Qualquer dúvida ou desconforto, pode nos chamar aqui — estamos à disposição!<br><br>Se quiser compartilhar sua experiência no Google, ficamos muito gratos. 🙏</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 13: SCRIPTS CONTINUAÇÃO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 03 — WhatsApp</div>
+      <div class="slide-title">Mais <span>scripts</span> essenciais</div>
+      <div class="divider"></div>
+      <div class="cards cards-3">
+        <div class="wa-bubble-wrap">
+          <div class="wa-header">&#127881; Aniversário do paciente</div>
+          <div class="wa-body">
+            <div class="wa-msg">[Nome], <strong>feliz aniversário!</strong> 🎉<br><br>Que esse novo ano seja cheio de saúde, alegria e muito sorriso!<br><br>Um abraço carinhoso de toda a equipe da A&amp;S Sorriso. 💚</div>
+          </div>
+        </div>
+        <div class="wa-bubble-wrap">
+          <div class="wa-header">&#128337; Lembrete de retorno</div>
+          <div class="wa-body">
+            <div class="wa-msg">Olá, [Nome]! 😊<br><br>Já faz um tempinho desde sua última visita à A&amp;S Sorriso. Que tal agendarmos sua manutenção?<br><br>Temos horários essa semana ainda. Quando fica melhor: <strong>manhã ou tarde?</strong></div>
+          </div>
+        </div>
+        <div class="wa-bubble-wrap">
+          <div class="wa-header">&#11088; Pedido de avaliação Google</div>
+          <div class="wa-body">
+            <div class="wa-msg">[Nome], obrigada por confiar na A&amp;S Sorriso! 🙏<br><br>Se ficou satisfeita, uma avaliação no Google nos ajuda a ajudar mais pessoas.<br><br>Leva só 1 minutinho! 😊<br><strong>[link do Google Meu Negócio]</strong></div>
+          </div>
+        </div>
+      </div>
+      <div class="card highlight" style="margin-top:16px;">
+        <h3 style="color:var(--green); margin-bottom:10px;">&#129399; Quando o lead para de responder...</h3>
+        <p style="font-size:13px; color:var(--muted); line-height:1.6;">Depois de 2 mensagens sem retorno, mande um emoji de esqueletinho esperando (&#129543;) com o texto: <strong>"Ainda por aqui!"</strong> ou <strong>"Ainda te esperando!"</strong>. A pessoa ri, quebra o gelo e a conversa reinicia. Funciona em vários mercados — e odontologia não é exceção. Não usa no primeiro contato. Só quando já travou.</p>
+        <div class="pills" style="margin-top:10px;">
+          <div class="pill amber">Só após 2 tentativas</div>
+          <div class="pill green">Reinicia a conversa</div>
+          <div class="pill teal">Quebra de gelo</div>
+        </div>
+      </div>
+      <div class="result-badge" style="margin-top:16px;">&#128172; Salve todos esses templates no celular com atalhos. Velocidade de resposta é tudo.</div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 14: FIM DO NO-SHOW ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 03 — WhatsApp</div>
+      <div class="slide-title">Fim do <span>no-show</span>: confirmação em 3 toques</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Com 30 a 40 pacientes por dia, uma mensagem na véspera não é suficiente. Cada toque a mais reduz faltas — e cada falta é uma cadeira vazia com custo fixo rodando.</p>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">D-7</div>
+            <div class="step-content">
+              <h4>Logo após agendar — âncora o compromisso</h4>
+              <p>Mande uma mensagem resumindo: data, horário e o que o paciente deve levar. Isso cria compromisso real desde o primeiro momento.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D-2</div>
+            <div class="step-content">
+              <h4>Segundo toque — reaquecer sem pressionar</h4>
+              <p>Mensagem descontraída, sem pedir confirmação ainda. Objetivo: fazer o paciente pensar na consulta antes da véspera.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D-1</div>
+            <div class="step-content">
+              <h4>Confirmação oficial — enviar até meio-dia</h4>
+              <p>Peça confirmação com SIM ou NÃO. Sem resposta até 10h do dia seguinte: ligar ou liberar o horário para a lista de espera.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D-0</div>
+            <div class="step-content">
+              <h4>Manhã — último toque para consultas à tarde</h4>
+              <p>"A clínica te espera hoje!" Rápido, sem cobrar confirmação. Reduz no-show de último minuto.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="wa-bubble-wrap">
+            <div class="wa-header">&#128197; Script D-1 — Confirmação</div>
+            <div class="wa-body">
+              <div class="wa-msg">Olá, [Nome]! &#128522;<br><br>Passando para confirmar sua consulta na A&amp;S Sorriso <strong>amanhã às [horário]</strong>.<br><br>Confirma para mim com um <strong>SIM</strong>? Qualquer imprevisto é só falar — reagendamos sem problema! &#128522;</div>
+            </div>
+          </div>
+          <div class="card red-card" style="margin-top:14px;">
+            <h3 style="color:var(--red);">&#9888;&#65039; Sem resposta até 10h?</h3>
+            <p style="margin-top:8px; font-size:13px; color:var(--muted);">Não espere. Ligue, ofereça reagendamento imediato ou libere o horário para outro paciente em lista de espera. Cada horário vazio tem custo real — mais de 40 pacientes por dia, cada falta importa.</p>
+          </div>
+          <div class="result-badge" style="margin-top:12px;">&#127919; Confirmação em 3 toques pode reduzir faltas em até 40% nos primeiros 30 dias.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 15: AS 5 LISTAS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 04 — As 5 Listas</div>
+      <div class="fase-hero">
+        <div class="num">04</div>
+        <h2>A receita que já existe na sua base</h2>
+        <p>Antes de investir em anúncio, trabalhe sua base. Paciente que já foi à clínica custa até 5x menos para converter do que um novo lead. Separar em 5 grupos permite abordagens que realmente convertem.</p>
+      </div>
+      <div class="cards cards-2" style="margin-top:4px;">
+        <div class="list">
+          <div class="list-item">
+            <div class="li-icon amber" style="font-weight:900;font-size:16px;">1</div>
+            <div><h4>Inativos — mais de 6 meses sem visita</h4><p>Campanha de reativação com WhatsApp personalizado + oferta de avaliação gratuita.</p></div>
+          </div>
+          <div class="list-item">
+            <div class="li-icon green" style="font-weight:900;font-size:16px;">2</div>
+            <div><h4>Ativos — consulta nos últimos 6 meses</h4><p>Mensagem de acompanhamento + apresentação da próxima etapa do tratamento.</p></div>
+          </div>
+          <div class="list-item">
+            <div class="li-icon teal" style="font-weight:900;font-size:16px;">3</div>
+            <div><h4>VIPs — pacientes de alto valor</h4><p>Convite para evento exclusivo + solicitação de indicação de amigos e família.</p></div>
+          </div>
+        </div>
+        <div class="list">
+          <div class="list-item">
+            <div class="li-icon red" style="font-weight:900;font-size:16px;">4</div>
+            <div><h4>Leads frios — vieram perguntar mas não agendaram</h4><p>Cadência de 3 mensagens em 7 dias: dia 1 (proposta), dia 3 (case similar), dia 7 (ligação).</p></div>
+          </div>
+          <div class="list-item">
+            <div class="li-icon amber" style="font-weight:900;font-size:16px;">5</div>
+            <div><h4>Casos especiais — pós-procedimento, eventos</h4><p>Mensagem personalizada referenciando o procedimento + proposta de próxima etapa.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 15: CADÊNCIA FOLLOW-UP ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 04 — As 5 Listas</div>
+      <div class="slide-title">Cadência de <span>follow-up</span> para leads frios</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Para quem perguntou mas não agendou, a maioria das clínicas simplesmente desiste. Com esse fluxo de 7 dias, parte deles volta.</p>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">D1</div>
+            <div class="step-content">
+              <h4>Mensagem de boas-vindas + confirmação de interesse</h4>
+              <p>Retome o contato, apresente brevemente a clínica, pergunte sobre a necessidade. Termine com pergunta aberta.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D3</div>
+            <div class="step-content">
+              <h4>Case de resultado similar</h4>
+              <p>Envie um before/after ou depoimento de paciente com situação parecida. Mostre que o problema do lead já foi resolvido antes.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D7</div>
+            <div class="step-content">
+              <h4>Ligação — não só mensagem</h4>
+              <p>Uma ligação no dia 7 recupera parte dos leads que não responderam mensagem. Seja breve e direta.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D30</div>
+            <div class="step-content">
+              <h4>Reclassificar como inativo</h4>
+              <p>Mova para a lista de inativos e inclua nas campanhas mensais de reativação. Não abandone — só mude o ritmo.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight">
+            <h3 style="color:var(--green); margin-bottom:12px;">&#128172; Script do D1</h3>
+            <div class="wa-bubble-wrap">
+              <div class="wa-body" style="padding:14px;">
+                <div class="wa-msg" style="font-size:12.5px;">Olá, [Nome]! Tudo bem? 😊<br><br>Vi que você nos procurou outro dia sobre [tratamento]. Quero entender melhor o que você está buscando para ver como podemos te ajudar da melhor forma.<br><br>Ainda tem interesse em saber mais?</div>
+              </div>
+            </div>
+          </div>
+          <div class="result-badge" style="margin-top:12px;">&#128200; Clínicas que usam cadência de follow-up convertem até 3x mais leads do que as que abordam só uma vez.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 17: PROCESSO DA CONSULTORA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Processo comercial</div>
+      <div class="slide-title">Da consulta ao <span>SIM</span>: o processo da consultora</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Quando o doutor entrega o paciente para a consultora, o valor já foi construído. A missão é capturar esse valor — sem atropelar o processo.</p>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Criar rapport — o paciente ainda não confia em você</h4>
+              <p>O paciente confia no doutor, não na consultora. Comece conectando: "Vi que você conversou com o Dr. Pedro — ele é incrível, né? Me conta como foi a consulta."</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Qualificar antes de abrir o orçamento</h4>
+              <p>Nunca abra o valor antes de perguntar. Tire dúvidas pendentes, entenda a urgência e o que motivou o paciente a buscar tratamento.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Apresentar o valor — depois o número</h4>
+              <p>Descreva o que está incluído antes de falar o preço. O número só vem depois que o paciente já entende o que recebe. Fale o valor e fique em silêncio — não justifique.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Isolar a objeção com uma pergunta direta</h4>
+              <p>"Tirando o investimento, a gente está alinhado? Tem alguma outra dúvida?" Se a única objeção for preço, trabalhe condições — não desconto.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight">
+            <h3 style="color:var(--green); margin-bottom:12px;">&#128172; Script de isolamento de objeção</h3>
+            <div class="wa-bubble-wrap">
+              <div class="wa-body" style="padding:14px;">
+                <div class="wa-msg" style="font-size:12.5px;">[Nome], tirando o fator investimento, você já está convencida de que esse é o tratamento certo pra você?<br><br><em style="color:#7ac; font-size:11px;">(aguarda resposta)</em><br><br>Ótimo. Então vamos encontrar uma condição que caiba no seu orçamento. Como fica melhor pra você — à vista ou parcelado?</div>
+              </div>
+            </div>
+          </div>
+          <div class="card amber-card" style="margin-top:14px;">
+            <h3 style="color:var(--amber); margin-bottom:8px;">&#9888;&#65039; Nunca suponha o limite do paciente</h3>
+            <p style="font-size:13px; color:var(--muted); line-height:1.6;">Não reduza o tratamento baseado na aparência ou no jeito de falar do paciente. Apresente sempre o completo primeiro. Quem decide se está caro é o paciente — não a consultora.</p>
+          </div>
+          <div class="result-badge" style="margin-top:12px;">&#128200; Consultora que isola a objeção antes de negociar converte até 2x mais do que quem entra em desconto direto.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 18: MÉTRICAS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 05 — Métricas</div>
+      <div class="slide-title">Os números que <span>você precisa</span> acompanhar</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Não dá para melhorar o que não se mede. Esses são os indicadores que separam clínicas que crescem das que estacionam.</p>
+      <div class="stat-row" style="margin-bottom:18px;">
+        <div class="big-stat">
+          <div class="number">10min</div>
+          <div class="label">Tempo máximo de resposta no WhatsApp</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">80%</div>
+          <div class="label">Conversão para quem responde em até 10 min</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">5x</div>
+          <div class="label">Mais barato reter paciente atual do que captar novo</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">15min</div>
+          <div class="label">Por semana respondendo Google gera confiança</div>
+        </div>
+      </div>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-icon">&#128228;</div>
+          <h3 style="color:var(--green);">Taxa de conversão de leads</h3>
+          <p>De 10 contatos, quantos agendaram? Meta: acima de 60%. Abaixo disso, o problema está na resposta inicial.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128197;</div>
+          <h3 style="color:var(--green);">Taxa de comparecimento</h3>
+          <p>De 10 consultas agendadas, quantos apareceram? Meta: acima de 80%. Confirmação 1 dia antes reduz faltas em 30%.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">&#128260;</div>
+          <h3 style="color:var(--green);">Taxa de retorno</h3>
+          <p>De 10 pacientes atendidos, quantos voltaram em 6 meses? Meta: acima de 50%. Abaixo disso, o follow-up precisa melhorar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 17: PLANO DE AÇÃO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Implementação</div>
+      <div class="slide-title">Os próximos <span>30 dias</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Tudo que foi apresentado aqui precisa virar ação concreta. Esse é o ritmo de implementação recomendado para a A&amp;S Sorriso.</p>
+      <div class="cards cards-2">
+        <div class="card highlight">
+          <h3 style="color:var(--green); margin-bottom:12px;">&#128197; Semana 1 — Estrutura básica</h3>
+          <div class="checklist">
+            <div class="check-item">Imprimir QR Code de avaliação Google e colocar no balcão</div>
+            <div class="check-item">Configurar playlist do Spotify na recepção</div>
+            <div class="check-item">Salvar os 6 scripts de WhatsApp no celular com atalhos</div>
+            <div class="check-item">Criar e imprimir checklist diário de abertura</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--teal); margin-bottom:12px;">&#128172; Semana 2 — Protocolo em prática</h3>
+          <div class="checklist">
+            <div class="check-item">Aplicar os 6 passos em todos os atendimentos</div>
+            <div class="check-item">Confirmar consultas 1 dia antes via WhatsApp</div>
+            <div class="check-item">Iniciar envio de pós-consulta no dia seguinte</div>
+            <div class="check-item">Responder avaliações Google 2x por semana</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--amber); margin-bottom:12px;">&#128203; Semana 3 — Ativação das listas</h3>
+          <div class="checklist">
+            <div class="check-item">Separar pacientes inativos (6+ meses) e enviar campanha</div>
+            <div class="check-item">Identificar VIPs e criar abordagem personalizada</div>
+            <div class="check-item">Levantar leads que não agendaram e iniciar cadência D1</div>
+          </div>
+        </div>
+        <div class="card amber-card">
+          <h3 style="color:var(--amber); margin-bottom:12px;">&#128200; Semana 4 — Revisão e ajuste</h3>
+          <div class="checklist">
+            <div class="check-item">Quantos agendamentos vieram das listas?</div>
+            <div class="check-item">Taxa de conversão de leads está melhorando?</div>
+            <div class="check-item">Quais scripts estão funcionando melhor?</div>
+            <div class="check-item">Definir metas para o mês seguinte</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 18: CHECKLIST ABERTURA E DURANTE ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 06 — Checklist Diário</div>
+      <div class="fase-hero">
+        <div class="num">06</div>
+        <h2>Checklist diário da atendente</h2>
+        <p>Consistência vence talento. Esse checklist em 3 blocos garante que nenhum detalhe seja esquecido — e que toda semana o padrão seja o mesmo, independente do dia ou do humor.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:13px; color:var(--green); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-weight:700;">&#127748; Ao chegar — antes do primeiro paciente</h3>
+          <div class="checklist">
+            <div class="check-item">Organizar o balcão — sem papéis soltos, cabos escondidos</div>
+            <div class="check-item">Preparar o café e verificar se tem água disponível</div>
+            <div class="check-item">Ligar a música ambiente (Spotify) e a TV da clínica</div>
+            <div class="check-item">Revisar a agenda: pacientes de primeira vez, aniversariantes, retornos longos</div>
+            <div class="check-item">Verificar o WhatsApp e responder mensagens da noite anterior</div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:13px; color:var(--teal); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-weight:700;">&#9728;&#65039; Durante o dia — a cada atendimento</h3>
+          <div class="checklist">
+            <div class="check-item">Receber de pé, com o nome do paciente na saudação</div>
+            <div class="check-item">Oferecer café ou água ativamente</div>
+            <div class="check-item">Informar o tempo de espera e atualizar se mudar</div>
+            <div class="check-item">Acompanhar o paciente até a sala</div>
+            <div class="check-item">Responder WhatsApp em até 10 minutos durante o expediente</div>
+            <div class="check-item">Solicitar avaliação Google com QR Code após pagamento</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 19: CHECKLIST FECHAMENTO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Bloco 06 — Checklist Diário</div>
+      <div class="slide-title">Ao <span>fechar</span> o dia</div>
+      <div class="divider"></div>
+      <p class="slide-desc">O que você faz nos últimos 15 minutos do expediente define a qualidade dos primeiros 15 minutos do dia seguinte — e a taxa de comparecimento da semana.</p>
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:13px; color:var(--amber); text-transform:uppercase; letter-spacing:2px; margin-bottom:12px; font-weight:700;">&#127762;&#65039; Ao fechar — antes de sair</h3>
+          <div class="checklist">
+            <div class="check-item">Enviar confirmações para todos os pacientes com consulta amanhã</div>
+            <div class="check-item">Enviar pós-consulta para pacientes atendidos hoje</div>
+            <div class="check-item">Registrar aniversariantes da semana para mensagem no dia</div>
+            <div class="check-item">Organizar balcão e recepção para o dia seguinte</div>
+            <div class="check-item">Responder avaliações Google (pelo menos 2–3x por semana)</div>
+          </div>
+        </div>
+        <div>
+          <div class="card amber-card" style="margin-bottom:14px;">
+            <h3 style="color:var(--amber);">&#127919; Meta semanal da atendente</h3>
+            <div style="margin-top:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Avaliações Google solicitadas</span>
+                <span style="font-weight:700;color:var(--text);">5+</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Confirmações enviadas</span>
+                <span style="font-weight:700;color:var(--text);">100%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Pós-consultas enviados</span>
+                <span style="font-weight:700;color:var(--text);">100%</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;">
+                <span style="color:var(--muted);">Retornos agendados na saída</span>
+                <span style="font-weight:700;color:var(--text);">80%+</span>
+              </div>
+            </div>
+          </div>
+          <div class="result-badge">&#128200; Fazer isso todo dia é o que transforma clínica mediana em clínica que cresce por indicação.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 20: FECHAMENTO ====== -->
+  <div class="slide" style="background: radial-gradient(ellipse at 50% 50%, #060e0b 0%, var(--dark) 70%);">
+    <div class="slide-inner close-slide">
+      <div class="badge" style="margin-bottom:20px;">&#129463; Grupo NG</div>
+      <h2>A clínica que<br/><span>cresce por indicação</span></h2>
+      <p>Paciente que se sente tratado com atenção volta, indica e não troca por concorrente com preço menor. Isso começa na recepção.</p>
+      <div class="cover-tags" style="justify-content:center; margin-bottom:36px;">
+        <div class="ctag">&#128203; Scripts salvos</div>
+        <div class="ctag">&#9989; Checklist impresso</div>
+        <div class="ctag">&#128197; 30 dias de plano</div>
+        <div class="ctag">&#10024; Grupo NG Estratégia</div>
+      </div>
+      <button class="btn-primary" onclick="goTo(0)">&#8592; Voltar ao início</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+  const dotsEl   = document.getElementById('dots');
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'exit');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('exit');
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    const pct = ((current + 1) / total) * 100;
+    progress.style.width = pct + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    update();
+  }
+
+  document.getElementById('btn-prev').onclick = () => goTo(current - 1);
+  document.getElementById('btn-next').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     goTo(current - 1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
+  });
+
+  update();
+</script>
+</body>
+</html>
