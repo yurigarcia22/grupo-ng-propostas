@@ -1241,32 +1241,74 @@
     </div>
   </div>
 
-  <!-- ====== SLIDE 18: PROJECAO + INVESTIMENTO ====== -->
+  <!-- ====== SLIDE 18: RECAPITULAÇÃO PRIMEIRA PROPOSTA ====== -->
   <div class="slide">
     <div class="slide-inner">
-      <div class="section-label">Investimento</div>
-      <div class="slide-title">O que você <span>recebe</span></div>
+      <div class="section-label">Recapitulação</div>
+      <div class="slide-title">O que <span>apresentamos</span> na primeira proposta</div>
       <div class="divider"></div>
-      <p class="slide-desc">Um projeto completo de crescimento, sem fidelidade, com transparência total e acompanhamento semanal. Preço justo para o tamanho do trabalho e para o tamanho da Loop.</p>
+      <p class="slide-desc">Na primeira reunião, apresentamos o escopo completo: tráfego pago, comercial, CRM e criação de conteúdo para redes sociais. Abaixo tudo que estava na mesa.</p>
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; font-weight:700;">Escopo apresentado</h3>
+          <div class="checklist">
+            <div class="check-item">Estratégia e planejamento mensal</div>
+            <div class="check-item">Gestão de Meta Ads e Google Ads</div>
+            <div class="check-item">Produção de criativos para anúncios (imagem e vídeo)</div>
+            <div class="check-item">Criação de conteúdo e gestão de social media</div>
+            <div class="check-item">Estrutura e treinamento comercial (SDR + Closer)</div>
+            <div class="check-item">Playbook e scripts customizados</div>
+            <div class="check-item">Configuração e otimização do CRM</div>
+            <div class="check-item">Relatório diário no WhatsApp</div>
+            <div class="check-item">Reunião semanal com Luvânio e Nathalia</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:center;">
+          <div class="modulo-card" style="text-align:center; padding:32px 36px;">
+            <p style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; font-weight:700;">Investimento mensal</p>
+            <div style="margin-bottom:14px;">
+              <span style="font-size:52px; font-weight:900; line-height:1; color:var(--muted);">R$ 3.000</span>
+            </div>
+            <p style="font-size:12px; color:var(--muted); margin-bottom:18px; line-height:1.5;">Escopo completo incluindo<br/>social media + mídia separada</p>
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:10px; padding:10px 16px;">
+              <span style="color:var(--amber); font-size:15px;">→</span>
+              <span style="font-size:13px; color:var(--amber); font-weight:600;">Ajustado na segunda reunião</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 19: NOVA PROPOSTA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Proposta Ajustada</div>
+      <div class="slide-title">Foco em <span>resultado</span>: só o que move receita</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Ajustamos o escopo para o que a Loop precisa agora: geração de leads, tráfego pago e acompanhamento comercial. Social media fora, foco total em conversão e venda.</p>
       <div class="two-col">
         <div>
           <h3 style="font-size:13px; color:var(--blue); text-transform:uppercase; letter-spacing:2px; margin-bottom:14px; font-weight:700;">O que está incluído</h3>
           <div class="checklist">
             <div class="check-item">Estratégia e planejamento mensal</div>
             <div class="check-item">Gestão de Meta Ads e Google Ads</div>
-            <div class="check-item">Produção de criativos (imagens e vídeos)</div>
+            <div class="check-item">Criativos para anúncios (imagem e vídeo)</div>
             <div class="check-item">Estrutura e treinamento comercial (SDR + Closer)</div>
             <div class="check-item">Playbook e scripts customizados</div>
             <div class="check-item">Configuração e otimização do CRM</div>
             <div class="check-item">Relatório diário no WhatsApp</div>
             <div class="check-item">Reunião semanal com Luvânio e Nathalia</div>
-            <div class="check-item">Ajustes ilimitados durante o mês</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px; margin-top:14px; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); border-radius:10px; padding:12px 16px;">
+            <span style="font-size:15px; color:#ef4444; font-weight:800; flex-shrink:0;">✕</span>
+            <span style="font-size:13px; color:var(--muted);">Criação de conteúdo para redes sociais não inclusa</span>
           </div>
         </div>
         <div style="display:flex; align-items:center; justify-content:center;">
-          <div id="btn-revelar-wrap" style="text-align:center;">
-            <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">Pronto para ver o investimento?</p>
-            <button id="btn-revelar" onclick="revelarInvestimento()" style="
+          <div id="btn-revelar-wrap-v2" style="text-align:center;">
+            <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">Pronto para ver o investimento ajustado?</p>
+            <button onclick="revelarInvestimentoV2()" style="
               background: linear-gradient(135deg, var(--blue), var(--cyan));
               color:#fff;
               border:none;
@@ -1284,11 +1326,11 @@
               Ver Investimento
             </button>
           </div>
-          <div id="card-investimento" class="modulo-card rec" style="display:none; opacity:0; transition: opacity .5s ease;">
-            <div class="rec-tag">Plano recomendado</div>
-            <h4 style="font-size:18px; font-weight:800; margin-bottom:8px;">Plano Growth Loop</h4>
+          <div id="card-investimento-v2" class="modulo-card rec" style="display:none; opacity:0; transition: opacity .5s ease;">
+            <div class="rec-tag">Proposta ajustada</div>
+            <h4 style="font-size:18px; font-weight:800; margin-bottom:8px;">Plano Performance Loop</h4>
             <div style="margin: 8px 0 16px;">
-              <span style="font-size:44px; font-weight:900; background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 3.000</span>
+              <span style="font-size:44px; font-weight:900; background: linear-gradient(135deg, var(--blue), var(--cyan)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 2.300</span>
               <span style="font-size:13px; color:var(--muted); font-weight:500;">/mês</span>
             </div>
             <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">+ investimento em anúncios (direto nas plataformas Meta e Google). Valor sugerido inicial: R$ 3.000/mês em mídia.</p>
@@ -1296,7 +1338,7 @@
               <p style="font-size:12px; color:var(--muted); margin-bottom:8px;"><strong style="color:var(--blue);">Sem fidelidade.</strong> Contrato mensal. Sai quando quiser.</p>
               <p style="font-size:12px; color:var(--muted);"><strong style="color:var(--blue);">Sem taxa de setup.</strong> Primeiro mês já é de implementação.</p>
             </div>
-            <button onclick="ocultarInvestimento()" style="
+            <button onclick="ocultarInvestimentoV2()" style="
               margin-top:16px;
               background:transparent;
               color:var(--muted);
@@ -1457,6 +1499,24 @@
   function ocultarInvestimento() {
     const btn = document.getElementById('btn-revelar-wrap');
     const card = document.getElementById('card-investimento');
+    card.style.opacity = '0';
+    setTimeout(() => {
+      card.style.display = 'none';
+      btn.style.display = 'block';
+    }, 500);
+  }
+
+  function revelarInvestimentoV2() {
+    const btn = document.getElementById('btn-revelar-wrap-v2');
+    const card = document.getElementById('card-investimento-v2');
+    btn.style.display = 'none';
+    card.style.display = 'block';
+    requestAnimationFrame(() => { card.style.opacity = '1'; });
+  }
+
+  function ocultarInvestimentoV2() {
+    const btn = document.getElementById('btn-revelar-wrap-v2');
+    const card = document.getElementById('card-investimento-v2');
     card.style.opacity = '0';
     setTimeout(() => {
       card.style.display = 'none';
