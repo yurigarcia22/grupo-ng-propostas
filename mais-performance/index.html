@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mais Performance — Planejamento Grupo NG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --orange: #f97316;
+    --amber:  #f59e0b;
+    --red:    #ef4444;
+    --teal:   #14b8a6;
+    --dark:   #0D1117;
+    --dark2:  #161B22;
+    --dark3:  #21262D;
+    --border: #30363D;
+    --text:   #E6EDF3;
+    --muted:  #8B949E;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  #progress {
+    position: fixed; top:0; left:0; height:3px;
+    background: linear-gradient(90deg, var(--orange), var(--amber));
+    transition: width 0.4s ease; z-index:100;
+  }
+
+  #counter {
+    position: fixed; bottom:24px; right:32px;
+    font-size:12px; color:var(--muted); font-weight:500;
+    letter-spacing:1px; z-index:100;
+  }
+
+  .nav-btn {
+    position: fixed; bottom:20px;
+    background: var(--dark3); border:1px solid var(--border);
+    color: var(--text); width:44px; height:44px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:18px; transition:all 0.2s; z-index:100;
+  }
+  .nav-btn:hover { background:var(--orange); border-color:var(--orange); color:#fff; }
+  #btn-prev { right:120px; }
+  #btn-next { right:68px; }
+
+  #dots {
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+    display:flex; gap:6px; z-index:100;
+  }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:all 0.3s; cursor:pointer; }
+  .dot.active { background:var(--orange); width:20px; border-radius:3px; }
+
+  #slides { width:100%; height:100vh; position:relative; }
+
+  .slide {
+    position:absolute; width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:translateX(60px);
+    transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events:none; padding:60px 80px; overflow-y:auto;
+  }
+  .slide.active { opacity:1; transform:translateX(0); pointer-events:all; }
+  .slide.exit   { opacity:0; transform:translateX(-60px); }
+
+  .slide-inner { max-width:1100px; width:100%; }
+
+  /* COVER */
+  .cover {
+    background: radial-gradient(ellipse at 30% 50%, #1a0800 0%, var(--dark) 70%);
+  }
+  .cover::before {
+    content:''; position:absolute; top:-200px; right:-200px;
+    width:600px; height:600px;
+    background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+    border-radius:50%;
+  }
+  .cover::after {
+    content:''; position:absolute; bottom:-100px; left:-100px;
+    width:400px; height:400px;
+    background: radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 70%);
+    border-radius:50%;
+  }
+
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(249,115,22,0.12); border:1px solid rgba(249,115,22,0.35);
+    color:var(--orange); padding:6px 16px; border-radius:100px;
+    font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:32px;
+  }
+
+  .cover h1 { font-size:76px; font-weight:900; line-height:0.95; letter-spacing:-3px; margin-bottom:24px; }
+  .cover h1 span {
+    background:linear-gradient(135deg, var(--orange), var(--amber));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .cover .subtitle { font-size:20px; color:var(--muted); font-weight:400; max-width:560px; line-height:1.6; margin-bottom:48px; }
+  .cover-tags { display:flex; gap:12px; flex-wrap:wrap; }
+  .ctag { background:var(--dark3); border:1px solid var(--border); padding:8px 16px; border-radius:8px; font-size:13px; color:var(--muted); font-weight:500; }
+
+  /* SECTION LABEL */
+  .section-label { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--orange); margin-bottom:16px; }
+
+  .slide-title { font-size:44px; font-weight:800; line-height:1.1; letter-spacing:-1.5px; margin-bottom:16px; }
+  .slide-title span {
+    background:linear-gradient(135deg, var(--orange), var(--amber));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .slide-desc { font-size:17px; color:var(--muted); line-height:1.7; margin-bottom:30px; max-width:720px; }
+  .divider { width:48px; height:4px; background:linear-gradient(90deg,var(--orange),var(--amber)); border-radius:2px; margin:20px 0; }
+
+  /* CARDS */
+  .cards { display:grid; gap:14px; }
+  .cards-2 { grid-template-columns:repeat(2,1fr); }
+  .cards-3 { grid-template-columns:repeat(3,1fr); }
+  .cards-4 { grid-template-columns:repeat(4,1fr); }
+
+  .card { background:var(--dark2); border:1px solid var(--border); border-radius:16px; padding:22px 24px; transition:border-color 0.2s; }
+  .card:hover { border-color:rgba(249,115,22,0.4); }
+  .card.highlight { background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(245,158,11,0.04)); border-color:rgba(249,115,22,0.28); }
+  .card.red-card  { background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(249,115,22,0.04)); border-color:rgba(239,68,68,0.2); }
+  .card.teal-card { background:linear-gradient(135deg,rgba(20,184,166,0.08),transparent); border-color:rgba(20,184,166,0.25); }
+  .card-icon { font-size:28px; margin-bottom:12px; display:block; }
+  .card h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+  .card p { font-size:13px; color:var(--muted); line-height:1.6; }
+  .card .card-num { font-size:44px; font-weight:900; line-height:1; margin-bottom:8px; background:linear-gradient(135deg,var(--orange),var(--amber)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+
+  /* LIST */
+  .list { display:flex; flex-direction:column; gap:12px; }
+  .list-item { display:flex; align-items:flex-start; gap:14px; background:var(--dark2); border:1px solid var(--border); border-radius:12px; padding:16px 20px; }
+  .list-item:hover { border-color:rgba(249,115,22,0.3); }
+  .li-icon { width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:17px; flex-shrink:0; margin-top:2px; }
+  .li-icon.orange { background:rgba(249,115,22,0.14); }
+  .li-icon.red    { background:rgba(239,68,68,0.14); }
+  .li-icon.amber  { background:rgba(245,158,11,0.14); }
+  .li-icon.teal   { background:rgba(20,184,166,0.14); }
+  .list-item h4 { font-size:14px; font-weight:700; margin-bottom:4px; }
+  .list-item p  { font-size:12.5px; color:var(--muted); line-height:1.55; }
+
+  /* TWO COL */
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+
+  /* STEPS */
+  .steps { display:flex; flex-direction:column; gap:12px; }
+  .step  { display:flex; align-items:flex-start; gap:14px; }
+  .step-num { width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,var(--orange),var(--amber)); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; color:#fff; }
+  .step-content h4 { font-size:14px; font-weight:700; margin-bottom:3px; }
+  .step-content p  { font-size:12.5px; color:var(--muted); line-height:1.5; }
+
+  /* STAT */
+  .stat-row { display:flex; gap:14px; }
+  .big-stat { flex:1; text-align:center; padding:22px 16px; background:var(--dark2); border:1px solid var(--border); border-radius:14px; }
+  .big-stat .number { font-size:48px; font-weight:900; line-height:1; background:linear-gradient(135deg,var(--orange),var(--amber)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .big-stat .label  { font-size:12px; color:var(--muted); margin-top:6px; }
+
+  /* PILAR HERO */
+  .pilar-hero { background:linear-gradient(135deg,rgba(249,115,22,0.1),rgba(245,158,11,0.04)); border:1px solid rgba(249,115,22,0.25); border-radius:18px; padding:24px 28px; margin-bottom:20px; }
+  .pilar-hero .num { font-size:60px; font-weight:900; line-height:1; background:linear-gradient(135deg,var(--orange),var(--amber)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:4px; }
+  .pilar-hero h2 { font-size:24px; font-weight:800; letter-spacing:-0.5px; margin-bottom:6px; }
+  .pilar-hero p  { font-size:14px; color:var(--muted); line-height:1.6; max-width:720px; }
+
+  /* DOR BIG */
+  .dor-big { background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(249,115,22,0.04)); border:1px solid rgba(239,68,68,0.2); border-radius:18px; padding:24px 28px; margin-bottom:18px; }
+  .dor-big .dor-icon { font-size:38px; margin-bottom:10px; }
+  .dor-big h2 { font-size:24px; font-weight:800; margin-bottom:10px; }
+  .dor-big p  { font-size:15px; color:var(--muted); line-height:1.7; max-width:720px; }
+
+  /* CHECKLIST */
+  .checklist { display:flex; flex-direction:column; gap:8px; }
+  .check-item { display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--text); line-height:1.5; }
+  .check-item::before { content:"✓"; color:var(--orange); font-weight:800; flex-shrink:0; margin-top:1px; }
+
+  /* QUOTE */
+  .quote-block { background:var(--dark2); border:1px solid var(--border); border-left:4px solid var(--orange); border-radius:0 12px 12px 0; padding:18px 22px; margin:12px 0; }
+  .quote-block p { font-size:15px; font-style:italic; line-height:1.6; }
+  .quote-block .author { font-size:11px; color:var(--muted); margin-top:8px; font-style:normal; }
+
+  /* RESULT BADGE */
+  .result-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(249,115,22,0.1); border:1px solid rgba(249,115,22,0.25); color:var(--orange); padding:10px 18px; border-radius:10px; font-size:13px; font-weight:600; margin-top:14px; }
+
+  /* PILLS */
+  .pills { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .pill { padding:5px 12px; border-radius:100px; font-size:11px; font-weight:600; }
+  .pill.orange { background:rgba(249,115,22,0.13); color:var(--orange); border:1px solid rgba(249,115,22,0.3); }
+  .pill.amber  { background:rgba(245,158,11,0.13); color:var(--amber); border:1px solid rgba(245,158,11,0.3); }
+  .pill.teal   { background:rgba(20,184,166,0.13); color:var(--teal); border:1px solid rgba(20,184,166,0.3); }
+  .pill.red    { background:rgba(239,68,68,0.13); color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+
+  /* MODULO CARD */
+  .modulo-card { background:var(--dark2); border:1px solid var(--border); border-radius:18px; padding:28px; }
+  .modulo-card.rec { background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(245,158,11,0.06)); border:2px solid rgba(249,115,22,0.4); }
+  .rec-tag { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--orange); margin-bottom:12px; }
+
+  /* CLOSE */
+  .close-slide { text-align:center; }
+  .close-slide h2 { font-size:60px; font-weight:900; line-height:1; letter-spacing:-2px; margin-bottom:22px; }
+  .close-slide h2 span { background:linear-gradient(135deg,var(--orange),var(--amber)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+  .close-slide p { font-size:19px; color:var(--muted); max-width:520px; margin:0 auto 36px; line-height:1.6; }
+  .btn-primary { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg,var(--orange),var(--amber)); color:#fff; padding:14px 32px; border-radius:12px; font-size:15px; font-weight:800; border:none; cursor:pointer; font-family:'Inter',sans-serif; }
+
+  /* MOBILE */
+  @media (max-width:768px) {
+    body { overflow-y:auto; height:auto; }
+    #slides { height:auto; position:relative; }
+    .slide { position:relative; opacity:1 !important; transform:none !important; pointer-events:all !important; padding:40px 20px 80px; height:auto; min-height:100svh; display:none; align-items:flex-start; }
+    .slide.active { display:flex; }
+    #dots { bottom:16px; } .nav-btn { bottom:12px; } #btn-prev { right:100px; } #btn-next { right:52px; } #counter { bottom:18px; right:16px; }
+    .cover h1 { font-size:42px; letter-spacing:-1.5px; }
+    .cover .subtitle { font-size:15px; } .cover-tags { gap:8px; } .ctag { font-size:11px; padding:6px 12px; }
+    .slide-title { font-size:30px; letter-spacing:-0.5px; } .slide-desc { font-size:15px; margin-bottom:24px; } .section-label { font-size:10px; }
+    .cards-3,.cards-4,.cards-2 { grid-template-columns:1fr; }
+    .two-col { grid-template-columns:1fr; gap:20px; }
+    .stat-row { flex-direction:column; gap:12px; }
+    .big-stat .number { font-size:48px; }
+    .pilar-hero { padding:20px; } .pilar-hero .num { font-size:48px; } .pilar-hero h2 { font-size:20px; } .pilar-hero p { font-size:14px; }
+    .dor-big { padding:20px; } .dor-big h2 { font-size:20px; } .dor-big p { font-size:14px; }
+    .close-slide h2 { font-size:36px; } .close-slide p { font-size:16px; }
+    .card { padding:18px 20px; } .card .card-num { font-size:36px; }
+    .list-item { padding:14px 16px; } .quote-block p { font-size:14px; }
+    .slide-inner { max-width:100%; }
+  }
+  @media (max-width:400px) {
+    .cover h1 { font-size:34px; } .slide-title { font-size:26px; } .pilar-hero .num { font-size:40px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+<div id="counter"></div>
+
+<div id="slides">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <div class="badge">&#128170; Grupo NG &nbsp;&#183;&nbsp; Planejamento Estratégico</div>
+      <h1>Mais<br/><span>Performance</span></h1>
+      <p class="subtitle">Como dobrar a retenção, estruturar a captação e transformar dados em receita previsível.</p>
+      <div class="cover-tags">
+        <div class="ctag">&#128205; Palmas, Tocantins</div>
+        <div class="ctag">&#127942; Academia Premium</div>
+        <div class="ctag">&#128101; 1.305 alunos</div>
+        <div class="ctag">&#128197; Abril de 2026</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: O QUE MAPEAMOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Diagnóstico</div>
+      <div class="slide-title">O que mapeamos na <span>primeira reunião</span></div>
+      <div class="divider"></div>
+      <div class="stat-row" style="margin-bottom:20px;">
+        <div class="big-stat">
+          <div class="number">1.305</div>
+          <div class="label">Alunos ativos</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">55</div>
+          <div class="label">Entradas em 15 dias</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">35</div>
+          <div class="label">Saídas em 15 dias</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">R$230</div>
+          <div class="label">Ticket recorrente anual</div>
+        </div>
+      </div>
+      <div class="cards cards-2">
+        <div class="card">
+          <span class="card-icon">&#127942;</span>
+          <h3>Academia premium de bairro</h3>
+          <p>Estrutura de alto nível, metodologia de acompanhamento individualizado, bioimpedância e app Pacto integrado. Diferencial real no mercado de Palmas.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128101;</span>
+          <h3>Time comercial e operacional</h3>
+          <p>4 consultoras, 16 professores incluindo estagiários, CRM com divisão diária de contatos. Estrutura montada, com espaço grande para otimização.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128200;</span>
+          <h3 style="color:var(--orange);">Pacto com API aberta</h3>
+          <p>Sistema completo com métricas, bioimpedância, app do aluno, CRM interno. Tem tudo que precisa para automatizar retenção e nutrição dos alunos.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128293;</span>
+          <h3 style="color:var(--orange);">Campanha Força do Hábito</h3>
+          <p>7 dias grátis para construir o hábito de treinar, com desconto desbloqueado ao completar sem falhar. Conceito forte, execução com espaço para potencializar.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: PONTOS FORTES ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">O que vocês já têm</div>
+      <div class="slide-title">Os <span>diferenciais</span> que a concorrência não tem</div>
+      <div class="divider"></div>
+      <p class="slide-desc">A academia de rede ao lado custa R$100/mês e não acompanha ninguém. Vocês têm estrutura, metodologia e tecnologia. O que falta é fazer o aluno sentir isso antes de cancelar.</p>
+      <div class="list">
+        <div class="list-item">
+          <div class="li-icon orange">&#129520;</div>
+          <div><h4>Metodologia de acompanhamento real</h4><p>Anamnese, ficha de treino personalizada, atualização a cada 4 semanas, professor que observa e corrige. É personal trainer coletivo, não musculação genérica.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon orange">&#128200;</div>
+          <div><h4>Bioimpedância e app Pacto</h4><p>O aluno vê sua evolução no aplicativo: peso, massa muscular, gordura visceral, hidratação, TMB. Quem acompanha a evolução não cancela. Só precisam usar isso estrategicamente.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon teal">&#128172;</div>
+          <div><h4>CRM com grupos de risco mapeados</h4><p>O sistema já divide diariamente quem está faltando, aniversariantes e alunos em risco de cancelamento. A estrutura existe, a execução pode ser mais consistente.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#127881;</div>
+          <div><h4>Cultura de pertencimento</h4><p>Happy hour, churrasco, show, eventos internos. A academia não é só musculação, é comunidade. Esse posicionamento é o argumento mais forte contra a academia de rede.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: AS 3 DORES ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Diagnóstico</div>
+      <div class="slide-title">As <span>3 dores</span> que mais custam receita</div>
+      <div class="divider"></div>
+      <div class="dor-big">
+        <div class="dor-icon">&#128683;</div>
+        <h2 style="color:#ef4444;">35 saídas em 15 dias, apenas 20 de saldo</h2>
+        <p>Se esse ritmo continuar, a academia perde cerca de 70 alunos por mês. A R$230/mês cada, são R$16.100 de receita evaporando todo mês. Sem processo de retenção estruturado, a torneira de entrada nunca compensa a torneira de saída.</p>
+      </div>
+      <div class="cards cards-2">
+        <div class="card red-card">
+          <span class="card-icon">&#128176;</span>
+          <h3 style="color:#ef4444;">Ticket erodido por desconto informal</h3>
+          <p>Plano anual sai a R$230/mês, mas alunos com proximidade com Roberto conseguem pagar R$190. São R$40/mês por cabeça que saem silenciosamente, sem nenhum critério comercial definido.</p>
+        </div>
+        <div class="card red-card">
+          <span class="card-icon">&#128202;</span>
+          <h3 style="color:#ef4444;">Ana sem acesso a métricas comerciais</h3>
+          <p>A gerente comercial que é cobrada por retenção não tem os números de CPL, taxa de conversão ou custo por cancelamento na mão. Não dá para corrigir o que não se vê.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 5: A SOLUÇÃO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Proposta</div>
+      <div class="slide-title">A solução em <span>4 pilares</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">A academia já tem estrutura, sistema e time. O trabalho é conectar os pontos, criar processo onde não tem e medir o que já existe. Quatro frentes trabalhadas em conjunto.</p>
+      <div class="cards cards-2">
+        <div class="card highlight">
+          <div class="card-num">01</div>
+          <h3 style="color:var(--orange);">Retenção estruturada</h3>
+          <p>Protocolo de ativação de alunos em risco usando os dados que o Pacto já entrega. Automação via WhatsApp para mostrar evolução e criar vínculo emocional antes do cancelamento.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">02</div>
+          <h3 style="color:var(--orange);">Captação com funil e número</h3>
+          <p>Funil de captação com CPL, taxa de conversão e follow-up estruturado. Campanha Força do Hábito otimizada para converter mais dos 7 dias grátis em matrículas.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">03</div>
+          <h3 style="color:var(--orange);">Processo comercial e métricas</h3>
+          <p>Dashboard semanal para Ana com os números que ela precisa. Scripts para as consultoras. Política de desconto estruturada para eliminar a erosão informal do ticket.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">04</div>
+          <h3 style="color:var(--orange);">Tecnologia: Pacto API + WhatsApp</h3>
+          <p>Integração da API do Pacto com automação de WhatsApp para nutrir o aluno fora da academia: resultados de bioimpedância, mensagens de parabéns por frequência, alertas antes do cancelamento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 6: PILAR 1 — RETENÇÃO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 01</div>
+      <div class="pilar-hero">
+        <div class="num">01</div>
+        <h2>Retenção: fechar a torneira antes de abrir mais a entrada</h2>
+        <p>Todo aluno que sai custou para entrar. Antes de investir mais em captação, cada saída evitada vale R$230 de receita mensal recuperada. O sistema já tem os dados, falta o processo.</p>
+      </div>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Ativação automática do grupo de risco</h4>
+              <p>Via Pacto API, identificar automaticamente quem está abaixo de 3 treinos/semana há mais de 7 dias. Disparo de mensagem personalizada via WhatsApp antes de sumirem.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Bioimpedância como âncora de permanência</h4>
+              <p>Mensagem automática com os resultados da avaliação + comparativo da última: "Você perdeu 2,3kg de gordura em 45 dias. Não para agora." Evolução visível = permanência.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Protocolo de reconquista antes do cancelamento</h4>
+              <p>Aluno que não vem há mais de 14 dias recebe contato do professor do horário dele. Não da consultora, não do sistema. Do professor que ele conhece. Pessoal e difícil de ignorar.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Evento de pertencimento mensal</h4>
+              <p>O Happy Hour já existe. Transformá-lo em rotina mensal com comunicação 15 dias antes. Aluno que tem algo pra esperar não cancela na véspera.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight">
+            <h3 style="color:var(--orange); margin-bottom:12px;">Impacto projetado</h3>
+            <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">Reduzindo as saídas de 70/mês para 40/mês:</p>
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px;">
+              <span style="color:var(--muted);">Saídas evitadas/mês</span>
+              <span style="font-weight:700; color:var(--orange);">30 alunos</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border); font-size:13px;">
+              <span style="color:var(--muted);">Receita retida/mês</span>
+              <span style="font-weight:700; color:var(--orange);">R$ 6.900</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:8px 0; font-size:13px;">
+              <span style="color:var(--muted);">Receita retida/ano</span>
+              <span style="font-weight:700; color:var(--orange);">R$ 82.800</span>
+            </div>
+          </div>
+          <div class="result-badge" style="margin-top:14px;">&#128293; Reter é sempre mais barato do que captar.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 7: PILAR 2 — CAPTAÇÃO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 02</div>
+      <div class="pilar-hero">
+        <div class="num">02</div>
+        <h2>Captação com funil, número e conversão</h2>
+        <p>A academia recebe leads pelo Instagram, WhatsApp e presencialmente. Mas sem CPL, taxa de conversão e follow-up estruturado, não dá para saber o que está funcionando e onde apertar.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="list">
+            <div class="list-item">
+              <div class="li-icon orange">&#128202;</div>
+              <div><h4>Funil com métricas claras para Ana</h4><p>CPL por canal (Instagram Ads, WhatsApp, presencial), taxa de agendamento de aula experimental, taxa de conversão para matrícula e ticket médio. Semana a semana.</p></div>
+            </div>
+            <div class="list-item">
+              <div class="li-icon orange">&#127775;</div>
+              <div><h4>Força do Hábito: do gratuito ao pago</h4><p>Estruturar um follow-up durante os 7 dias grátis para aumentar a conversão. Quem chega no dia 7 sem ter faltado recebe uma oferta com urgência real, não só um desconto passivo.</p></div>
+            </div>
+            <div class="list-item">
+              <div class="li-icon teal">&#128172;</div>
+              <div><h4>Cadência de follow-up para leads que não converteram</h4><p>Lead que pediu informação no Instagram e não agendou: 3 contatos em 7 dias com abordagem diferente a cada vez. Hoje, provavelmente, recebe no máximo um "olá, e aí?"</p></div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight" style="margin-bottom:14px;">
+            <h3 style="color:var(--orange); margin-bottom:10px;">Aula experimental como funil</h3>
+            <div class="checklist">
+              <div class="check-item">Lead entra na campanha ou chega por indicação</div>
+              <div class="check-item">Agendamento da avaliação física gratuita no WhatsApp</div>
+              <div class="check-item">Anamnese + bioimpedância no primeiro contato</div>
+              <div class="check-item">Apresentação do plano de treino personalizado</div>
+              <div class="check-item">Oferta de matrícula com condição especial do dia</div>
+            </div>
+          </div>
+          <div class="quote-block">
+            <p>"Quem saiu de casa pra conhecer a academia e fez bioimpedância está 80% mais perto de assinar do que qualquer lead digital."</p>
+            <div class="author">Princípio do funil presencial</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 8: PILAR 3 — PROCESSO COMERCIAL ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 03</div>
+      <div class="pilar-hero">
+        <div class="num">03</div>
+        <h2>Processo comercial: métricas, scripts e política de desconto</h2>
+        <p>Ana é cobrada por resultado mas não tem acesso aos números. As consultoras atendem sem script estruturado. Roberto dá desconto informal que erode o ticket. Três problemas com a mesma causa: falta de processo.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card">
+          <span class="card-icon">&#128202;</span>
+          <h3>Dashboard semanal para Ana</h3>
+          <p>Leads gerados, custo por lead, taxa de conversão, ticket médio, alunos em risco, taxa de retenção. Toda segunda-feira, na mão dela. Sem precisar pedir para o Roberto.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128172;</span>
+          <h3>Script das consultoras</h3>
+          <p>Desde o "oi, vi que você entrou em contato" até o fechamento com condição especial. Incluindo como apresentar o valor da academia antes de falar o preço.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128683;</span>
+          <h3 style="color:var(--orange);">Política de desconto estruturada</h3>
+          <p>Desconto só com critério: renovação antecipada, indicação de novo aluno, pagamento à vista anual. Zero desconto "por amizade". Roberto define a tabela e todo mundo segue.</p>
+        </div>
+      </div>
+      <div class="card red-card" style="margin-top:16px;">
+        <p style="font-size:14px; line-height:1.6; color:var(--muted);">&#9888;&#65039; <strong style="color:#ef4444;">O desconto informal é o maior vazamento silencioso:</strong> se 50 alunos pagam R$190 no lugar de R$230, a academia perde R$2.000/mês sem nenhum processo de saída registrado.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 9: PILAR 4 — TECNOLOGIA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 04</div>
+      <div class="pilar-hero">
+        <div class="num">04</div>
+        <h2>Tecnologia: Pacto API + WhatsApp para reter e motivar</h2>
+        <p>O sistema Pacto tem API aberta. Isso significa que é possível integrar com WhatsApp e enviar mensagens personalizadas e automáticas baseadas no comportamento de cada aluno, sem depender do professor lembrar de mandar.</p>
+      </div>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Aluno completa bioimpedância</h4>
+              <p>O sistema detecta via API e dispara automaticamente: "Parabéns, você perdeu X kg de gordura em 30 dias. Seu próximo treino está te esperando."</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Aluno atinge meta de frequência</h4>
+              <p>Treinou 3x na semana por 4 semanas seguidas? Mensagem automática celebrando o hábito formado. Com o nome do aluno, com o número exato de dias.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Aluno some por mais de 7 dias</h4>
+              <p>Mensagem do professor do horário via WhatsApp: "Oi [nome], aqui é o professor [X]. Tô sentindo sua falta. Tá tudo bem?" Pessoal, direto, impossível ignorar.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Plano vencendo em 30 dias</h4>
+              <p>Mensagem automática de renovação com condição especial para quem renova antes do vencimento. Urgência real com benefício real.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight">
+            <h3 style="color:var(--orange); margin-bottom:12px;">Por que WhatsApp e não só o app?</h3>
+            <p style="font-size:13px; color:var(--muted); line-height:1.6; margin-bottom:12px;">O aluno abre o WhatsApp 80+ vezes por dia. O app da academia, quando lembra. A comunicação onde o aluno já está é sempre mais eficiente do que pedir para ele abrir outro app.</p>
+            <div class="pills">
+              <div class="pill orange">97% de taxa de abertura</div>
+              <div class="pill amber">Mensagem pessoal</div>
+              <div class="pill teal">Automático</div>
+            </div>
+          </div>
+          <div class="result-badge" style="margin-top:14px;">&#9889; A API do Pacto + WhatsApp é a alavanca mais rápida de retenção que vocês têm disponível hoje.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 10: FORÇA DO HÁBITO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Captação</div>
+      <div class="slide-title">Força do Hábito: <span>transformar curiosidade em contrato</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">A campanha tem o conceito certo. O lead entra porque quer mudar, não porque o preço está baixo. Só falta um funil estruturado dentro dos 7 dias para converter mais.</p>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">D1</div>
+            <div class="step-content">
+              <h4>Boas-vindas + anamnese + bioimpedância</h4>
+              <p>No primeiro dia, além do treino, o aluno já faz avaliação física completa. Ele tem um número de partida. Isso cria um antes que ele vai querer ver virar depois.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D3</div>
+            <div class="step-content">
+              <h4>Check-in de como está indo</h4>
+              <p>Mensagem do professor: "Como tá o treino? Seu corpo já está sentindo a diferença." Mantém o vínculo e identifica quem está animado (mais fácil de converter).</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D6</div>
+            <div class="step-content">
+              <h4>Preparar para a oferta do dia 7</h4>
+              <p>"Amanhã é seu último dia do desafio. Se você completar, desbloqueia sua condição especial de matrícula." Cria expectativa antes da oferta.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">D7</div>
+            <div class="step-content">
+              <h4>Oferta com urgência e condição especial</h4>
+              <p>Parabéns por completar + apresentação do resultado da bioimpedância + condição especial válida por 48h. Não é só um desconto, é uma conquista que ele pode continuar.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight" style="margin-bottom:14px;">
+            <h3 style="color:var(--orange); margin-bottom:10px;">Projeção de conversão</h3>
+            <div style="font-size:13px;">
+              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Leads entrando na campanha/mês</span>
+                <span style="font-weight:700;">50</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Conversão atual estimada</span>
+                <span style="font-weight:700; color:var(--red);">~20%</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--border);">
+                <span style="color:var(--muted);">Conversão com funil estruturado</span>
+                <span style="font-weight:700; color:var(--orange);">~40%</span>
+              </div>
+              <div style="display:flex; justify-content:space-between; padding:8px 0;">
+                <span style="color:var(--muted);">Matrículas adicionais/mês</span>
+                <span style="font-weight:700; color:var(--orange);">+10 alunos</span>
+              </div>
+            </div>
+          </div>
+          <div class="result-badge">&#128293; 10 alunos adicionais/mês = R$2.300/mês de receita nova.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 11: PLANO 30/60/90 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Implementação</div>
+      <div class="slide-title">O que acontece nos <span>primeiros 90 dias</span></div>
+      <div class="divider"></div>
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-num" style="font-size:32px;">30</div>
+          <h3 style="color:var(--orange);">dias — Estrutura</h3>
+          <div class="checklist" style="margin-top:12px;">
+            <div class="check-item">Dashboard de métricas para Ana configurado</div>
+            <div class="check-item">Scripts das consultoras prontos e em prática</div>
+            <div class="check-item">Política de desconto definida com Roberto</div>
+            <div class="check-item">Pacto API conectada ao WhatsApp</div>
+            <div class="check-item">Força do Hábito com funil de 7 dias ativo</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-num" style="font-size:32px;">60</div>
+          <h3 style="color:var(--teal);">dias — Ativação</h3>
+          <div class="checklist" style="margin-top:12px;">
+            <div class="check-item">Automações de retenção rodando</div>
+            <div class="check-item">Cadência de follow-up de leads ativa</div>
+            <div class="check-item">Campanha de reativação de ex-alunos</div>
+            <div class="check-item">Upsell do pacote Plus (bioimpedância ilimitada)</div>
+            <div class="check-item">Primeira análise de métricas com o Roberto</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-num" style="font-size:32px;">90</div>
+          <h3 style="color:var(--amber);">dias — Escala</h3>
+          <div class="checklist" style="margin-top:12px;">
+            <div class="check-item">Saídas mensais reduzidas em pelo menos 30%</div>
+            <div class="check-item">CPL e conversão da campanha otimizados</div>
+            <div class="check-item">Ticket médio protegido (zero descontos informais)</div>
+            <div class="check-item">Evento de pertencimento como rotina mensal</div>
+            <div class="check-item">Apresentação de resultados com Roberto</div>
+          </div>
+        </div>
+      </div>
+      <div class="quote-block" style="margin-top:20px;">
+        <p>"O objetivo dos 90 dias não é crescer 500%. É fechar os vazamentos, organizar o que já funciona e transformar o processo em algo que funciona sem depender de improviso."</p>
+        <div class="author">Grupo NG</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 12: INVESTIMENTO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Investimento</div>
+      <div class="slide-title">O que você <span>recebe</span></div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:16px; font-weight:700; margin-bottom:16px;">O que está incluído</h3>
+          <div class="checklist">
+            <div class="check-item">Dashboard comercial semanal para Ana</div>
+            <div class="check-item">Scripts das consultoras + treinamento prático</div>
+            <div class="check-item">Integração Pacto API + WhatsApp automação</div>
+            <div class="check-item">Funil Força do Hábito estruturado (D1 ao D7)</div>
+            <div class="check-item">Protocolo de retenção e ativação de grupo de risco</div>
+            <div class="check-item">Cadência de follow-up para leads não convertidos</div>
+            <div class="check-item">Política de desconto estruturada para o Roberto</div>
+            <div class="check-item">Campanha de reativação de ex-alunos</div>
+            <div class="check-item">Relatório quinzenal de performance</div>
+            <div class="check-item">Reunião mensal de revisão estratégica</div>
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:center;">
+          <div id="btn-revelar-wrap" style="text-align:center;">
+            <p style="font-size:13px; color:var(--muted); margin-bottom:20px;">Pronto para ver o investimento?</p>
+            <button id="btn-revelar" onclick="revelarInvestimento()" style="background:linear-gradient(135deg,var(--orange),var(--amber)); color:#fff; border:none; border-radius:12px; padding:18px 40px; font-size:17px; font-weight:800; font-family:'Inter',sans-serif; letter-spacing:-0.3px; cursor:pointer; box-shadow:0 8px 32px rgba(249,115,22,0.4); transition:transform .15s, box-shadow .15s;" onmouseover="this.style.transform='scale(1.04)'; this.style.boxShadow='0 12px 40px rgba(249,115,22,0.55)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 32px rgba(249,115,22,0.4)';">
+              Ver Investimento
+            </button>
+          </div>
+          <div id="card-investimento" class="modulo-card rec" style="display:none; opacity:0; transition:opacity .5s ease;">
+            <div class="rec-tag">Plano recomendado</div>
+            <h4 style="font-size:18px; font-weight:800; margin-bottom:8px;">Plano Crescimento</h4>
+            <div style="margin:8px 0 16px;">
+              <span style="font-size:44px; font-weight:900; background:linear-gradient(135deg,var(--orange),var(--amber)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 3.000</span>
+              <span style="font-size:13px; color:var(--muted); font-weight:500;">/mês</span>
+            </div>
+            <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">+ verba de anúncios gerida diretamente pela Mais Performance nas plataformas Meta e Google.</p>
+            <div style="padding-top:14px; border-top:1px solid var(--border);">
+              <p style="font-size:12px; color:var(--muted); margin-bottom:8px;"><strong style="color:var(--orange);">Sem fidelidade.</strong> Contrato mensal. Sai quando quiser.</p>
+              <p style="font-size:12px; color:var(--muted);">
+                <strong style="color:var(--orange);">Sem taxa de setup.</strong> Primeiro mês já é de implementação.
+              </p>
+            </div>
+            <button onclick="ocultarInvestimento()" style="margin-top:16px; background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:8px; padding:8px 20px; font-size:12px; font-family:'Inter',sans-serif; cursor:pointer; width:100%; transition:border-color .15s, color .15s;" onmouseover="this.style.borderColor='var(--orange)'; this.style.color='var(--orange)';" onmouseout="this.style.borderColor='var(--border)'; this.style.color='var(--muted)';">Ocultar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 13: PRÓXIMOS PASSOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Próximos passos</div>
+      <div class="slide-title">O caminho <span>daqui pra frente</span></div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Apresentação para o Roberto</h4>
+              <p>Ana leva o planejamento para o Roberto. A conversa não é sobre gastar, é sobre quanto está custando NÃO ter um processo. R$16.100/mês em saídas evitáveis é o número que abre a conversa.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Acesso ao Pacto e à API</h4>
+              <p>Com acesso ao sistema, a equipe técnica mapeia os dados disponíveis e desenha as automações de retenção personalizadas para a estrutura da Mais Performance.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Semana 1 de implementação</h4>
+              <p>Dashboard para Ana configurado, scripts das consultoras entregues, política de desconto definida com Roberto. Primeiros processos no ar antes do fim do mês.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Revisão dos primeiros 30 dias</h4>
+              <p>Análise dos primeiros dados: saídas, conversão da Força do Hábito, ticket médio protegido. Ajuste fino do que está rodando e escala do que está funcionando.</p>
+            </div>
+          </div>
+        </div>
+        <div class="card highlight">
+          <h3 style="color:var(--orange); margin-bottom:16px;">O argumento para o Roberto</h3>
+          <div class="stat-row" style="flex-direction:column; gap:10px;">
+            <div style="display:flex; justify-content:space-between; padding:10px 14px; background:var(--dark3); border-radius:10px; font-size:13px;">
+              <span style="color:var(--muted);">Saídas evitadas/mês (meta)</span>
+              <span style="font-weight:700; color:var(--orange);">30 alunos</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:10px 14px; background:var(--dark3); border-radius:10px; font-size:13px;">
+              <span style="color:var(--muted);">Receita retida/mês</span>
+              <span style="font-weight:700; color:var(--orange);">R$ 6.900</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:10px 14px; background:var(--dark3); border-radius:10px; font-size:13px;">
+              <span style="color:var(--muted);">Novas matrículas Força do Hábito</span>
+              <span style="font-weight:700; color:var(--orange);">+10/mês</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:10px 14px; background:var(--dark3); border-radius:10px; font-size:13px;">
+              <span style="color:var(--muted);">Receita nova por matrículas</span>
+              <span style="font-weight:700; color:var(--orange);">R$ 2.300/mês</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; padding:12px 14px; background:rgba(249,115,22,0.12); border:1px solid rgba(249,115,22,0.3); border-radius:10px; font-size:14px;">
+              <span style="font-weight:700; color:var(--text);">Impacto total estimado</span>
+              <span style="font-weight:900; color:var(--orange);">R$ 9.200/mês</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 14: FECHAMENTO ====== -->
+  <div class="slide" style="background: radial-gradient(ellipse at 50% 50%, #1a0800 0%, var(--dark) 70%);">
+    <div class="slide-inner close-slide">
+      <div class="badge" style="margin-bottom:20px;">&#128170; Grupo NG</div>
+      <h2>A academia que <br/><span>cresce por processo</span></h2>
+      <p>Vocês já têm o diferencial. O que falta é o processo que faz o aluno sentir esse diferencial toda semana, não só quando pensa em cancelar.</p>
+      <div class="cover-tags" style="justify-content:center; margin-bottom:36px;">
+        <div class="ctag">&#128202; Dashboard para Ana</div>
+        <div class="ctag">&#9889; Pacto API conectada</div>
+        <div class="ctag">&#128172; Scripts prontos</div>
+        <div class="ctag">&#128293; Força do Hábito otimizada</div>
+      </div>
+      <button class="btn-primary" onclick="goTo(0)">&#8592; Voltar ao início</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+  const dotsEl   = document.getElementById('dots');
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'exit');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('exit');
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    const pct = ((current + 1) / total) * 100;
+    progress.style.width = pct + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    update();
+  }
+
+  document.getElementById('btn-prev').onclick = () => goTo(current - 1);
+  document.getElementById('btn-next').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     goTo(current - 1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
+  });
+
+  update();
+
+  function revelarInvestimento() {
+    const btn  = document.getElementById('btn-revelar-wrap');
+    const card = document.getElementById('card-investimento');
+    btn.style.display = 'none';
+    card.style.display = 'block';
+    requestAnimationFrame(() => { card.style.opacity = '1'; });
+  }
+
+  function ocultarInvestimento() {
+    const btn  = document.getElementById('btn-revelar-wrap');
+    const card = document.getElementById('card-investimento');
+    card.style.opacity = '0';
+    setTimeout(() => {
+      card.style.display = 'none';
+      btn.style.display = 'block';
+    }, 500);
+  }
+</script>
+</body>
+</html>
