@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estratégia Três Marias · Desafio Empreendedor · Grupo NG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --navy:     #1F2A5C;
+    --navy-2:   #182148;
+    --navy-3:   #283566;
+    --navy-4:   #34427A;
+    --coral:    #E97862;
+    --coral-lt: #F4937F;
+    --coral-dk: #C95A48;
+    --border:   #3D4B7E;
+    --text:     #FFFFFF;
+    --muted:    #A0AABE;
+    --soft:     #C9D0E0;
+    --white:    #FFFFFF;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* PROGRESS BAR */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--coral), var(--coral-lt));
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* COUNTER */
+  #counter {
+    position: fixed;
+    bottom: 24px; right: 32px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  /* NAV */
+  .nav-btn {
+    position: fixed;
+    bottom: 20px;
+    background: var(--navy-3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .nav-btn:hover { background: var(--coral); border-color: var(--coral); color: var(--navy); }
+  #btn-prev { right: 120px; }
+  #btn-next { right: 68px; }
+
+  /* DOTS */
+  #dots {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--coral); width: 20px; border-radius: 3px; }
+
+  /* LOGO NG */
+  .ng-logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px; height: 56px;
+    background: var(--navy);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: -1px;
+    color: var(--coral);
+    position: relative;
+  }
+  .ng-logo::after {
+    content: 'grupo';
+    position: absolute;
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    color: var(--white);
+  }
+
+  /* SLIDES */
+  #slides { width: 100%; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+    padding: 60px 80px;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .slide-inner { max-width: 1140px; width: 100%; }
+
+  /* =================== COVER =================== */
+  .cover {
+    background: radial-gradient(ellipse at 30% 50%, #2A3673 0%, var(--navy) 65%);
+    text-align: left;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(233,120,98,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(244,147,127,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .cover-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 40px;
+  }
+  .cover-logo .ng-mark {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: var(--navy-2);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    border: 1px solid var(--border);
+  }
+  .cover-logo .ng-mark .letters {
+    font-size: 26px; font-weight: 900;
+    color: var(--coral); letter-spacing: -2px;
+    line-height: 1;
+  }
+  .cover-logo .ng-mark .sub {
+    font-size: 8px; font-weight: 400; color: var(--white);
+    letter-spacing: 1.5px; margin-top: 2px;
+  }
+  .cover-logo .brand-text { font-size: 13px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(233,120,98,0.12);
+    border: 1px solid rgba(233,120,98,0.35);
+    color: var(--coral);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .cover h1 {
+    font-size: 78px;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+  .cover h1 span {
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover .subtitle {
+    font-size: 20px;
+    color: var(--soft);
+    font-weight: 400;
+    max-width: 620px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cover-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ctag {
+    background: var(--navy-3);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--soft);
+    font-weight: 500;
+  }
+
+  /* =================== SECTION HEADER =================== */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--coral);
+    margin-bottom: 16px;
+  }
+  .slide-title {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+  }
+  .slide-title span {
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-desc {
+    font-size: 17px;
+    color: var(--soft);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    max-width: 760px;
+  }
+  .divider {
+    width: 48px; height: 4px;
+    background: linear-gradient(90deg, var(--coral), var(--coral-lt));
+    border-radius: 2px;
+    margin: 20px 0;
+  }
+
+  /* =================== CARDS =================== */
+  .cards { display: grid; gap: 16px; }
+  .cards-3 { grid-template-columns: repeat(3,1fr); }
+  .cards-2 { grid-template-columns: repeat(2,1fr); }
+  .cards-4 { grid-template-columns: repeat(4,1fr); }
+
+  .card {
+    background: var(--navy-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(233,120,98,0.4); }
+  .card.highlight {
+    background: linear-gradient(135deg, rgba(233,120,98,0.09), rgba(244,147,127,0.04));
+    border-color: rgba(233,120,98,0.28);
+  }
+  .card-icon { font-size: 30px; margin-bottom: 14px; display: block; }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--white); }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .card .card-num {
+    font-size: 44px; font-weight: 900; line-height: 1; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* =================== LIST ITEMS =================== */
+  .list { display: flex; flex-direction: column; gap: 14px; }
+  .list-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: var(--navy-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  .list-item:hover { border-color: rgba(233,120,98,0.3); }
+  .li-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; margin-top: 2px;
+    font-weight: 800; color: var(--coral);
+  }
+  .li-icon.coral { background: rgba(233,120,98,0.14); color: var(--coral); }
+  .li-icon.amber { background: rgba(245,158,11,0.14); color: #f59e0b; }
+  .li-icon.red   { background: rgba(239,68,68,0.14); color: #ef4444; }
+  .li-icon.blue  { background: rgba(96,165,250,0.14); color: #60a5fa; }
+  .list-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--white); }
+  .list-item p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* =================== TWO COL =================== */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 32px; align-items: start;
+  }
+
+  /* =================== STEPS =================== */
+  .steps { display: flex; flex-direction: column; gap: 14px; }
+  .step  { display: flex; align-items: flex-start; gap: 16px; }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; flex-shrink: 0; color: var(--navy);
+  }
+  .step-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--white); }
+  .step-content p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* =================== PILLS =================== */
+  .pills { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .pill { padding: 5px 13px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+  .pill.coral { background: rgba(233,120,98,0.13);  color: var(--coral); border: 1px solid rgba(233,120,98,0.3); }
+  .pill.amber { background: rgba(245,158,11,0.13); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
+  .pill.red   { background: rgba(239,68,68,0.13);  color: #ef4444;      border: 1px solid rgba(239,68,68,0.3); }
+  .pill.blue  { background: rgba(96,165,250,0.13); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
+  .pill.muted { background: var(--navy-3); color: var(--soft); border: 1px solid var(--border); }
+
+  /* =================== BIG STAT =================== */
+  .stat-row { display: flex; gap: 16px; margin-top: 4px; }
+  .big-stat {
+    flex: 1; text-align: center; padding: 28px 20px;
+    background: var(--navy-2); border: 1px solid var(--border); border-radius: 16px;
+  }
+  .big-stat .number {
+    font-size: 64px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .big-stat .label { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  /* =================== PILAR HERO =================== */
+  .pilar-hero {
+    background: linear-gradient(135deg, rgba(233,120,98,0.10), rgba(244,147,127,0.04));
+    border: 1px solid rgba(233,120,98,0.25);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .pilar-hero .num {
+    font-size: 72px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .pilar-hero h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; color: var(--white); }
+  .pilar-hero p  { font-size: 15px; color: var(--soft); line-height: 1.6; max-width: 760px; }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14px; color: var(--soft); line-height: 1.5;
+  }
+  .check-item::before {
+    content: "›";
+    color: var(--coral);
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 0px;
+    font-size: 18px;
+  }
+
+  /* DOR */
+  .dor-big {
+    background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(245,158,11,0.04));
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .dor-big .dor-icon { font-size: 36px; margin-bottom: 12px; color: #ef4444; }
+  .dor-big h2 { font-size: 28px; font-weight: 800; margin-bottom: 10px; color: var(--white); }
+  .dor-big p  { font-size: 16px; color: var(--soft); line-height: 1.7; max-width: 760px; }
+
+  /* WHATSAPP MOCK */
+  .wpp-mock {
+    background: #0B1838;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 22px;
+    max-width: 460px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .wpp-mock .wpp-head {
+    font-size: 11px; color: var(--coral); font-weight: 700;
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px;
+  }
+  .wpp-bubble {
+    background: #1F2D5C;
+    border-radius: 12px 12px 12px 4px;
+    padding: 12px 14px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--white);
+  }
+
+  /* TABELA KPI */
+  .kpi-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--navy-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .kpi-table th, .kpi-table td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .kpi-table th {
+    background: var(--navy-3);
+    color: var(--coral);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .kpi-table td { color: var(--soft); }
+  .kpi-table td:last-child { color: var(--white); font-weight: 700; text-align: right; }
+  .kpi-table tr:last-child td { border-bottom: none; }
+
+  /* CLOSE */
+  .close-slide { text-align: center; }
+  .close-slide h2 {
+    font-size: 64px; font-weight: 900; line-height: 1;
+    letter-spacing: -2px; margin-bottom: 24px;
+  }
+  .close-slide h2 span {
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .close-slide p {
+    font-size: 20px; color: var(--soft);
+    max-width: 580px; margin: 0 auto 40px; line-height: 1.6;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--coral), var(--coral-lt));
+    color: var(--navy); padding: 16px 36px; border-radius: 12px;
+    font-size: 16px; font-weight: 800; border: none; cursor: pointer;
+  }
+
+  /* FLOW DIAGRAM */
+  .flow-step {
+    background: var(--navy-2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--coral);
+    border-radius: 0 12px 12px 0;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .flow-step .flow-num {
+    font-size: 11px; font-weight: 800; letter-spacing: 2px;
+    color: var(--coral); text-transform: uppercase; margin-bottom: 4px;
+  }
+  .flow-step h4 { font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 4px; }
+  .flow-step p { font-size: 13px; color: var(--muted); }
+  .flow-arrow {
+    text-align: center;
+    color: var(--coral);
+    font-size: 20px;
+    margin: -2px 0;
+    opacity: 0.6;
+  }
+
+  /* =================== MOBILE RESPONSIVO =================== */
+  @media (max-width: 768px) {
+
+    body { overflow-y: auto; height: auto; }
+    #slides { height: auto; position: relative; }
+
+    .slide {
+      position: relative;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: all !important;
+      padding: 40px 20px 80px;
+      height: auto;
+      min-height: 100svh;
+      display: none;
+      align-items: flex-start;
+    }
+    .slide.active { display: flex; }
+
+    #dots { bottom: 16px; }
+    .nav-btn { bottom: 12px; }
+    #btn-prev { right: 100px; }
+    #btn-next { right: 52px; }
+    #counter { bottom: 18px; right: 16px; }
+
+    .cover h1 { font-size: 42px; letter-spacing: -1.5px; }
+    .cover .subtitle { font-size: 15px; }
+    .cover-tags { gap: 8px; }
+    .ctag { font-size: 11px; padding: 6px 12px; }
+
+    .slide-title { font-size: 30px; letter-spacing: -0.5px; }
+    .slide-desc  { font-size: 15px; margin-bottom: 24px; }
+    .section-label { font-size: 10px; }
+
+    .cards-3,
+    .cards-4,
+    .cards-2 { grid-template-columns: 1fr; }
+
+    .two-col { grid-template-columns: 1fr; gap: 20px; }
+
+    .stat-row { flex-direction: column; gap: 12px; }
+    .big-stat .number { font-size: 48px; }
+
+    .pilar-hero { padding: 20px; }
+    .pilar-hero .num { font-size: 48px; }
+    .pilar-hero h2 { font-size: 20px; }
+    .pilar-hero p  { font-size: 14px; }
+
+    .dor-big { padding: 20px; }
+    .dor-big .dor-icon { font-size: 32px; }
+    .dor-big h2 { font-size: 20px; }
+    .dor-big p  { font-size: 14px; }
+
+    .close-slide h2 { font-size: 36px; }
+    .close-slide p  { font-size: 16px; }
+
+    .card { padding: 18px 20px; }
+    .card .card-num { font-size: 36px; }
+    .list-item { padding: 14px 16px; }
+    .kpi-table th, .kpi-table td { padding: 10px 12px; font-size: 12px; }
+    .slide-inner { max-width: 100%; }
+    .wpp-mock { max-width: 100%; }
+  }
+
+  @media (max-width: 400px) {
+    .cover h1 { font-size: 34px; }
+    .slide-title { font-size: 26px; }
+    .pilar-hero .num { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+<div id="counter"></div>
+
+<div id="slides">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <div class="cover-logo">
+        <div class="ng-mark">
+          <div class="letters">NG</div>
+          <div class="sub">grupo</div>
+        </div>
+        <div class="brand-text">Grupo NG &nbsp;·&nbsp; Estratégia</div>
+      </div>
+      <div class="badge">Cliente GCO &nbsp;·&nbsp; Desafio Empreendedor</div>
+      <h1>Estratégia<br/><span>Três Marias</span></h1>
+      <p class="subtitle">Captação de empresas PME para o Desafio Empreendedor. Plano de chegada estruturado em 3 frentes para a viagem do Gustavo na próxima semana.</p>
+      <div class="cover-tags">
+        <div class="ctag">📍 Três Marias, MG</div>
+        <div class="ctag">📅 Reunião de alinhamento 22/05</div>
+        <div class="ctag">🎯 PME até R$ 250k/mês</div>
+        <div class="ctag">⚡ 3 frentes paralelas</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: TRÊS MARIAS EM NÚMEROS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Contexto</div>
+      <div class="slide-title">Três Marias <span>em números</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">A cidade é pequena o bastante para a gente atacar com cirurgia e grande o bastante para construir um pipeline robusto. Cada número aqui muda a forma como vamos investir e segmentar.</p>
+
+      <div class="cards cards-4">
+        <div class="card highlight">
+          <div class="card-num">28k</div>
+          <h3>Habitantes</h3>
+          <p>Cidade interior de Minas, reconhecida pela represa e pela pesca.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">~350</div>
+          <h3>Empresas PME ativas</h3>
+          <p>Estimativa de CNPJ excluindo MEI no município.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">~100</div>
+          <h3>Alvos diretos</h3>
+          <p>Faturamento até R$ 250 mil mensais. Universo total da campanha.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num">3</div>
+          <h3>Turmas anteriores</h3>
+          <p>O Desafio Empreendedor já passou por lá. Cerca de 30 empresas formadas.</p>
+        </div>
+      </div>
+
+      <div class="pilar-hero" style="margin-top:24px;">
+        <h2>30 indicações na mão antes da viagem</h2>
+        <p>O Gustavo embarca para Três Marias com a lista pronta. Isso é o ativo mais valioso da operação. Cada uma dessas indicações vira o ponto de partida do funil personalizado da Estratégia 2.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: DIAGNÓSTICO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Diagnóstico</div>
+      <div class="slide-title">O erro <span>que evitar</span></div>
+      <div class="divider"></div>
+
+      <div class="dor-big">
+        <div class="dor-icon">⚠</div>
+        <h2>Bater na porta de 30 indicações sem aquecimento prévio</h2>
+        <p>Cidade pequena significa que o empresário precisa ter visto o Gustavo na timeline pelo menos 3 a 5 vezes antes da reunião presencial. Sem isso, a indicação vira apresentação fria e o ciclo de venda dobra de tamanho.</p>
+      </div>
+
+      <div class="pilar-hero">
+        <h2>O posicionamento que faz sentido</h2>
+        <p>Gustavo Conha como consultor de gestão empresarial reconhecido. Ancorado na metodologia Gestão 6D e na credibilidade do Desafio Empreendedor, mas sem ser refém da marca. Tom: autoridade técnica acessível, sem jargão de consultor.</p>
+      </div>
+
+      <div class="cards cards-2" style="margin-top:18px;">
+        <div class="card">
+          <h3 style="color:var(--coral);">Não funciona</h3>
+          <p>"O Desafio Empreendedor está chegando em Três Marias." Foca na marca, não na pessoa. Empresário não compra marca de consultoria, compra consultor.</p>
+        </div>
+        <div class="card highlight">
+          <h3 style="color:var(--coral);">Funciona</h3>
+          <p>"Gustavo Conha, consultor empresarial, está em Três Marias resolvendo gargalo de PME local." Foca na pessoa. A marca aparece como credencial.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: PRINCÍPIO RAIZ ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Princípio raiz</div>
+      <div class="slide-title">Empresário PME compra <span>a pessoa</span> do consultor</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Empresário de cidade interior não fecha consultoria de primeira. Ele fecha depois de ver várias vezes, ouvir alguém de confiança falar bem, e perceber que o cara entende a dor específica dele. As 3 estratégias cobrem esses 3 eixos.</p>
+
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="card-icon">👁</div>
+          <h3>Ver várias vezes</h3>
+          <p>Anúncio frio geo-segmentado. Faz o rosto do Gustavo aparecer 4 a 7 vezes na timeline em 14 dias.</p>
+          <div class="pills"><div class="pill coral">Estratégia 1</div></div>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">🤝</div>
+          <h3>Ouvir alguém de confiança</h3>
+          <p>WhatsApp personalizado para as 30 indicações. Quem indicou faz a ponte, o Gustavo aquece o terreno.</p>
+          <div class="pills"><div class="pill coral">Estratégia 2</div></div>
+        </div>
+        <div class="card highlight">
+          <div class="card-icon">🎯</div>
+          <h3>Provar que entende a dor</h3>
+          <p>Live segmentada com big idea concreta. Conteúdo puro, sem jargão, com case local.</p>
+          <div class="pills"><div class="pill coral">Estratégia 3</div></div>
+        </div>
+      </div>
+
+      <div class="pilar-hero" style="margin-top:24px;">
+        <h2>A força está em rodar as três ao mesmo tempo</h2>
+        <p>Cada estratégia sozinha tem efeito limitado. Combinadas, elas geram saturação na timeline, aquecimento direto e filtro de qualificação simultaneamente. Quando o Gustavo desembarcar, a cidade já vai estar pronta para receber ele.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 5: AS 3 ESTRATÉGIAS OVERVIEW ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Visão geral</div>
+      <div class="slide-title">As <span>3 estratégias</span> de chegada</div>
+      <div class="divider"></div>
+
+      <div class="list">
+        <div class="list-item">
+          <div class="li-icon coral">1</div>
+          <div>
+            <h4>Saturação na timeline do empresário PME local</h4>
+            <p>Anúncio frio geo-segmentado em Três Marias e raio de 15km. Objetivo: garantir que todo dono de empresa PME da cidade veja o Gustavo no Instagram pelo menos 4 vezes em 10 a 14 dias. Função: plantar o rosto antes da chegada física.</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon coral">2</div>
+          <div>
+            <h4>Aquecimento direto via WhatsApp nas 30 indicações</h4>
+            <p>Sequência de 4 toques personalizados pelo setor de cada contato. Objetivo: transformar indicação fria em reunião marcada antes da chegada presencial. Função: converter o ativo mais valioso da operação no canal de maior ROI.</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon coral">3</div>
+          <div>
+            <h4>Live de palestra como filtro de qualificação</h4>
+            <p>Aula gratuita com big idea concreta voltada para PME local. Objetivo: separar curioso de comprador e gerar lista de quem está pronto para diagnóstico. Função: priorizar a agenda presencial do Gustavo na semana da visita.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 6: ESTRATÉGIA 1 INTRO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estratégia 1</div>
+      <div class="slide-title">Saturação na <span>timeline</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Garantir que todo dono de empresa PME de Três Marias veja o Gustavo no Instagram pelo menos 4 vezes em 10 dias. Com pouco dinheiro a gente atinge praticamente o universo total porque a cidade é pequena.</p>
+
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:18px; font-weight:800; color:var(--coral); margin-bottom:16px; text-transform:uppercase; letter-spacing:2px;">Targeting cirúrgico</h3>
+          <div class="checklist">
+            <div class="check-item">Localização: Três Marias mais raio de 15km. Não amplia, a cidade já é o foco.</div>
+            <div class="check-item">Idade: 32 a 58 anos. Empresário consolidado, não jovem começando.</div>
+            <div class="check-item">Targeting principal: admins de página de empresa no Facebook.</div>
+            <div class="check-item">Interesses combinados: empreendedorismo, gestão empresarial, ContaAzul, Sebrae, Endeavor.</div>
+            <div class="check-item">Comportamento: pequenos empresários (categoria nativa do Meta).</div>
+            <div class="check-item">Exclusões: estudantes e idade abaixo de 28 anos.</div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:18px; font-weight:800; color:var(--coral); margin-bottom:16px; text-transform:uppercase; letter-spacing:2px;">Setup de campanha</h3>
+          <div class="checklist">
+            <div class="check-item">Objetivo de campanha: alcance e ThruPlay.</div>
+            <div class="check-item">3 conjuntos de anúncio rodando paralelos (1 por setor).</div>
+            <div class="check-item">Posicionamento: feed, reels e stories do Instagram.</div>
+            <div class="check-item">Janela: 10 a 14 dias antes da chegada física.</div>
+            <div class="check-item">Frequência alvo: 4 a 7 impressões por pessoa.</div>
+            <div class="check-item">Otimização: rotação manual de criativos a cada 4 dias.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 7: CRIATIVOS POR SETOR ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estratégia 1 · Criativos</div>
+      <div class="slide-title">3 criativos <span>segmentados por setor</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Cada vídeo tem o Gustavo falando do problema, dando 1 insight curto e fechando com convite para a live. Mensagem genérica não vai chegar lá.</p>
+
+      <div class="cards cards-3">
+        <div class="card highlight">
+          <div class="pills" style="margin:0 0 12px 0;"><div class="pill coral">Comércio</div></div>
+          <h3>Por que sua loja vende bem no mês e fecha o caixa no vermelho</h3>
+          <p style="margin-top:10px;">Dor de comércio local: fluxo de caixa furado por falta de DRE simples. Gustavo entrega 1 insight rápido sobre formação de preço.</p>
+        </div>
+        <div class="card highlight">
+          <div class="pills" style="margin:0 0 12px 0;"><div class="pill coral">Serviços</div></div>
+          <h3>Você cobra pelo serviço ou pela sua hora? Tem diferença e ela quebra empresa</h3>
+          <p style="margin-top:10px;">Dor de prestador de serviço: precificação por intuição. Gustavo entrega o método de cobrar por entrega gerada.</p>
+        </div>
+        <div class="card highlight">
+          <div class="pills" style="margin:0 0 12px 0;"><div class="pill coral">Turismo</div></div>
+          <h3>Alta temporada salva, baixa temporada quebra. Tem como inverter</h3>
+          <p style="margin-top:10px;">Dor de pousada e restaurante da represa: sazonalidade. Gustavo abre o conceito de receita previsível em baixa.</p>
+        </div>
+      </div>
+
+      <div class="pilar-hero" style="margin-top:24px;">
+        <h2>Formato do vídeo</h2>
+        <p>Vertical 9:16, entre 30 e 60 segundos, legenda queimada, Gustavo aparecendo de frente para a câmera. Fechamento: "Se você toca uma empresa em Três Marias, vou fazer uma aula gratuita na próxima quinta. Segue aqui que vou te mandar o link."</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 8: BUDGET E KPIS ESTRATÉGIA 1 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estratégia 1 · Investimento</div>
+      <div class="slide-title">Budget <span>e métricas esperadas</span></div>
+      <div class="divider"></div>
+
+      <div class="stat-row">
+        <div class="big-stat">
+          <div class="number">R$ 50</div>
+          <div class="label">Investimento diário</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">14</div>
+          <div class="label">Dias de campanha</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">R$ 700</div>
+          <div class="label">Investimento total</div>
+        </div>
+      </div>
+
+      <p class="slide-desc" style="margin-top:36px;">Em cidade pequena, frequência alta com pouco dinheiro é a vantagem matemática. Com R$ 700 a gente cobre praticamente 100% do universo PME alvo da campanha.</p>
+
+      <table class="kpi-table">
+        <thead>
+          <tr><th>Métrica</th><th>Meta esperada</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Alcance único da população PME alvo</td><td>70% a 90%</td></tr>
+          <tr><td>Frequência média por pessoa</td><td>4 a 7</td></tr>
+          <tr><td>CPM em cidade pequena</td><td>R$ 6 a R$ 12</td></tr>
+          <tr><td>Custo por ThruPlay (3s+)</td><td>Abaixo de R$ 0,10</td></tr>
+          <tr><td>Empresários PME impactados</td><td>200 a 350 pessoas qualificadas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 9: ESTRATÉGIA 2 INTRO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estratégia 2</div>
+      <div class="slide-title">WhatsApp das <span>30 indicações</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Indicação fria não converte. Indicação morna converte. Esse é o canal de maior ROI da operação porque já tem permissão social de quem indicou. Tudo sai do WhatsApp pessoal do Gustavo, escrito como se ele tivesse digitado, sem cara de campanha.</p>
+
+      <div class="cards cards-2">
+        <div class="card highlight">
+          <h3>O princípio que rege a Estratégia 2</h3>
+          <p style="margin-top:10px;">Empresário PME responde melhor a mensagem de pessoa do que mensagem de empresa. Se parecer campanha, queima na hora. Roteiro vem da NG, envio vem do Gustavo.</p>
+        </div>
+        <div class="card highlight">
+          <h3>Resultado esperado realista</h3>
+          <p style="margin-top:10px;">Das 30 indicações, é factível esperar entre 12 e 18 reuniões agendadas antes mesmo do Gustavo embarcar para Três Marias. Esse é o pipeline de partida da viagem.</p>
+        </div>
+      </div>
+
+      <div class="pilar-hero" style="margin-top:24px;">
+        <h2>Personalização por setor</h2>
+        <p>Antes de disparar, a NG vai mapear o setor de cada uma das 30 indicações. Cada contato recebe o vídeo de aquecimento do setor dele. Se for comércio, recebe o vídeo de comércio. Se for serviço, recebe o vídeo de serviço. Personalização real, não cosmética.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 10: SEQUÊNCIA 4 TOQUES ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estratégia 2 · Sequência</div>
+      <div class="slide-title">Os <span>4 toques</span> antes da reunião</div>
+      <div class="divider"></div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Sábado: apresentação personalizada</h4>
+            <p>"Oi [nome], aqui é o Gustavo Conha. [quem indicou] te indicou pra mim. Sou consultor empresarial e vou estar em Três Marias na semana de [data]. Antes de te incomodar pessoalmente queria te mandar isso aqui." Anexa o vídeo de autoridade do setor.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Terça: convite para a live</h4>
+            <p>"[Nome], vou fazer uma aula online na [dia] sobre [big idea]. É pra dono de empresa em Três Marias e cidades vizinhas. Não custa nada, te ajuda mesmo se a gente nem se conhecer pessoalmente. Posso te mandar o link?"</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Um dia antes da live: lembrete com pergunta-chave</h4>
+            <p>"[Nome], a aula é amanhã às [hora]. Antes de você entrar, posso te perguntar uma coisa? Qual o maior gargalo da sua empresa hoje?" Essa pergunta é a chave do funil. Quem responde já está dentro.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Dia da chegada: marca o café</h4>
+            <p>"[Nome], cheguei em Três Marias. Bloqueei uns dias aqui pra conversar com o pessoal indicado. Café ou almoço? Você prefere [dia] ou [dia]?" Reunião deixa de ser apresentação e vira diagnóstico.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 11: ESTRATÉGIA 3 INTRO + BIG IDEA ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estratégia 3</div>
+      <div class="slide-title">Live como <span>filtro de qualificação</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Live é o melhor filtro de baixo custo que existe para consultoria. Quem aparece e fica até o fim já se qualificou sozinho. Esse é o ponto onde anúncio frio e WhatsApp convergem para gerar a lista de diagnósticos presenciais.</p>
+
+      <div class="pilar-hero">
+        <h2>A big idea precisa ter 3 atributos</h2>
+        <p>Promessa concreta (não framework). Numerização (faturamento, prazo, percentual). Identificação local (Três Marias ou empresa de interior na chamada).</p>
+      </div>
+
+      <h3 style="font-size:14px; font-weight:800; color:var(--coral); margin: 28px 0 14px; text-transform:uppercase; letter-spacing:2px;">Opções para fechar na reunião de quinta</h3>
+      <div class="cards cards-3">
+        <div class="card">
+          <h3>Opção A</h3>
+          <p style="margin-top:8px;">"Os 6 erros que travam empresas faturando entre R$ 50k e R$ 250k em Três Marias"</p>
+          <div class="pills"><div class="pill coral">Local + numerização</div></div>
+        </div>
+        <div class="card">
+          <h3>Opção B</h3>
+          <p style="margin-top:8px;">"Como sair do operacional em 90 dias sem demitir ninguém"</p>
+          <div class="pills"><div class="pill coral">Dor universal PME</div></div>
+        </div>
+        <div class="card">
+          <h3>Opção C</h3>
+          <p style="margin-top:8px;">"Por que sua empresa de Três Marias não cresce mesmo dando lucro"</p>
+          <div class="pills"><div class="pill coral">Provocação direta</div></div>
+        </div>
+      </div>
+
+      <p class="slide-desc" style="margin-top:24px; max-width:none;"><strong style="color:var(--coral);">Gestão 6D</strong> permanece como metodologia por trás, mas <strong style="color:var(--white);">nunca</strong> como nome do evento. Empresário não quer aprender 6 pilares, quer parar de perder dinheiro.</p>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 12: ESTRUTURA DA LIVE ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Estratégia 3 · Estrutura</div>
+      <div class="slide-title">Como construir <span>a live</span></div>
+      <div class="divider"></div>
+
+      <div class="two-col">
+        <div>
+          <h3 style="font-size:18px; font-weight:800; color:var(--coral); margin-bottom:16px; text-transform:uppercase; letter-spacing:2px;">Formato recomendado</h3>
+          <div class="checklist">
+            <div class="check-item">Live no Instagram (atrito zero) ou webinar via Zoom (lead mais qualificado).</div>
+            <div class="check-item">Recomendação inicial: Instagram. Mais fácil para o primeiro teste em cidade pequena.</div>
+            <div class="check-item">Duração total: 60 a 75 minutos.</div>
+            <div class="check-item">Horário: terça ou quinta entre 19h30 e 20h30.</div>
+            <div class="check-item">Captação: anúncio geo + WhatsApp das 30 + posts orgânicos + alumni das 3 turmas anteriores.</div>
+          </div>
+        </div>
+        <div>
+          <h3 style="font-size:18px; font-weight:800; color:var(--coral); margin-bottom:16px; text-transform:uppercase; letter-spacing:2px;">Estrutura interna</h3>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">1</div>
+              <div class="step-content">
+                <h4>Abertura (5 min)</h4>
+                <p>Autoridade rápida com cases das 3 turmas anteriores de Três Marias.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">2</div>
+              <div class="step-content">
+                <h4>Conteúdo puro (40 min)</h4>
+                <p>1 pilar do Gestão 6D destrinchado com exemplo do comércio local.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">3</div>
+              <div class="step-content">
+                <h4>Cases rápidos (10 min)</h4>
+                <p>2 cases curtos de empresa local com resultado em número.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">4</div>
+              <div class="step-content">
+                <h4>Pitch + CTA (10 min)</h4>
+                <p>Diagnóstico presencial gratuito com CTA claro pelo WhatsApp.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">5</div>
+              <div class="step-content">
+                <h4>Perguntas (5 min)</h4>
+                <p>Mensagem automática 5 min depois para quem comentou.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pilar-hero" style="margin-top:24px;">
+        <h2>Detalhe que aumenta conversão</h2>
+        <p>Logo no início da live, pedir para cada participante escrever no chat o setor da empresa. Gera engajamento, alimenta o algoritmo, e dá ao Gustavo material em tempo real para customizar os exemplos durante a aula.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 13: FLUXO INTEGRADO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Operação</div>
+      <div class="slide-title">Como as <span>3 estratégias</span> se conectam</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Cada empresário PME de Três Marias passa por uma trilha integrada que combina exposição passiva, contato direto e qualificação ativa antes de chegar na mesa do Gustavo.</p>
+
+      <div class="flow-step">
+        <div class="flow-num">Etapa 1 · Estratégia 1</div>
+        <h4>Empresário vê 4 a 7 vídeos do Gustavo na timeline</h4>
+        <p>Anúncio geo-segmentado por setor. Custo abaixo de R$ 0,10 por visualização de 3s.</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="flow-num">Etapa 2 · Estratégia 2 (paralela)</div>
+        <h4>Indicações recebem WhatsApp personalizado</h4>
+        <p>4 toques entre sábado e dia da chegada. Vídeo do setor + convite para live + pergunta de gargalo.</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="flow-num">Etapa 3 · Estratégia 3</div>
+        <h4>Live com big idea concreta no Instagram</h4>
+        <p>Conteúdo puro 40 min + pitch 10 min. Capta lista de quem está pronto para diagnóstico.</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="flow-num">Etapa 4 · Consequência</div>
+        <h4>Diagnóstico presencial com Gustavo em Três Marias</h4>
+        <p>Agenda priorizada: quem foi na live primeiro, depois indicações que responderam o toque 3.</p>
+      </div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step">
+        <div class="flow-num">Etapa 5 · Fechamento</div>
+        <h4>Contrato de consultoria</h4>
+        <p>Meta realista da primeira viagem: 3 a 7 contratos fechados.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 14: MÉTRICAS FINAIS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Métricas</div>
+      <div class="slide-title">KPIs <span>realistas</span> da operação</div>
+      <div class="divider"></div>
+      <p class="slide-desc">Metas honestas para a primeira viagem. Operação calibra a partir da segunda visita usando os dados coletados nessa rodada.</p>
+
+      <table class="kpi-table">
+        <thead>
+          <tr><th>Métrica</th><th>Meta realista</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Cobertura da população PME na cidade via anúncio</td><td>70% a 90%</td></tr>
+          <tr><td>Frequência média por pessoa</td><td>4 a 7</td></tr>
+          <tr><td>Reuniões agendadas via WhatsApp das 30 indicações</td><td>12 a 18</td></tr>
+          <tr><td>Inscritos confirmados na live</td><td>25 a 45</td></tr>
+          <tr><td>Show-up rate da live</td><td>40% a 55%</td></tr>
+          <tr><td>Diagnósticos presenciais agendados na semana</td><td>15 a 25</td></tr>
+          <tr><td>Conversão diagnóstico em contrato</td><td>20% a 35%</td></tr>
+          <tr><td>Contratos fechados na primeira viagem</td><td>3 a 7</td></tr>
+        </tbody>
+      </table>
+
+      <div class="pilar-hero" style="margin-top:24px;">
+        <h2>Investimento total da operação</h2>
+        <p><strong style="color:var(--white);">R$ 700 em mídia paga</strong> mais tempo de produção dos criativos, roteirização dos disparos e construção da live. Sem investimento adicional em landing page para essa primeira rodada.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 15: RISCOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Riscos</div>
+      <div class="slide-title">O que pode <span>quebrar tudo</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Quatro bloqueadores precisam estar resolvidos antes do Gustavo embarcar. Falha em qualquer um deles compromete a cascata inteira da operação.</p>
+
+      <div class="list">
+        <div class="list-item">
+          <div class="li-icon red">!</div>
+          <div>
+            <h4>Big idea da palestra genérica</h4>
+            <p>Se ficar como "Gestão 6D" sem promessa numerada e ancoragem local, a live esvazia. Definir na reunião de quinta é inegociável.</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">!</div>
+          <div>
+            <h4>Falta de material de vídeo do Gustavo</h4>
+            <p>O anúncio precisa rodar com ele aparecendo, falando, ensinando. Foto isolada não converte. Diagnosticar o acervo até quarta. Se não houver, agendar gravação dedicada.</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">!</div>
+          <div>
+            <h4>WhatsApp com cara de campanha</h4>
+            <p>Se a mensagem parecer empresa, queima na hora. Roteiro NG, envio Gustavo, sem disparo automatizado, sem link bit.ly, sem rastreador na URL.</p>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">!</div>
+          <div>
+            <h4>Gustavo chegar lá sem agenda fechada</h4>
+            <p>A meta é desembarcar com 80% das reuniões já marcadas. Se chegar para improvisar agenda, a viagem perde força e custa o triplo em tempo.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 16: PRÓXIMOS PASSOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Próximos passos</div>
+      <div class="slide-title">Plano de ação <span>até a viagem</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Cronograma travado em dias. Cada bloco depende do anterior. Atraso em qualquer etapa reduz o impacto da operação na proporção exata do dia perdido.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Quarta 21/05 · Diagnóstico de material e setor das 30 indicações</h4>
+            <p>Gustavo entrega o acervo de vídeo existente e a lista das 30 indicações com setor mapeado de cada uma. NG avalia o que dá pra usar e o que precisa gravar.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Quinta 22/05 14h · Reunião de fechamento da estratégia</h4>
+            <p>Decisão final da big idea da live. Definição de data e plataforma da live. Aprovação dos criativos por setor. Aprovação dos scripts de WhatsApp.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Quinta a sexta 22 e 23/05 · Produção e setup</h4>
+            <p>NG monta os 3 criativos de anúncio. Roteiriza a sequência de 4 toques do WhatsApp. Configura a campanha geo no Meta. Prepara o evento da live.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Sexta 23/05 · Subida da campanha de anúncio</h4>
+            <p>Campanha de reconhecimento ativa. Começa a fase de saturação na timeline. Métricas acompanhadas diariamente pela NG.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h4>Sábado 24/05 · Disparo do primeiro toque da Estratégia 2</h4>
+            <p>Gustavo envia a mensagem 1 personalizada para cada uma das 30 indicações com o vídeo do setor de cada contato.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-content">
+            <h4>Semana seguinte · Execução da live e viagem do Gustavo</h4>
+            <p>Live no meio da semana. Logo depois, Gustavo desembarca em Três Marias com agenda 80% fechada para diagnósticos presenciais.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 17: CLOSE ====== -->
+  <div class="slide" style="background: radial-gradient(ellipse at 50% 50%, #2A3673 0%, var(--navy) 70%);">
+    <div class="slide-inner close-slide">
+      <div class="cover-logo" style="justify-content:center; margin-bottom:32px;">
+        <div class="ng-mark">
+          <div class="letters">NG</div>
+          <div class="sub">grupo</div>
+        </div>
+      </div>
+      <h2>Três Marias<br/><span>está pronta</span></h2>
+      <p>Anúncio frio satura a timeline. WhatsApp aquece a indicação. Live filtra o pronto pra comprar. Quando o Gustavo embarcar, a cidade já vai ter visto, ouvido e respondido.</p>
+      <div class="cover-tags" style="justify-content:center; margin-bottom:40px;">
+        <div class="ctag">📞 Yuri Garcia</div>
+        <div class="ctag">📍 Estratégia GCO · Três Marias</div>
+        <div class="ctag">⚡ Pronto para executar</div>
+      </div>
+      <button class="btn-primary" onclick="goTo(0)">← Voltar ao início</button>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+  const dotsEl   = document.getElementById('dots');
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'exit');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('exit');
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    const pct = ((current + 1) / total) * 100;
+    progress.style.width = pct + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    update();
+  }
+
+  document.getElementById('btn-prev').onclick = () => goTo(current - 1);
+  document.getElementById('btn-next').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     goTo(current - 1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
+  });
+
+  update();
+</script>
+</body>
+</html>
