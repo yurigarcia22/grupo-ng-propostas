@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta BGI Contabilidade — Grupo NG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --green:   #3b82f6;
+    --teal:    #22d3ee;
+    --lime:    #84cc16;
+    --amber:   #f59e0b;
+    --dark:    #0D1117;
+    --dark2:   #161B22;
+    --dark3:   #21262D;
+    --border:  #30363D;
+    --text:    #E6EDF3;
+    --muted:   #8B949E;
+    --white:   #FFFFFF;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* PROGRESS BAR */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    transition: width 0.4s ease;
+    z-index: 100;
+  }
+
+  /* COUNTER */
+  #counter {
+    position: fixed;
+    bottom: 24px; right: 32px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+    letter-spacing: 1px;
+    z-index: 100;
+  }
+
+  /* NAV */
+  .nav-btn {
+    position: fixed;
+    bottom: 20px;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+  .nav-btn:hover { background: var(--green); border-color: var(--green); color: #0D1117; }
+  #btn-prev { right: 120px; }
+  #btn-next { right: 68px; }
+
+  /* DOTS */
+  #dots {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+  }
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .dot.active { background: var(--green); width: 20px; border-radius: 3px; }
+
+  /* SLIDES */
+  #slides { width: 100%; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateX(60px);
+    transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events: none;
+    padding: 60px 80px;
+  }
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+  .slide.exit {
+    opacity: 0;
+    transform: translateX(-60px);
+  }
+
+  .slide-inner { max-width: 1100px; width: 100%; }
+
+  /* =================== COVER =================== */
+  .cover {
+    background: radial-gradient(ellipse at 30% 50%, #0a1220 0%, var(--dark) 70%);
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(59,130,246,0.12);
+    border: 1px solid rgba(59,130,246,0.35);
+    color: var(--teal);
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .cover h1 {
+    font-size: 78px;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 24px;
+  }
+  .cover h1 span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover .subtitle {
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 400;
+    max-width: 560px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+  }
+  .cover-tags { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ctag {
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  /* =================== SECTION HEADER =================== */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+  .slide-title {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 16px;
+  }
+  .slide-title span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .slide-desc {
+    font-size: 17px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    max-width: 680px;
+  }
+  .divider {
+    width: 48px; height: 4px;
+    background: linear-gradient(90deg, var(--green), var(--teal));
+    border-radius: 2px;
+    margin: 20px 0;
+  }
+
+  /* =================== CARDS =================== */
+  .cards { display: grid; gap: 16px; }
+  .cards-3 { grid-template-columns: repeat(3,1fr); }
+  .cards-2 { grid-template-columns: repeat(2,1fr); }
+  .cards-4 { grid-template-columns: repeat(4,1fr); }
+
+  .card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 26px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(59,130,246,0.4); }
+  .card.highlight {
+    background: linear-gradient(135deg, rgba(59,130,246,0.09), rgba(34,211,238,0.04));
+    border-color: rgba(59,130,246,0.28);
+  }
+  .card-icon { font-size: 30px; margin-bottom: 14px; display: block; }
+  .card h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .card .card-num {
+    font-size: 44px; font-weight: 900; line-height: 1; margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  /* =================== LIST ITEMS =================== */
+  .list { display: flex; flex-direction: column; gap: 14px; }
+  .list-item {
+    display: flex; align-items: flex-start; gap: 16px;
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  .list-item:hover { border-color: rgba(59,130,246,0.3); }
+  .li-icon {
+    width: 40px; height: 40px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0; margin-top: 2px;
+  }
+  .li-icon.green { background: rgba(59,130,246,0.14); }
+  .li-icon.teal  { background: rgba(34,211,238,0.14); }
+  .li-icon.amber { background: rgba(245,158,11,0.14); }
+  .li-icon.red   { background: rgba(239,68,68,0.14); }
+  .list-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .list-item p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* =================== TWO COL =================== */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 32px; align-items: start;
+  }
+
+  /* =================== STEPS =================== */
+  .steps { display: flex; flex-direction: column; gap: 14px; }
+  .step  { display: flex; align-items: flex-start; gap: 16px; }
+  .step-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; flex-shrink: 0; color: #0D1117;
+  }
+  .step-content h4 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .step-content p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* =================== PILLS =================== */
+  .pills { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .pill { padding: 5px 13px; border-radius: 100px; font-size: 12px; font-weight: 600; }
+  .pill.green { background: rgba(59,130,246,0.13);  color: #60a5fa; border: 1px solid rgba(59,130,246,0.3); }
+  .pill.teal  { background: rgba(34,211,238,0.13); color: var(--teal);  border: 1px solid rgba(34,211,238,0.3); }
+  .pill.amber { background: rgba(245,158,11,0.13); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+  .pill.red   { background: rgba(239,68,68,0.13);  color: #ef4444;      border: 1px solid rgba(239,68,68,0.3); }
+
+  /* =================== QUOTE =================== */
+  .quote-block {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--green);
+    border-radius: 0 12px 12px 0;
+    padding: 22px 26px;
+    margin: 14px 0;
+  }
+  .quote-block p { font-size: 17px; font-style: italic; line-height: 1.7; }
+  .quote-block .author { font-size: 12px; color: var(--muted); margin-top: 10px; font-style: normal; }
+
+  /* =================== BIG STAT =================== */
+  .stat-row { display: flex; gap: 16px; margin-top: 4px; }
+  .big-stat {
+    flex: 1; text-align: center; padding: 28px 20px;
+    background: var(--dark2); border: 1px solid var(--border); border-radius: 16px;
+  }
+  .big-stat .number {
+    font-size: 64px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .big-stat .label { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+  /* =================== PILAR HERO =================== */
+  .pilar-hero {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(34,211,238,0.05));
+    border: 1px solid rgba(59,130,246,0.25);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .pilar-hero .num {
+    font-size: 72px; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 4px;
+  }
+  .pilar-hero h2 { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .pilar-hero p  { font-size: 15px; color: var(--muted); line-height: 1.6; max-width: 680px; }
+
+  /* CHECKLIST */
+  .checklist { display: flex; flex-direction: column; gap: 8px; }
+  .check-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14px; color: var(--text); line-height: 1.5;
+  }
+  .check-item::before {
+    content: "✓";
+    color: var(--teal);
+    font-weight: 800;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* RESULTADO BADGE */
+  .result-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: var(--teal);
+    padding: 10px 18px; border-radius: 10px;
+    font-size: 13px; font-weight: 600;
+    margin-top: 18px;
+  }
+
+  /* MODULO CARDS */
+  .modulo-card {
+    background: var(--dark2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px;
+    transition: border-color 0.2s;
+  }
+  .modulo-card.rec {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(34,211,238,0.04));
+    border-color: rgba(59,130,246,0.35);
+  }
+  .modulo-card .rec-tag {
+    display: inline-block;
+    background: var(--teal); color: #0D1117;
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    padding: 3px 10px; border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .modulo-card h4 { font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+  .modulo-card ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .modulo-card ul li {
+    font-size: 13px; color: var(--muted);
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .modulo-card ul li::before { content: "—"; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+
+  /* CLOSE */
+  .close-slide { text-align: center; }
+  .close-slide h2 {
+    font-size: 64px; font-weight: 900; line-height: 1;
+    letter-spacing: -2px; margin-bottom: 24px;
+  }
+  .close-slide h2 span {
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .close-slide p {
+    font-size: 20px; color: var(--muted);
+    max-width: 520px; margin: 0 auto 40px; line-height: 1.6;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: linear-gradient(135deg, var(--green), var(--teal));
+    color: #0D1117; padding: 16px 36px; border-radius: 12px;
+    font-size: 16px; font-weight: 800; border: none; cursor: pointer;
+  }
+
+  /* DOR SLIDE */
+  .dor-big {
+    background: linear-gradient(135deg, rgba(239,68,68,0.08), rgba(245,158,11,0.04));
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 20px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .dor-big .dor-icon { font-size: 44px; margin-bottom: 12px; }
+  .dor-big h2 { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+  .dor-big p  { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 700px; }
+
+  /* OPORTUNIDADE */
+  .oport-card {
+    background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(34,211,238,0.06));
+    border: 1px solid rgba(59,130,246,0.3);
+    border-radius: 16px; padding: 22px 26px;
+  }
+  .oport-card .titulo { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--teal); margin-bottom: 8px; }
+  .oport-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+  .oport-card p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* =================== MOBILE RESPONSIVO =================== */
+  @media (max-width: 768px) {
+
+    body { overflow-y: auto; height: auto; }
+    #slides { height: auto; position: relative; }
+
+    .slide {
+      position: relative;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: all !important;
+      padding: 40px 20px 80px;
+      height: auto;
+      min-height: 100svh;
+      display: none;
+      align-items: flex-start;
+    }
+    .slide.active { display: flex; }
+
+    #dots { bottom: 16px; }
+    .nav-btn { bottom: 12px; }
+    #btn-prev { right: 100px; }
+    #btn-next { right: 52px; }
+    #counter { bottom: 18px; right: 16px; }
+
+    .cover h1 { font-size: 42px; letter-spacing: -1.5px; }
+    .cover .subtitle { font-size: 15px; }
+    .cover-tags { gap: 8px; }
+    .ctag { font-size: 11px; padding: 6px 12px; }
+
+    .slide-title { font-size: 30px; letter-spacing: -0.5px; }
+    .slide-desc  { font-size: 15px; margin-bottom: 24px; }
+    .section-label { font-size: 10px; }
+
+    .cards-3,
+    .cards-4,
+    .cards-2 { grid-template-columns: 1fr; }
+
+    .two-col { grid-template-columns: 1fr; gap: 20px; }
+
+    .stat-row { flex-direction: column; gap: 12px; }
+    .big-stat .number { font-size: 48px; }
+
+    .pilar-hero { padding: 20px; }
+    .pilar-hero .num { font-size: 48px; }
+    .pilar-hero h2 { font-size: 20px; }
+    .pilar-hero p  { font-size: 14px; }
+
+    .dor-big { padding: 20px; }
+    .dor-big .dor-icon { font-size: 32px; }
+    .dor-big h2 { font-size: 20px; }
+    .dor-big p  { font-size: 14px; }
+
+    .close-slide h2 { font-size: 36px; }
+    .close-slide p  { font-size: 16px; }
+
+    .card { padding: 18px 20px; }
+    .card .card-num { font-size: 36px; }
+    .list-item { padding: 14px 16px; }
+    .quote-block p { font-size: 14px; }
+    .slide-inner { max-width: 100%; }
+  }
+
+  @media (max-width: 400px) {
+    .cover h1 { font-size: 34px; }
+    .slide-title { font-size: 26px; }
+    .pilar-hero .num { font-size: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+<div id="counter"></div>
+
+<div id="slides">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <div class="badge">&#128200; Grupo NG &nbsp;&#183;&nbsp; Proposta Comercial</div>
+      <h1>Máquina de<br/><span>Captação</span><br/>BGI Contabilidade</h1>
+      <p class="subtitle">Um plano pragmático para a BGI sair da dependência de indicação e construir um processo comercial previsível, com pessoas, processo e tecnologia.</p>
+      <div class="cover-tags">
+        <div class="ctag">&#128205; Florianópolis, SC</div>
+        <div class="ctag">&#128197; Reunião: 17/07/2026</div>
+        <div class="ctag">&#129309; Geovani + Fabrício</div>
+        <div class="ctag">&#127942; No mercado desde 2013</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: SOBRE GRUPO NG ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Sobre nós</div>
+      <div class="slide-title">Quem é o <span>Grupo NG</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Não somos uma agência tradicional. Somos um braço estratégico do seu negócio, trabalhando lado a lado com o dono em três alavancas: pessoas, processo e tecnologia. Nosso diferencial é acompanhar a execução, não entregar um documento e sumir.</p>
+      <div class="cards cards-4">
+        <div class="card highlight">
+          <div class="card-num">5</div>
+          <h3>Anos de mercado</h3>
+          <p>Desde 2021 estruturando o comercial de empresas em crescimento.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">3-5</div>
+          <h3>Clientes por atendente</h3>
+          <p>Atendimento próximo de verdade. Nada de carteira com 50 contas por pessoa.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">3</div>
+          <h3>Pilares de atuação</h3>
+          <p>Pessoas, processo e tecnologia: metodologia própria de crescimento.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">100%</div>
+          <h3>Transparência</h3>
+          <p>Números abertos, métricas em tempo real e relatórios sem enrolação.</p>
+        </div>
+      </div>
+      <div class="card highlight" style="margin-top:20px; padding:20px 24px;">
+        <p style="font-size:13px; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Cases que conversam com o seu mercado</p>
+        <div class="two-col" style="gap:16px;">
+          <div>
+            <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">CS Integra (Thomson Reuters)</h4>
+            <p style="font-size:13px; color:var(--muted); line-height:1.6;">Top 1 em vendas do sistema da Thomson Reuters. Atendemos o comercial deles, que vende para empresas de R$ 300 a 500 milhões de faturamento. O mesmo sistema que a BGI usa hoje.</p>
+          </div>
+          <div>
+            <h4 style="font-size:14px; font-weight:700; margin-bottom:6px;">Flávio Augusto (eventos)</h4>
+            <p style="font-size:13px; color:var(--muted); line-height:1.6;">Copywriting e estratégia de captação para eventos em 2025. Escrita persuasiva e pesquisa de oferta são especialidades da casa.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: RAIO-X DA BGI ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Diagnóstico</div>
+      <div class="slide-title">Raio-X da <span>BGI hoje</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Tudo o que está aqui saiu da nossa conversa do dia 09/07. A BGI tem uma base sólida e um fechamento forte. O que falta não é competência: é um motor de oportunidades ligado todos os dias.</p>
+      <div class="stat-row">
+        <div class="big-stat">
+          <div class="number">150+</div>
+          <div class="label">clientes ativos na base</div>
+        </div>
+        <div class="big-stat">
+          <div class="number" style="font-size:44px;">R$ 450</div>
+          <div class="label">ticket médio de honorários</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">10-15</div>
+          <div class="label">clientes que cabem hoje sem contratar</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">13</div>
+          <div class="label">anos de mercado (desde 2013)</div>
+        </div>
+      </div>
+      <div class="two-col" style="margin-top:20px;">
+        <div class="card highlight">
+          <h3 style="margin-bottom:8px;">&#128170; O que já funciona</h3>
+          <p>Mais captura do que perda de clientes. E quando o lead chega na reunião, dificilmente a negociação se perde. O fechamento de vocês é forte.</p>
+        </div>
+        <div class="card">
+          <h3 style="margin-bottom:8px;">&#9888;&#65039; O gargalo</h3>
+          <p>Em 2026, 100% dos novos clientes vieram de indicação. Não existe canal ativo gerando oportunidade nova. Quem depende só de indicação não controla o próprio crescimento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: MAPA DE DORES ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Mapeamento</div>
+      <div class="slide-title">O que identificamos<br/><span>na reunião</span></div>
+      <div class="divider"></div>
+      <div class="list">
+        <div class="list-item">
+          <div class="li-icon red">&#127793;</div>
+          <div><h4>Crescimento refém da indicação</h4><p>Em 2026, nenhum canal ativo de captação. Se a indicação parar, o crescimento para junto.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon red">&#128683;</div>
+          <div><h4>Disparo em massa bloqueado</h4><p>A ferramenta de disparo funcionava, mas sem API oficial o número foi bloqueado e o volume teve que cair.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#128100;</div>
+          <div><h4>Comercial sem dono</h4><p>Toda vez que alguém assumiu o comercial, a demanda operacional engoliu a pessoa e a função morreu.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon amber">&#128202;</div>
+          <div><h4>Zero métricas comerciais</h4><p>Sem CRM, sem funil, sem números. Impossível saber o que funciona e o que é dinheiro jogado fora.</p></div>
+        </div>
+        <div class="list-item">
+          <div class="li-icon teal">&#128269;</div>
+          <div><h4>Presença digital que não converte</h4><p>Apenas 11 avaliações no Google com mais de 150 clientes na base. Posts impulsionados no passado não trouxeram resultado.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 5: DOR 01 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Dor 01</div>
+      <div class="dor-big">
+        <div class="dor-icon">&#127793;</div>
+        <h2>Vocês não controlam o próprio crescimento</h2>
+        <p>Indicação é excelente, mas é imprevisível: não dá para acelerar, não dá para planejar contratação, não dá para definir meta. A BGI tem capacidade para absorver de 10 a 15 clientes agora, e nenhum motor ligado para preenchê-la.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <p class="slide-desc" style="font-size:15px; margin-bottom:16px;">O que ouvimos na reunião:</p>
+          <div class="quote-block">
+            <p>"Em 2026 a gente só está pela indicação. A gente tem interesse no crescimento, porque ficar parado nesse momento não dá."</p>
+            <div class="author">Geovani, reunião 09/07</div>
+          </div>
+        </div>
+        <div>
+          <p class="slide-desc" style="font-size:15px; margin-bottom:16px;">O que vai mudar:</p>
+          <div class="checklist">
+            <div class="check-item">Três canais de aquisição rodando ao mesmo tempo</div>
+            <div class="check-item">Meta clara: preencher a capacidade atual antes de contratar no operacional</div>
+            <div class="check-item">Previsibilidade: saber quantas reuniões entram por semana</div>
+            <div class="check-item">Indicação vira processo, não acaso</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 6: DOR 02 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Dor 02</div>
+      <div class="dor-big">
+        <div class="dor-icon">&#128100;</div>
+        <h2>O comercial sempre morre engolido pela operação</h2>
+        <p>Já aconteceu: a pessoa assume a prospecção, a demanda do escritório aperta, e ela volta para o operacional. Sem uma função protegida, com processo, treinamento e acompanhamento externo, o ciclo se repete.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <p class="slide-desc" style="font-size:15px; margin-bottom:16px;">O que ouvimos na reunião:</p>
+          <div class="quote-block">
+            <p>"A gente já tentou implantar, só que às vezes a demanda começa a ficar pesada e a pessoa que está fazendo comercial vai saindo da função."</p>
+            <div class="author">Geovani, reunião 09/07</div>
+          </div>
+        </div>
+        <div>
+          <p class="slide-desc" style="font-size:15px; margin-bottom:16px;">O que vai mudar:</p>
+          <div class="checklist">
+            <div class="check-item">Uma pessoa de pré-vendas 100% dedicada ao comercial</div>
+            <div class="check-item">Apoio na contratação: perfil de cargo e roteiro de entrevista</div>
+            <div class="check-item">Treinamento e roleplay semanal com o nosso time</div>
+            <div class="check-item">Fechamento continua com Geovani e Fabrício, que já fecham bem</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 7: DOR 03 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Dor 03</div>
+      <div class="dor-big">
+        <div class="dor-icon">&#128202;</div>
+        <h2>Sem números, toda decisão é no escuro</h2>
+        <p>Hoje a BGI tem ferramentas para o operacional (CNDs, tarefas, obrigações), mas nada para o comercial. Quantos leads entraram no mês? Quantos viraram reunião? Quanto custou cada cliente novo? Sem essas respostas, não existe gestão de crescimento.</p>
+      </div>
+      <div class="stat-row">
+        <div class="big-stat">
+          <div class="number">0</div>
+          <div class="label">CRM comercial ativo hoje</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">0</div>
+          <div class="label">métricas de funil registradas</div>
+        </div>
+        <div class="big-stat">
+          <div class="number">11</div>
+          <div class="label">avaliações no Google com 150+ clientes na base</div>
+        </div>
+      </div>
+      <div class="result-badge">&#127919; Contador vive de número. O comercial de uma contabilidade também precisa viver.</div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 8: OPORTUNIDADE ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Oportunidade</div>
+      <div class="slide-title">A janela tributária<br/><span>está aberta agora</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Quem fala com todo mundo não fala com ninguém. A estratégia é atacar nichos de prestação de serviço com ofertas específicas e urgentes, começando por Florianópolis e expandindo o raio. É assim que se compete sem brigar com quem investe R$ 200 mil por mês em captação.</p>
+      <div class="cards cards-2" style="margin-bottom:16px;">
+        <div class="oport-card">
+          <div class="titulo">Oferta 01 &#183; Reforma tributária</div>
+          <h4>CBS e IBS: o medo que abre portas</h4>
+          <p>Toda empresa vai passar pela transição. A maioria dos contadores não está avisando os clientes. Quem avisa primeiro, leva a reunião.</p>
+        </div>
+        <div class="oport-card">
+          <div class="titulo">Oferta 02 &#183; Fator R</div>
+          <h4>Redução de imposto para a área da saúde</h4>
+          <p>Médicos, dentistas e fisioterapeutas pagando mais imposto do que deveriam. Promessa direta, mensurável e com case fácil de demonstrar em reunião.</p>
+        </div>
+      </div>
+      <div class="cards cards-2">
+        <div class="oport-card">
+          <div class="titulo">Nichos prioritários</div>
+          <h4>Prestadores de serviço</h4>
+          <p>Saúde, engenharia e agências: menor demanda operacional por cliente, exatamente o perfil que a BGI pediu para absorver mais.</p>
+        </div>
+        <div class="oport-card">
+          <div class="titulo">Território</div>
+          <h4>Conquista local primeiro</h4>
+          <p>Empresa gosta de contabilidade próxima. Dominamos a Grande Florianópolis com anúncio, Google e prospecção, depois expandimos o raio.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 9: PILAR 1 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 01</div>
+      <div class="pilar-hero">
+        <div class="num">01</div>
+        <h2>Pessoas: o pré-vendas dedicado</h2>
+        <p>Uma pessoa focada em atendimento no WhatsApp, prospecção ativa e follow-up. Pré-venda é mais fácil de treinar do que fechamento: ela não precisa dominar contabilidade, precisa vender a reunião. O fechamento fica com quem já fecha bem: Geovani e Fabrício.</p>
+      </div>
+      <div class="two-col">
+        <div class="checklist">
+          <div class="check-item">Perfil de cargo e apoio na seleção do pré-vendas</div>
+          <div class="check-item">2 treinamentos mensais (e mais quando precisar)</div>
+          <div class="check-item">Roleplay semanal: ligação junto, feedback em tempo real</div>
+          <div class="check-item">Resposta ao lead em até 15-20 minutos como padrão</div>
+          <div class="check-item">Suporte contínuo no WhatsApp com o nosso time</div>
+        </div>
+        <div>
+          <div class="result-badge" style="display:flex; margin-top:0;">&#127919; Resultado esperado</div>
+          <div class="card" style="margin-top:12px; border-color: rgba(59,130,246,0.2);">
+            <p style="font-size:14px; color:var(--text);">Uma função comercial que não morre quando a operação aperta, com processo documentado e escalável: cada novo pré-vendas replicando o mesmo playbook.</p>
+          </div>
+          <div class="pills" style="margin-top:12px;">
+            <div class="pill green">Pré-vendas</div>
+            <div class="pill teal">Roleplay</div>
+            <div class="pill amber">Scripts</div>
+            <div class="pill green">Treinamento</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 10: PILAR 2 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 02</div>
+      <div class="pilar-hero">
+        <div class="num">02</div>
+        <h2>Processo: três bocas de canhão</h2>
+        <p>A lei do plantio e da colheita: quem não planta oportunidade, não colhe cliente. Três canais rodando ao mesmo tempo, cada um com processo, cadência e script próprios.</p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card">
+          <div class="card-icon">&#129309;</div>
+          <h3>1. Indicação estruturada</h3>
+          <p>O que já funciona, agora com processo: pedido ativo de indicação em cada reunião e na base de clientes atual. Inclusive de quem não fechou.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#128222;</div>
+          <h3>2. Prospecção ativa</h3>
+          <p>Cold call com discador automático, script de passagem pela recepção e disparo com API oficial do WhatsApp, sem risco de bloqueio.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">&#129522;</div>
+          <h3>3. Captação (inbound)</h3>
+          <p>Anúncios nichados no Meta e Google com as ofertas da janela tributária. Roteiro, edição e otimização por nossa conta: vocês só gravam.</p>
+        </div>
+      </div>
+      <div class="card highlight" style="margin-top:16px; padding:20px 24px;">
+        <p style="font-size:14px; color:var(--text); line-height:1.7;"><strong>Google como vitrine local:</strong> otimização do perfil no Google (avaliações, palavras-chave, posição no mapa) e página preparada para conversão, para a BGI aparecer quando alguém pesquisar "contabilidade em Florianópolis".</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 11: PILAR 3 ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Pilar 03</div>
+      <div class="pilar-hero">
+        <div class="num">03</div>
+        <h2>Tecnologia: CRM e métricas de verdade</h2>
+        <p>Nosso CRM entra no projeto sem custo nos primeiros meses. É a ferramenta de mitigação de risco: cada lead que converteu ou não converteu tem um porquê registrado. Sem isso, a gestão fica refém de feedback de memória.</p>
+      </div>
+      <div class="two-col">
+        <div class="checklist">
+          <div class="check-item">CRM com WhatsApp conectado: toda conversa registrada</div>
+          <div class="check-item">Funil visual: lead, reunião agendada, realizada, proposta, fechamento</div>
+          <div class="check-item">Cold call com discagem automática integrada</div>
+          <div class="check-item">Disparos via API oficial do WhatsApp (sem bloqueio)</div>
+          <div class="check-item">Métricas semanais: ligações, conexões, decisores, reuniões</div>
+        </div>
+        <div>
+          <div class="result-badge" style="display:flex; margin-top:0;">&#127919; Resultado esperado</div>
+          <div class="card" style="margin-top:12px; border-color: rgba(59,130,246,0.2);">
+            <p style="font-size:14px; color:var(--text);">Clareza total: quanto custa cada lead, de onde veio cada cliente e onde o funil trava. Decisão de crescimento baseada em número, não em achismo.</p>
+          </div>
+          <div class="pills" style="margin-top:12px;">
+            <div class="pill green">CRM incluso</div>
+            <div class="pill teal">API oficial</div>
+            <div class="pill amber">Discador</div>
+            <div class="pill green">Dashboard</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 12: CRONOGRAMA 90 DIAS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Cronograma</div>
+      <div class="slide-title">Como são os <span>primeiros 90 dias</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">Sem promessa de 30 clientes no primeiro mês, isso não existe. O que existe é metodologia: estrutura primeiro, ajuste fino depois, escala quando o número prova o que funciona.</p>
+      <div class="cards cards-3">
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <div style="background:linear-gradient(135deg,var(--green),var(--teal)); color:#0D1117; padding:6px 14px; border-radius:100px; font-size:12px; font-weight:800;">Dias 1-30</div>
+          </div>
+          <h3 style="font-size:16px; margin-bottom:10px;">Fase de estrutura</h3>
+          <p style="margin-bottom:12px;">Setup completo: pessoa contratada, processo criado junto, primeiras campanhas no ar.</p>
+          <div class="checklist">
+            <div class="check-item">Contratação e onboarding do pré-vendas</div>
+            <div class="check-item">CRM configurado com WhatsApp</div>
+            <div class="check-item">Scripts de prospecção e atendimento</div>
+            <div class="check-item">Primeiras campanhas nichadas no ar</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <div style="background:linear-gradient(135deg,var(--green),var(--teal)); color:#0D1117; padding:6px 14px; border-radius:100px; font-size:12px; font-weight:800;">Dias 30-60</div>
+          </div>
+          <h3 style="font-size:16px; margin-bottom:10px;">Ajuste fino</h3>
+          <p style="margin-bottom:12px;">Roleplay semanal rodando, custo por lead caindo, cadência de prospecção madura.</p>
+          <div class="checklist">
+            <div class="check-item">Custo por lead em otimização</div>
+            <div class="check-item">Anúncios vencedores identificados</div>
+            <div class="check-item">Reuniões entrando na agenda dos sócios</div>
+            <div class="check-item">Follow-up e cadência afinados</div>
+          </div>
+        </div>
+        <div class="card highlight">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+            <div style="background:linear-gradient(135deg,var(--green),var(--teal)); color:#0D1117; padding:6px 14px; border-radius:100px; font-size:12px; font-weight:800;">Dias 60-90</div>
+          </div>
+          <h3 style="font-size:16px; margin-bottom:10px;">Escala com dado</h3>
+          <p style="margin-bottom:12px;">Funil previsível. Meta: preencher a capacidade de 10 a 15 clientes e planejar a contratação do operacional com faturamento novo pagando a conta.</p>
+          <div class="checklist">
+            <div class="check-item">Volume previsível de reuniões por semana</div>
+            <div class="check-item">Números fechados por canal</div>
+            <div class="check-item">Decisão de contratação baseada em dado</div>
+            <div class="check-item">Plano dos próximos 90 dias</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 13: INVESTIMENTO ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Investimento</div>
+      <div class="slide-title">Como <span>trabalhamos</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">O projeto é modular: a BGI começa pelo que faz sentido agora e amplia conforme o resultado aparece. O CRM está incluso sem custo nos primeiros meses em qualquer módulo.</p>
+      <div class="cards cards-3">
+        <div class="modulo-card">
+          <h4>Módulo Comercial</h4>
+          <div style="margin: 10px 0 14px;">
+            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 2.000</span>
+            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mês</span>
+          </div>
+          <ul>
+            <li>Estruturação do processo comercial</li>
+            <li>Apoio na contratação do pré-vendas</li>
+            <li>2 treinamentos mensais + roleplay semanal</li>
+            <li>CRM incluso nos primeiros meses</li>
+            <li>Scripts de prospecção e follow-up</li>
+          </ul>
+        </div>
+        <div class="modulo-card rec">
+          <div class="rec-tag">Recomendado para a BGI</div>
+          <h4>Módulo Crescimento</h4>
+          <div style="margin: 10px 0 14px;">
+            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 3.000</span>
+            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mês</span>
+          </div>
+          <ul>
+            <li>Tudo do Módulo Comercial</li>
+            <li>Gestão de tráfego pago (Meta + Google)</li>
+            <li>Roteiros e edição dos anúncios em vídeo</li>
+            <li>Ofertas nichadas: reforma tributária e fator R</li>
+            <li>Otimização do Google Meu Negócio</li>
+          </ul>
+        </div>
+        <div class="modulo-card">
+          <h4>Módulo Completo</h4>
+          <div style="margin: 10px 0 14px;">
+            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 4.500</span>
+            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mês</span>
+          </div>
+          <ul>
+            <li>Tudo do Módulo Crescimento</li>
+            <li>Prospecção ativa com discador e API oficial</li>
+            <li>Página de conversão para as campanhas</li>
+            <li>Acompanhamento intensivo de todo o funil</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--muted); margin-top:16px;">Investimento em anúncios (verba de Meta e Google) é à parte e vai direto para as plataformas. Sem contrato de fidelidade abusivo.</p>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 14: PROXIMOS PASSOS ====== -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Próximos passos</div>
+      <div class="slide-title">O caminho<br/><span>daqui pra frente</span></div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <h4>Decisão do módulo inicial</h4>
+              <p>Geovani e Fabrício alinham o ponto de entrada. A proposta fica disponível neste link para consultar quando quiserem.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <h4>Contratação do pré-vendas</h4>
+              <p>Enviamos o perfil de cargo e o roteiro de entrevista. Participamos da seleção para garantir o fit comercial.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <h4>Setup dos primeiros 30 dias</h4>
+              <p>CRM configurado, scripts criados juntos, campanhas nichadas no ar e roleplay semanal começando.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <h4>Rotina de crescimento</h4>
+              <p>Reuniões entrando, números na mesa toda semana e decisões tomadas com dado, não com achismo.</p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="card highlight" style="padding:28px;">
+            <p style="font-size:13px; color:var(--muted); margin-bottom:16px; text-transform:uppercase; letter-spacing:2px; font-weight:700;">Por que agora</p>
+            <div class="list" style="gap:10px;">
+              <div class="list-item" style="padding:14px 18px;">
+                <div class="li-icon green">&#9203;</div>
+                <div><h4 style="font-size:13px;">A janela tributária é temporária</h4><p>CBS/IBS e fator R são ofertas fortes hoje. Daqui a um ano, todo contador estará usando.</p></div>
+              </div>
+              <div class="list-item" style="padding:14px 18px;">
+                <div class="li-icon teal">&#128188;</div>
+                <div><h4 style="font-size:13px;">Capacidade ociosa custa caro</h4><p>10 a 15 clientes a R$ 450 de ticket são até R$ 81 mil por ano deixados na mesa.</p></div>
+              </div>
+              <div class="list-item" style="padding:14px 18px;">
+                <div class="li-icon amber">&#128737;&#65039;</div>
+                <div><h4 style="font-size:13px;">Fechamento já é forte</h4><p>O gargalo da BGI é volume de oportunidade, não conversão. É o problema certo para resolver primeiro.</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 15: FECHAMENTO ====== -->
+  <div class="slide" style="background: radial-gradient(ellipse at 50% 50%, #0a1220 0%, var(--dark) 70%);">
+    <div class="slide-inner close-slide">
+      <div class="badge" style="margin-bottom:24px;">&#128200; Grupo NG</div>
+      <h2>Pronto para sair<br/><span>da indicação?</span></h2>
+      <p>A BGI tem 13 anos de base sólida e um fechamento que funciona. O que falta é um motor de oportunidades ligado todos os dias. É isso que a gente constrói junto.</p>
+      <div class="cover-tags" style="justify-content:center; margin-bottom:40px;">
+        <div class="ctag">&#128222; Yuri Garcia &#183; Diretor Comercial</div>
+        <div class="ctag">&#128200; Grupo NG</div>
+        <div class="ctag">&#128197; Florianópolis + remoto</div>
+      </div>
+      <button class="btn-primary" onclick="goTo(0)">&#8592; Voltar ao início</button>
+    </div>
+  </div>
+
+</div><!-- /slides -->
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const progress = document.getElementById('progress');
+  const counter  = document.getElementById('counter');
+  const dotsEl   = document.getElementById('dots');
+
+  // Create dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsEl.appendChild(d);
+  });
+
+  function update() {
+    slides.forEach((s, i) => {
+      s.classList.remove('active', 'exit');
+      if (i === current) s.classList.add('active');
+      else if (i < current) s.classList.add('exit');
+    });
+    document.querySelectorAll('.dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    const pct = ((current + 1) / total) * 100;
+    progress.style.width = pct + '%';
+    counter.textContent = (current + 1) + ' / ' + total;
+  }
+
+  function goTo(n) {
+    current = Math.max(0, Math.min(total - 1, n));
+    update();
+  }
+
+  document.getElementById('btn-prev').onclick = () => goTo(current - 1);
+  document.getElementById('btn-next').onclick = () => goTo(current + 1);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     goTo(current - 1);
+  });
+
+  // Touch swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
+  });
+
+  update();
+</script>
+</body>
+</html>
