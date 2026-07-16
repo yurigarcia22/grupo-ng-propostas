@@ -919,54 +919,43 @@
   <div class="slide">
     <div class="slide-inner">
       <div class="section-label">Investimento</div>
-      <div class="slide-title">Como <span>trabalhamos</span></div>
+      <div class="slide-title">Tudo o que está <span>incluso</span></div>
       <div class="divider"></div>
-      <p class="slide-desc">O projeto é modular: a BGI começa pelo que faz sentido agora e amplia conforme o resultado aparece. O CRM está incluso sem custo nos primeiros meses em qualquer módulo.</p>
-      <div class="cards cards-3">
-        <div class="modulo-card">
-          <h4>Módulo Comercial</h4>
-          <div style="margin: 10px 0 14px;">
-            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 2.000</span>
-            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mês</span>
+      <div class="two-col">
+        <div>
+          <p class="slide-desc" style="margin-bottom:20px;">Um projeto único, completo, cobrindo os três pilares. Sem módulo picado, sem venda casada, sem letra miúda.</p>
+          <div class="two-col" style="gap:20px;">
+            <div class="checklist">
+              <div class="check-item">Estruturação completa do processo comercial</div>
+              <div class="check-item">Apoio na contratação do pré-vendas (perfil + entrevista)</div>
+              <div class="check-item">2 treinamentos mensais + roleplay semanal</div>
+              <div class="check-item">Scripts de prospecção, atendimento e follow-up</div>
+              <div class="check-item">Suporte contínuo no WhatsApp com o nosso time</div>
+              <div class="check-item">CRM incluso nos primeiros meses</div>
+            </div>
+            <div class="checklist">
+              <div class="check-item">Gestão de tráfego pago (Meta + Google)</div>
+              <div class="check-item">Roteiros e edição dos anúncios em vídeo</div>
+              <div class="check-item">Ofertas nichadas: reforma tributária e fator R</div>
+              <div class="check-item">Prospecção ativa com discador e API oficial</div>
+              <div class="check-item">Otimização do Google Meu Negócio</div>
+              <div class="check-item">Métricas e relatório de funil toda semana</div>
+            </div>
           </div>
-          <ul>
-            <li>Estruturação do processo comercial</li>
-            <li>Apoio na contratação do pré-vendas</li>
-            <li>2 treinamentos mensais + roleplay semanal</li>
-            <li>CRM incluso nos primeiros meses</li>
-            <li>Scripts de prospecção e follow-up</li>
-          </ul>
+          <p style="font-size:12px; color:var(--muted); margin-top:20px;">Investimento em anúncios (verba de Meta e Google) é à parte e vai direto para as plataformas. Sem contrato de fidelidade abusivo.</p>
         </div>
-        <div class="modulo-card rec">
-          <div class="rec-tag">Recomendado para a BGI</div>
-          <h4>Módulo Crescimento</h4>
-          <div style="margin: 10px 0 14px;">
-            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 3.000</span>
-            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mês</span>
+        <div>
+          <div class="card highlight" style="padding:36px 32px; text-align:center;">
+            <p style="font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:2px; font-weight:700; margin-bottom:18px;">Investimento mensal</p>
+            <div id="valor-oculto" style="filter: blur(18px); user-select:none; pointer-events:none; transition: filter 0.6s ease;">
+              <span style="font-size:64px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 2.500</span>
+              <span style="font-size:15px; color:var(--muted); font-weight:600;">/mês</span>
+              <p style="font-size:13px; color:var(--muted); margin-top:14px; line-height:1.6;">Tudo incluso: os três pilares, CRM e acompanhamento de perto.</p>
+            </div>
+            <button id="btn-revelar" class="btn-primary" style="margin-top:24px;" onclick="revelarInvestimento(event)">&#128064; Revelar investimento</button>
           </div>
-          <ul>
-            <li>Tudo do Módulo Comercial</li>
-            <li>Gestão de tráfego pago (Meta + Google)</li>
-            <li>Roteiros e edição dos anúncios em vídeo</li>
-            <li>Ofertas nichadas: reforma tributária e fator R</li>
-            <li>Otimização do Google Meu Negócio</li>
-          </ul>
-        </div>
-        <div class="modulo-card">
-          <h4>Módulo Completo</h4>
-          <div style="margin: 10px 0 14px;">
-            <span style="font-size:32px; font-weight:900; background: linear-gradient(135deg, var(--green), var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1;">R$ 4.500</span>
-            <span style="font-size:12px; color:var(--muted); font-weight:500;">/mês</span>
-          </div>
-          <ul>
-            <li>Tudo do Módulo Crescimento</li>
-            <li>Prospecção ativa com discador e API oficial</li>
-            <li>Página de conversão para as campanhas</li>
-            <li>Acompanhamento intensivo de todo o funil</li>
-          </ul>
         </div>
       </div>
-      <p style="font-size:12px; color:var(--muted); margin-top:16px;">Investimento em anúncios (verba de Meta e Google) é à parte e vai direto para as plataformas. Sem contrato de fidelidade abusivo.</p>
     </div>
   </div>
 
@@ -1087,9 +1076,17 @@
   document.getElementById('btn-next').onclick = () => goTo(current + 1);
 
   document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'BUTTON') return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') goTo(current + 1);
     if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     goTo(current - 1);
   });
+
+  function revelarInvestimento(e) {
+    e.stopPropagation();
+    document.getElementById('valor-oculto').style.filter = 'none';
+    const btn = document.getElementById('btn-revelar');
+    btn.style.display = 'none';
+  }
 
   // Touch swipe
   let tx = 0;
