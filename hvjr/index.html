@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proposta HVJR — Grupo NG</title>
+<title>Proposta HVJR · Grupo NG</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
@@ -35,6 +35,23 @@
     position: fixed; top:0; left:0; height:3px;
     background: linear-gradient(90deg, var(--green), var(--green2));
     transition: width 0.4s ease; z-index:100;
+  }
+
+  /* LOGO FIXA */
+  #brand {
+    position:fixed; top:26px; left:32px; z-index:100;
+    display:flex; align-items:center; gap:10px;
+    opacity:0.55; transition:opacity 0.3s;
+  }
+  #brand:hover { opacity:1; }
+  #brand img { width:26px; height:26px; object-fit:contain; }
+  #brand span {
+    font-size:10px; font-weight:800; letter-spacing:2.5px;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .cover-logo {
+    width:64px; height:64px; object-fit:contain;
+    margin-bottom:26px; display:block;
   }
 
   .nav-btn {
@@ -371,6 +388,7 @@
 <body>
 
 <div id="progress"></div>
+<div id="brand"><img src="logo-ng.png" alt="Grupo NG"><span>Grupo NG</span></div>
 <div id="dots"></div>
 <button class="nav-btn" id="btn-prev">&#8592;</button>
 <button class="nav-btn" id="btn-next">&#8594;</button>
@@ -380,7 +398,8 @@
   <!-- 1. CAPA -->
   <div class="slide cover active">
     <div class="slide-inner">
-      <div class="badge">&#127807; Grupo NG &middot; Proposta Comercial</div>
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo">
+      <div class="badge">Proposta Comercial</div>
       <h1>Plano de<br><span>Crescimento</span><br>HVJR</h1>
       <p class="subtitle">Quatro frentes para transformar um hospital que já funciona muito bem numa operação que sabe exatamente de onde vem cada real.</p>
       <div class="cover-tags">
@@ -406,10 +425,9 @@
         <div class="big-stat"><div class="number">19k</div><div class="label">Seguidores</div></div>
       </div>
       <p class="slide-desc" style="margin-bottom:0;">
-        Oncologia, cardiologia, neurologia, ortopedia, intensivismo, medicina de felinos. Laboratório próprio.
-        Internamento monitorado. Duas cidades. Isso não é uma clínica que virou hospital, é um centro de
-        referência do agreste. A estrutura clínica está anos à frente da estrutura comercial, e é exatamente
-        aí que mora o crescimento dos próximos 12 meses.
+        Dez especialidades, laboratório próprio, internamento monitorado e duas unidades rodando 24h.
+        Estrutura pesada, montada ao longo de anos. O que ainda não existe no mesmo nível é a camada de dado
+        por cima: de onde vem cada paciente novo e quanto custa cada um.
       </p>
     </div>
   </div>
@@ -418,36 +436,37 @@
   <div class="slide">
     <div class="slide-inner">
       <div class="section-label">O ponto de partida</div>
-      <div class="slide-title">R$ 8 mil virando<br>R$ 160 mil. <span>Será?</span></div>
+      <div class="slide-title"><span>Quanto</span> desse resultado<br>é o Google?</div>
       <div class="divider"></div>
       <p class="slide-desc">
-        Esse é o número que vocês têm hoje. Vinte vezes o investido. Se ele fosse literalmente verdadeiro,
-        vocês não estariam investindo 8 mil. Estariam investindo 40, 50 mil. Ninguém deixa uma máquina de 20x
-        rodando em fogo baixo por escolha.
+        O hospital tem 19 mil seguidores, 30 mil clientes na base e indicação circulando. Boa parte de quem
+        digita o nome de vocês no Google já tinha ouvido falar antes. Então fica a dúvida: qual pedaço desses
+        R$ 160 mil o Google criou e qual pedaço ele só recebeu pronto? A resposta define quanto dá para
+        investir sem susto.
       </p>
       <div class="two-col">
-        <div class="alert-box">
-          <div class="alert-title">Hipótese 1: o número está inflado</div>
+        <div class="card">
+          <span class="card-icon">&#127942;</span>
+          <h3>Resultado que a marca já trazia</h3>
           <p>
-            Hospital veterinário no Google come muita busca de marca. Cliente que já é seu digita o nome do
-            hospital, clica no anúncio e o Google leva o crédito por uma receita que apareceria de qualquer
-            jeito. Some com atribuição frouxa e receita de recorrência entrando na conta, e chega-se em 20x
-            sem ter gerado quase nenhum cliente novo.
+            Quem chega buscando "Hospital Jerônimo Ribeiro" veio da reputação e do vizinho que indicou. O Google
+            entregou essa pessoa, e ele registra a venda. Precisamos separar esse volume para saber o tamanho
+            real da marca de vocês.
           </p>
         </div>
-        <div class="alert-box">
-          <div class="alert-title">Hipótese 2: o canal chegou no teto</div>
+        <div class="card highlight">
+          <span class="card-icon">&#128200;</span>
+          <h3>Demanda que o pago criou</h3>
           <p>
-            Caruaru e Santa Cruz não têm volume infinito de busca por veterinário. É bem possível que vocês já
-            estejam aparecendo em quase toda pesquisa relevante, e que colocar mais dinheiro só encareça o
-            mesmo lead que já vinha.
+            Busca por sintoma ou por especialidade, gente que não conhecia o hospital e escolheu por causa do
+            anúncio. Esse é o número que autoriza subir verba. Hoje ele vem misturado com o resto dentro do
+            mesmo relatório.
           </p>
         </div>
       </div>
       <p class="note">
-        As duas hipóteses levam ao mesmo lugar: hoje não dá para saber quanto do faturamento é novo e quanto
-        apareceria sem anúncio nenhum. E enquanto isso não estiver claro, qualquer decisão de escalar
-        investimento é aposta, não gestão.
+        Não é desconfiança do resultado. É a diferença entre saber e achar. Enquanto as duas coisas vierem
+        somadas na mesma linha, dobrar o investimento é aposta, e ninguém deveria apostar R$ 8 mil por mês.
       </p>
     </div>
   </div>
@@ -456,35 +475,35 @@
   <div class="slide">
     <div class="slide-inner">
       <div class="section-label">Diagnóstico</div>
-      <div class="slide-title">Quatro buracos<br>entre o clique e o <span>caixa</span></div>
+      <div class="slide-title">Quatro perguntas antes<br>de <span>mexer na verba</span></div>
       <div class="divider"></div>
       <div class="list">
         <div class="list-item">
-          <div class="li-icon red">&#128202;</div>
+          <div class="li-icon green">&#128202;</div>
           <div>
-            <h4>Vocês não medem o que vira cliente, medem o que vira clique</h4>
-            <p>Sem conversão offline conectada ao CRM, a plataforma otimiza para lead barato, não para paciente atendido. Um lead de banho e um lead de cirurgia ortopédica valem a mesma coisa para o algoritmo hoje.</p>
+            <h4>O que a plataforma consegue diferenciar hoje</h4>
+            <p>Precisamos ver o que já está sendo medido e se o Google distingue um lead de banho de um lead de ortopedia. Sem valor por tipo de serviço voltando para a plataforma, ela otimiza pelo lead mais barato de conseguir.</p>
           </div>
         </div>
         <div class="list-item">
           <div class="li-icon amber">&#128269;</div>
           <div>
-            <h4>Um canal só, e ele só captura quem já está procurando</h4>
-            <p>Google é intenção. Funciona para quem já sabe que o pet está doente. Ninguém pesquisa "oncologia veterinária" antes de descobrir o nódulo. Toda a demanda que precisa ser criada está de fora.</p>
+            <h4>A demanda que nunca vira busca</h4>
+            <p>Google pega quem já está procurando, e isso funciona bem. Só que ninguém pesquisa oncologia veterinária antes de achar o nódulo. Falta medir o tanto de tutor que ainda não sabe que precisa de vocês.</p>
           </div>
         </div>
         <div class="list-item">
           <div class="li-icon blue">&#128101;</div>
           <div>
-            <h4>30 mil clientes parados dentro do CRM</h4>
-            <p>Vacina anual, vermífugo, check-up geriátrico, retorno pós-cirúrgico, exame de rotina. Medicina veterinária é o negócio mais recorrente que existe, e essa recorrência hoje depende do cliente lembrar sozinho.</p>
+            <h4>Quanto da receita vem da própria base</h4>
+            <p>Vacina, retorno, check-up anual: quanto disso é receita ativa e rastreável dentro do Bitrix? Se já existe processo rodando, a gente mede e escala. Se ainda não existe, a gente monta do zero.</p>
           </div>
         </div>
         <div class="list-item">
           <div class="li-icon green">&#128172;</div>
           <div>
-            <h4>Duas pessoas segurando o WhatsApp de duas unidades 24h</h4>
-            <p>Se o volume de contato dobrar, o gargalo não vai ser mídia, vai ser resposta. Lead de rede social esfria em minutos. Escalar investimento sem olhar isso é comprar contato para deixar sem resposta.</p>
+            <h4>Quanto o comercial aguenta antes de doer</h4>
+            <p>Pode estar dando conta tranquilo. Só que sem tempo de resposta e taxa de agendamento medidos, ninguém sabe o limite das duas pessoas antes de precisar de reforço. Subir mídia sem esse número é decidir no escuro.</p>
           </div>
         </div>
       </div>
@@ -495,7 +514,7 @@
   <div class="slide">
     <div class="slide-inner">
       <div class="section-label">A oportunidade</div>
-      <div class="slide-title">O leilão de vocês<br>está <span>vazio</span></div>
+      <div class="slide-title">Na Meta, o leilão<br>de vocês está <span>vazio</span></div>
       <div class="divider"></div>
       <p class="slide-desc">
         A gente puxou a Biblioteca de Anúncios da Meta antes de escrever esta proposta. Dois achados:
@@ -504,21 +523,21 @@
         <div class="card highlight">
           <span class="card-icon">&#128683;</span>
           <h3>Zero anúncios do HVJR</h3>
-          <p>Nenhum registro de veiculação no Facebook e Instagram. Vocês têm 19 mil seguidores e a maior estrutura veterinária da região, e nunca colocaram um real em mídia paga aí.</p>
+          <p>Nenhum registro de veiculação no Facebook e no Instagram. Dezenove mil seguidores acompanhando o perfil e nenhum real já investido em mídia paga nessa frente.</p>
         </div>
         <div class="card highlight">
           <span class="card-icon">&#127754;</span>
-          <h3>E quase nenhum concorrente também</h3>
-          <p>A busca por hospital veterinário em Caruaru retorna um punhado de anunciantes ativos no Brasil inteiro, e nenhum deles disputando a praça de vocês de verdade.</p>
+          <h3>E quase nenhum concorrente</h3>
+          <p>A busca por hospital veterinário na região retorna pouquíssimos anunciantes ativos, e nenhum deles disputando Caruaru ou Santa Cruz de verdade.</p>
         </div>
       </div>
       <div class="oport-card">
-        <div class="titulo">O que isso significa na prática</div>
-        <h4>Custo de entrada baixo e janela aberta</h4>
+        <div class="titulo">A diferença entre os dois canais</div>
+        <h4>No Google tem fila. Na Meta não tem ninguém.</h4>
         <p>
-          Leilão sem disputa é impressão barata. Numa praça como Caruaru e Santa Cruz, com uma marca que já tem
-          19 mil pessoas seguindo e reputação construída, os primeiros meses de Meta tendem a ser os mais baratos
-          que vocês vão ver. Essa janela fecha no dia em que um concorrente resolver fazer o mesmo.
+          O Google já é um leilão disputado, e é por isso que ele custa o que custa. A Meta, na praça de vocês, está
+          praticamente livre. Leilão sem disputa é impressão barata, e os primeiros meses tendem a ser os mais
+          baratos que vocês vão ver nesse canal. Essa janela fecha no dia em que um concorrente resolver fazer o mesmo.
         </p>
       </div>
     </div>
@@ -535,11 +554,18 @@
       <div class="two-col">
         <div>
           <div class="checklist">
-            <div class="check-item">Rastreamento server-side, que não depende de o navegador do cliente cooperar</div>
-            <div class="check-item">API de Conversões da Meta configurada com deduplicação de evento</div>
-            <div class="check-item">Conversão offline puxando do Bitrix: a plataforma passa a saber quem virou atendimento, não só quem clicou</div>
-            <div class="check-item">Eventos separados por tipo de serviço, para diferenciar consulta simples de cirurgia</div>
+            <div class="check-item">Servidor próprio de rastreamento hospedado via Stape, que registra a conversão do lado do servidor e não depende de o navegador do visitante cooperar</div>
+            <div class="check-item">API de Conversões da Meta configurada com deduplicação de evento, para o mesmo agendamento nunca ser contado duas vezes</div>
+            <div class="check-item">Conversão offline puxando do Bitrix: as plataformas passam a saber quem virou atendimento, não só quem clicou</div>
+            <div class="check-item">Eventos separados por tipo de serviço, para diferenciar consulta simples de cirurgia de alto valor</div>
             <div class="check-item">Painel único com Google, Meta e CRM na mesma tela</div>
+          </div>
+          <div class="pills" style="margin-top:18px;">
+            <span class="pill green">Stape</span>
+            <span class="pill green">GTM Server-Side</span>
+            <span class="pill green">Meta CAPI</span>
+            <span class="pill blue">Enhanced Conversions</span>
+            <span class="pill blue">Bitrix</span>
           </div>
         </div>
         <div>
@@ -557,13 +583,6 @@
             </p>
           </div>
         </div>
-      </div>
-      <div class="pills">
-        <span class="pill green">GTM Server-Side</span>
-        <span class="pill green">Meta CAPI</span>
-        <span class="pill blue">Enhanced Conversions</span>
-        <span class="pill blue">Integração Bitrix</span>
-        <span class="pill amber">Dashboard unificado</span>
       </div>
     </div>
   </div>
@@ -636,18 +655,23 @@
           </div>
         </div>
         <div>
-          <div class="oport-card">
-            <div class="titulo">Por que a gente prefere assim</div>
-            <h4>Quem mede não deveria ser quem executa</h4>
-            <p style="margin-bottom:12px;">
-              Assumir o Google agora seria assumir também a régua de avaliação dele. Vocês ficariam
-              dependendo da nossa palavra sobre o nosso próprio trabalho, e isso não serve para ninguém.
-            </p>
+          <div class="oport-card" style="margin-bottom:14px;">
+            <div class="titulo">O que vem no relatório todo mês</div>
+            <div class="checklist" style="margin-top:10px;">
+              <div class="check-item">Quanto do resultado veio de busca pelo nome do hospital e quanto veio de busca por sintoma, serviço ou especialidade</div>
+              <div class="check-item">Custo por atendimento efetivado, e não por clique ou por lead</div>
+              <div class="check-item">Quais termos de busca estão consumindo verba sem gerar atendimento</div>
+              <div class="check-item">Participação de impressão: o quanto ainda existe para comprar antes do canal encostar no teto</div>
+              <div class="check-item">Desempenho separado por unidade, Caruaru e Santa Cruz</div>
+              <div class="check-item">Recomendações objetivas, repassadas a quem gere a conta</div>
+            </div>
+          </div>
+          <div class="alert-box" style="border-color:rgba(16,185,129,0.25); background:rgba(16,185,129,0.05);">
+            <div class="alert-title" style="color:var(--green2);">O ponto que importa</div>
             <p>
-              Do jeito proposto, o senhor ganha uma leitura independente de um canal que hoje ninguém confere,
-              sem pagar por gestão duplicada e sem trocar de time no meio do caminho. Se em algum momento fizer
-              sentido a gente assumir a execução, a estrutura já vai estar pronta e a conversa acontece com
-              número na mesa.
+              Quem mede não deveria ser quem executa. Se a gente assumisse o Google agora, assumiria também a régua
+              que avalia o próprio trabalho. Do jeito proposto, vocês ganham leitura independente de um canal que
+              hoje ninguém confere, sem gestão duplicada e sem troca de time no meio do caminho.
             </p>
           </div>
         </div>
@@ -661,32 +685,37 @@
       <div class="pilar-hero">
         <div class="num">04</div>
         <h2>Os 30 mil que já são de vocês</h2>
-        <p>O ativo mais barato do hospital não está no Google nem na Meta. Está parado no Bitrix.</p>
+        <p>O ativo mais barato do hospital não está no Google nem na Meta. Está parado no Bitrix, e ele vale muito mais como público de anúncio do que como lista de disparo.</p>
       </div>
-      <div class="cards cards-2" style="margin-bottom:18px;">
+      <div class="cards cards-3" style="margin-bottom:18px;">
         <div class="card">
           <span class="card-icon">&#128203;</span>
-          <h3>Fase A: diagnóstico da base</h3>
-          <p>Quantos contatos têm telefone válido. Quantos compraram nos últimos 12 meses. Dá para segmentar por espécie, por procedimento, por data da última vacina. Sem esse mapa, régua de reativação é tiro no escuro.</p>
+          <h3>Diagnóstico da base</h3>
+          <p>Quantos contatos têm telefone válido, quantos atenderam nos últimos 12 meses, e o que dá para segmentar: espécie, procedimento, data da última vacina.</p>
         </div>
-        <div class="card">
-          <span class="card-icon">&#128276;</span>
-          <h3>Fase B: régua de recorrência</h3>
-          <p>Aviso de vacina vencendo, retorno pós-cirúrgico, check-up anual, exame de rotina do pet idoso. Disparo segmentado no WhatsApp, com agendamento direto e registro no CRM.</p>
+        <div class="card highlight">
+          <span class="card-icon">&#127919;</span>
+          <h3>A base vira público na Meta</h3>
+          <p>A lista sobe como público personalizado. Quem já é cliente passa a ver campanha de retorno, check-up e vacina no feed, sem depender de disparo em massa e sem risco de bloqueio de número.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128302;</span>
+          <h3>E gera o público semelhante</h3>
+          <p>A partir de 30 mil clientes reais, a Meta encontra quem se parece com eles dentro do raio de atendimento. É a segmentação mais precisa que existe, e só quem tem base grande consegue.</p>
         </div>
       </div>
       <div class="oport-card">
-        <div class="titulo">Por que isso vem antes de escalar mídia</div>
-        <h4>Custo de mídia zero e conversa mais fácil</h4>
+        <div class="titulo">Por que isso muda o jogo aqui</div>
+        <h4>Vocês atendem num raio de 400 km</h4>
         <p>
-          Reativar quem já confiou o pet a vocês é mais barato e converte melhor do que conquistar alguém que
-          nunca ouviu falar do hospital. É a frente que costuma pagar a assessoria inteira nos primeiros meses,
-          e ela não depende de aumentar um real de investimento em anúncio.
+          Uma base de 30 mil clientes reais alimentando público semelhante, num raio que cobre boa parte do
+          agreste, é um alcance qualificado que nenhum concorrente da região tem como reproduzir. Não é lista fria
+          comprada, é gente que já escolheu vocês uma vez servindo de modelo para encontrar as próximas.
         </p>
       </div>
       <p class="note">
-        Ressalva honesta: o Bitrix tem cerca de um mês de operação. Base nova é base com dado incompleto.
-        Por isso a Fase A é diagnóstico, não promessa de número. A projeção vem depois de olhar o que existe lá dentro.
+        Ressalva honesta: o Bitrix tem cerca de um mês de operação, então o dado ainda está se organizando lá dentro.
+        Por isso a primeira etapa é diagnóstico, não promessa de número.
       </p>
     </div>
   </div>
@@ -694,34 +723,36 @@
   <!-- 10. ATENDIMENTO -->
   <div class="slide">
     <div class="slide-inner">
-      <div class="section-label">O gargalo que ninguém vê</div>
-      <div class="slide-title">Não adianta encher<br>o funil e travar<br>na <span>porta</span></div>
+      <div class="section-label">Métricas do comercial</div>
+      <div class="slide-title">O que acontece<br><span>depois do clique</span></div>
       <div class="divider"></div>
       <p class="slide-desc">
-        Duas pessoas atendendo o WhatsApp de duas unidades. Hoje dá conta, porque o volume vem quase todo do
-        Google e chega diluído. Quando entrar Meta e reativação de base ao mesmo tempo, o volume muda de patamar.
+        O comercial de vocês roda, isso não está em discussão. O que falta é a métrica do atendimento aparecer
+        no mesmo painel da mídia. Campanha só melhora quando a gente enxerga o que acontece com o contato depois
+        do clique. Sem isso, otimização vira chute com nome bonito.
       </p>
-      <div class="cards cards-3">
+      <div class="cards cards-4">
         <div class="card">
           <div class="card-num">1</div>
           <h3>Tempo de primeira resposta</h3>
-          <p>A gente mede quanto tempo leva hoje e define uma meta realista. Contato de rede social que espera mais de 10 minutos perde a maior parte do valor.</p>
+          <p>Do contato entrar até alguém falar com ele. Cinco minutos e trinta minutos dão resultados bem diferentes, e essa diferença aparece direto no custo por paciente novo.</p>
         </div>
         <div class="card">
           <div class="card-num">2</div>
-          <h3>Taxa de agendamento</h3>
-          <p>De cada 10 conversas iniciadas, quantas viram consulta marcada. Esse número é o que separa mídia cara de mídia barata, e quase nunca é medido.</p>
+          <h3>Conversa que vira agendamento</h3>
+          <p>De cada dez tutores que puxam assunto no WhatsApp, quantos saem com horário marcado? É aqui que dá para ver se o ponto está no anúncio ou na abordagem.</p>
         </div>
         <div class="card">
           <div class="card-num">3</div>
-          <h3>Roteiro e distribuição</h3>
-          <p>Fila organizada por unidade e por urgência, com respostas prontas para as perguntas que se repetem. Menos tempo digitando o óbvio, mais tempo fechando agenda.</p>
+          <h3>Agendamento que vira comparecimento</h3>
+          <p>Marcar é a parte fácil. Se some gente entre a marcação e a consulta, dá para resolver com lembrete no WhatsApp antes de colocar mais dinheiro em anúncio.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">4</div>
+          <h3>Volume por unidade</h3>
+          <p>Caruaru e Santa Cruz não se comportam igual. Separando as duas, dá para colocar verba onde a agenda ainda tem espaço em vez de dividir no olho.</p>
         </div>
       </div>
-      <p class="note">
-        Isso entra como diagnóstico e recomendação dentro da assessoria. Se a conclusão for que precisa de uma
-        terceira pessoa ou de automação no atendimento, a gente aponta com número, e a decisão é de vocês.
-      </p>
     </div>
   </div>
 
@@ -749,7 +780,7 @@
           <h4>Abrir os canais</h4>
           <ul>
             <li>Meta escalando o que provou funcionar</li>
-            <li>Primeira régua de reativação disparada</li>
+            <li>Base carregada como público personalizado e público semelhante ativo</li>
             <li>Primeiro relatório independente do Google</li>
             <li>Recomendações de ajuste repassadas a quem gere a conta</li>
             <li>Métricas de atendimento em acompanhamento</li>
@@ -787,7 +818,7 @@
             <div class="check-item">Acesso ao Bitrix e ao SimplePet, mesmo que só de leitura no começo</div>
             <div class="check-item">Acesso ao site para instalação do rastreamento</div>
             <div class="check-item">Uma pessoa de referência do lado de vocês para destravar acesso e alinhar informação clínica</div>
-            <div class="check-item">Autorização para gravar material com equipe e estrutura, que é o insumo dos criativos</div>
+            <div class="check-item">Alguém da equipe disponível para gravar os vídeos com celular. A gente manda o roteiro, o enquadramento e o que falar, vocês gravam na rotina e enviam. É o insumo dos criativos e o que mais gera confiança em decisão de saúde</div>
           </div>
         </div>
         <div>
@@ -844,7 +875,7 @@
             <tr>
               <td>
                 <div class="service-name">Assessoria de performance</div>
-                <div class="service-type">Meta Ads, camada de medição, supervisão e relatório do Google, régua de reativação de base e acompanhamento de atendimento</div>
+                <div class="service-type">Meta Ads, camada de medição, supervisão e relatório independente do Google, ativação da base como público e acompanhamento das métricas de comercial</div>
               </td>
               <td><span class="badge-type badge-mensal">Mensal</span></td>
               <td style="text-align:right;"><span class="price">R$ 4.500</span></td>
@@ -860,18 +891,36 @@
           </tbody>
         </table>
 
-        <div class="inv-total">
-          <div>
-            <div class="total-label">Contrato de 6 meses</div>
-            <div class="total-note">Implementação isenta. R$ 4.500 por mês, sem valor de entrada.</div>
+        <div class="two-col" style="gap:16px; margin-top:20px;">
+          <div class="card highlight">
+            <div class="titulo" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--green2); margin-bottom:10px;">Opção recomendada</div>
+            <h3 style="font-size:17px; margin-bottom:10px;">Contrato de 6 meses</h3>
+            <p style="margin-bottom:12px;">
+              Os R$ 3.500 de implementação são <strong style="color:var(--text);">isentos</strong>. Vocês não pagam
+              nada de entrada e começam direto na mensalidade.
+            </p>
+            <div style="font-size:26px; font-weight:900; background:linear-gradient(135deg,var(--green),var(--green2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+              R$ 4.500<span style="font-size:14px; font-weight:600;">/mês</span>
+            </div>
+            <p style="margin-top:6px; font-size:12px;">Entrada: R$ 0</p>
           </div>
-          <div class="total-val">R$ 4.500<span style="font-size:15px; font-weight:600;">/mês</span></div>
+          <div class="card">
+            <div class="titulo" style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:10px;">Sem prazo definido</div>
+            <h3 style="font-size:17px; margin-bottom:10px;">Contrato mensal</h3>
+            <p style="margin-bottom:12px;">
+              A implementação é cobrada normalmente, uma única vez, no primeiro mês. Depois disso, só a mensalidade.
+            </p>
+            <div style="font-size:26px; font-weight:900; color:var(--text);">
+              R$ 4.500<span style="font-size:14px; font-weight:600;">/mês</span>
+            </div>
+            <p style="margin-top:6px; font-size:12px;">Entrada: R$ 3.500 (primeiro mês: R$ 8.000)</p>
+          </div>
         </div>
 
         <p class="note">
-          O prazo de 6 meses existe porque tráfego e reativação de base não mostram o que sabem fazer em 30 dias.
-          Fora dessa condição, a implementação é cobrada à parte, uma única vez. A verba de mídia continua sendo
-          paga por vocês diretamente às plataformas, sem intermediação e sem comissão nossa.
+          O prazo de 6 meses existe porque tráfego, medição e trabalho de base não mostram o que sabem fazer em
+          30 dias. É por isso que ele vale a isenção. A verba de mídia continua sendo paga por vocês diretamente
+          às plataformas, sem intermediação e sem comissão nossa.
         </p>
       </div>
     </div>
@@ -880,7 +929,7 @@
   <!-- 14. FECHAMENTO -->
   <div class="slide">
     <div class="slide-inner close-slide">
-      <div class="badge" style="margin:0 auto 28px;">&#127807; Grupo NG</div>
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo" style="margin:0 auto 26px;">
       <h2>Vamos acender<br>a <span>luz</span></h2>
       <p>
         Vocês já têm o hospital, a equipe, a reputação e 30 mil pessoas que confiaram um animal a vocês.
