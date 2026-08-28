@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Proposta Pawtel · Grupo NG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --teal:    #14B8A6;
+    --teal2:   #2DD4BF;
+    --navy:    #0C1116;
+    --navy2:   #141A20;
+    --navy3:   #1A222A;
+    --border:  #26303A;
+    --border2: rgba(38,48,58,0.6);
+    --text:    #EAF1F4;
+    --muted:   #7A8A94;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  #progress {
+    position: fixed; top:0; left:0; height:3px;
+    background: linear-gradient(90deg, var(--teal), var(--teal2));
+    transition: width 0.4s ease; z-index:100;
+  }
+
+  #brand {
+    position:fixed; top:26px; left:32px; z-index:100;
+    display:flex; align-items:center; gap:10px;
+    opacity:0.55; transition:opacity 0.3s;
+  }
+  #brand:hover { opacity:1; }
+  #brand img { width:26px; height:26px; object-fit:contain; }
+  #brand span {
+    font-size:10px; font-weight:800; letter-spacing:2.5px;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .cover-logo { width:64px; height:64px; object-fit:contain; margin-bottom:26px; display:block; }
+
+  .nav-btn {
+    position: fixed; bottom:20px;
+    background: var(--navy3); border:1px solid var(--border);
+    color: var(--text); width:44px; height:44px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:18px; transition:all 0.2s; z-index:100;
+  }
+  .nav-btn:hover { background:var(--teal); border-color:var(--teal); color:#04231F; }
+  #btn-prev { right:76px; }
+  #btn-next { right:24px; }
+
+  #dots {
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+    display:flex; gap:6px; z-index:100;
+  }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:all 0.3s; cursor:pointer; }
+  .dot.active { background:var(--teal); width:20px; border-radius:3px; }
+
+  #slides { width:100%; height:100vh; position:relative; }
+  .slide {
+    position:absolute; width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:translateX(60px);
+    transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events:none; padding:60px 80px;
+  }
+  .slide.active { opacity:1; transform:translateX(0); pointer-events:all; }
+  .slide.exit   { opacity:0; transform:translateX(-60px); }
+  .slide-inner  { max-width:1100px; width:100%; }
+
+  .cover { background: radial-gradient(ellipse at 25% 50%, #142124 0%, var(--navy) 65%); }
+  .cover::before {
+    content:''; position:absolute; top:-180px; right:-180px;
+    width:560px; height:560px;
+    background:radial-gradient(circle, rgba(20,184,166,0.12) 0%, transparent 70%);
+    border-radius:50%;
+  }
+  .cover::after {
+    content:''; position:absolute; bottom:-100px; left:-100px;
+    width:360px; height:360px;
+    background:radial-gradient(circle, rgba(20,184,166,0.05) 0%, transparent 70%);
+    border-radius:50%;
+  }
+
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(20,184,166,0.15); border:1px solid rgba(20,184,166,0.4);
+    color:var(--teal2); padding:6px 16px; border-radius:100px;
+    font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:32px;
+  }
+  .cover h1 { font-size:76px; font-weight:900; line-height:0.95; letter-spacing:-3px; margin-bottom:24px; }
+  .cover h1 span {
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .cover .subtitle { font-size:19px; color:var(--muted); font-weight:400; max-width:540px; line-height:1.6; margin-bottom:48px; }
+  .cover-tags { display:flex; gap:12px; flex-wrap:wrap; }
+  .ctag {
+    background:var(--navy3); border:1px solid var(--border);
+    padding:8px 16px; border-radius:8px; font-size:13px; color:var(--muted); font-weight:500;
+  }
+
+  .section-label { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--teal2); margin-bottom:16px; }
+  .slide-title { font-size:46px; font-weight:800; line-height:1.1; letter-spacing:-1.5px; margin-bottom:16px; }
+  .slide-title span {
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .slide-desc { font-size:17px; color:var(--muted); line-height:1.7; margin-bottom:32px; max-width:760px; }
+  .divider { width:48px; height:4px; background:linear-gradient(90deg, var(--teal), var(--teal2)); border-radius:2px; margin:20px 0; }
+
+  .cards { display:grid; gap:16px; }
+  .cards-2 { grid-template-columns:repeat(2,1fr); }
+  .cards-3 { grid-template-columns:repeat(3,1fr); }
+  .cards-4 { grid-template-columns:repeat(4,1fr); }
+  .cards-5 { grid-template-columns:repeat(5,1fr); }
+  .card { background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:24px 26px; transition:border-color 0.2s; }
+  .card:hover { border-color:rgba(20,184,166,0.45); }
+  .card.highlight {
+    background:linear-gradient(135deg, rgba(20,184,166,0.12), rgba(45,212,191,0.04));
+    border-color:rgba(20,184,166,0.35);
+  }
+  .card-icon { font-size:30px; margin-bottom:14px; display:block; }
+  .card h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+  .card p { font-size:13px; color:var(--muted); line-height:1.6; }
+  .card .card-num {
+    font-size:44px; font-weight:900; line-height:1; margin-bottom:8px;
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+
+  .list { display:flex; flex-direction:column; gap:14px; }
+  .list-item {
+    display:flex; align-items:flex-start; gap:16px;
+    background:var(--navy2); border:1px solid var(--border);
+    border-radius:12px; padding:18px 22px; transition:border-color 0.2s;
+  }
+  .list-item:hover { border-color:rgba(20,184,166,0.3); }
+  .li-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; margin-top:2px; }
+  .li-icon.teal  { background:rgba(20,184,166,0.15); }
+  .li-icon.blue  { background:rgba(100,120,220,0.2); }
+  .li-icon.amber { background:rgba(245,158,11,0.14); }
+  .li-icon.red   { background:rgba(239,68,68,0.14); }
+  .list-item h4 { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .list-item p  { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+
+  .steps { display:flex; flex-direction:column; gap:14px; }
+  .step  { display:flex; align-items:flex-start; gap:16px; }
+  .step-num {
+    width:36px; height:36px; border-radius:50%;
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:800; flex-shrink:0; color:#04231F;
+  }
+  .step-content h4 { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .step-content p  { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .pills { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .pill { padding:5px 13px; border-radius:100px; font-size:12px; font-weight:600; }
+  .pill.teal  { background:rgba(20,184,166,0.13); color:var(--teal2); border:1px solid rgba(20,184,166,0.35); }
+  .pill.blue  { background:rgba(100,120,220,0.15); color:#8899EE; border:1px solid rgba(100,120,220,0.3); }
+  .pill.amber { background:rgba(245,158,11,0.13); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+
+  .stat-row { display:flex; gap:16px; margin-top:4px; }
+  .big-stat { flex:1; text-align:center; padding:26px 18px; background:var(--navy2); border:1px solid var(--border); border-radius:16px; }
+  .big-stat .number {
+    font-size:42px; font-weight:900; line-height:1;
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .big-stat.warn .number {
+    background:linear-gradient(135deg,#ef4444,#f87171);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .big-stat .label { font-size:13px; color:var(--muted); margin-top:6px; }
+
+  .pilar-hero {
+    background:linear-gradient(135deg, rgba(20,184,166,0.12), rgba(20,60,80,0.28));
+    border:1px solid rgba(20,184,166,0.3); border-radius:20px;
+    padding:26px 32px; margin-bottom:20px;
+  }
+  .pilar-hero .num {
+    font-size:58px; font-weight:900; line-height:1;
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:4px;
+  }
+  .pilar-hero h2 { font-size:26px; font-weight:800; letter-spacing:-0.5px; margin-bottom:8px; }
+  .pilar-hero p  { font-size:15px; color:var(--muted); line-height:1.6; max-width:720px; }
+
+  .checklist { display:flex; flex-direction:column; gap:10px; }
+  .check-item { display:flex; gap:12px; align-items:flex-start; font-size:14px; color:var(--text); line-height:1.5; }
+  .check-item::before { content:"\2713"; color:var(--teal2); font-weight:800; flex-shrink:0; margin-top:1px; }
+
+  .alert-box { background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.22); border-radius:14px; padding:20px 24px; }
+  .alert-box .alert-title { font-size:12px; font-weight:700; color:#ef4444; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  .alert-box p { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .oport-card {
+    background:linear-gradient(135deg, rgba(20,184,166,0.1), rgba(20,60,80,0.2));
+    border:1px solid rgba(20,184,166,0.3); border-radius:16px; padding:22px 26px;
+  }
+  .oport-card .titulo { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--teal2); margin-bottom:8px; }
+  .oport-card h4 { font-size:16px; font-weight:700; margin-bottom:8px; }
+  .oport-card p  { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .inv-table { width:100%; border-collapse:collapse; }
+  .inv-table th {
+    text-align:left; font-size:11px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; color:var(--muted);
+    padding:10px 16px; border-bottom:1px solid var(--border);
+  }
+  .inv-table td { padding:15px 16px; font-size:14px; border-bottom:1px solid var(--border2); vertical-align:middle; }
+  .inv-table tr:last-child td { border-bottom:none; }
+  .service-name { font-weight:700; color:var(--text); }
+  .service-type { font-size:12px; color:var(--muted); margin-top:3px; }
+  .price {
+    font-size:20px; font-weight:900; white-space:nowrap;
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .badge-type { display:inline-block; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+  .badge-unico  { background:rgba(245,158,11,0.13); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+  .badge-mensal { background:rgba(20,184,166,0.13); color:var(--teal2); border:1px solid rgba(20,184,166,0.3); }
+
+  .reveal-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:48px 0; cursor:pointer; }
+  .reveal-btn .icon-lock {
+    width:72px; height:72px; border-radius:50%;
+    background:linear-gradient(135deg, rgba(20,184,166,0.2), rgba(20,60,80,0.4));
+    border:2px solid rgba(20,184,166,0.4);
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px; transition:all 0.3s;
+  }
+  .reveal-btn:hover .icon-lock {
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    border-color:var(--teal); transform:scale(1.08);
+  }
+  .reveal-btn p { font-size:15px; color:var(--muted); }
+  .btn-reveal {
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    color:#04231F; padding:14px 36px; border-radius:12px;
+    font-size:15px; font-weight:800; border:none; cursor:pointer;
+    transition:opacity 0.2s; letter-spacing:0.3px;
+  }
+  .btn-reveal:hover { opacity:0.88; }
+
+  .inv-content { display:none; animation:fadeUp 0.5s ease forwards; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  .close-slide { text-align:center; }
+  .close-slide h2 { font-size:64px; font-weight:900; line-height:1; letter-spacing:-2px; margin-bottom:24px; }
+  .close-slide h2 span {
+    background:linear-gradient(135deg, var(--teal), var(--teal2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .close-slide p { font-size:20px; color:var(--muted); max-width:560px; margin:0 auto 40px; line-height:1.6; }
+
+  .tl { display:flex; gap:14px; }
+  .tl-col { flex:1; background:var(--navy2); border:1px solid var(--border); border-radius:14px; padding:20px 22px; }
+  .tl-col .tl-when { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--teal2); margin-bottom:12px; }
+  .tl-col h4 { font-size:15px; font-weight:700; margin-bottom:10px; }
+  .tl-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .tl-col li { font-size:12.5px; color:var(--muted); line-height:1.5; padding-left:14px; position:relative; }
+  .tl-col li::before { content:"\2022"; position:absolute; left:0; color:var(--teal); }
+
+  .note { font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:14px; }
+
+  .jornada { display:flex; gap:10px; align-items:stretch; }
+  .jor-step {
+    flex:1; background:var(--navy2); border:1px solid var(--border);
+    border-radius:14px; padding:20px 18px; position:relative;
+  }
+  .jor-step .jn {
+    font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+    color:var(--teal2); margin-bottom:10px;
+  }
+  .jor-step h4 { font-size:15px; font-weight:800; margin-bottom:8px; }
+  .jor-step p { font-size:12px; color:var(--muted); line-height:1.55; }
+
+  @media (max-width: 768px) {
+    body { overflow-y:auto; height:auto; }
+    #slides { height:auto; }
+    .slide { position:relative; opacity:1 !important; transform:none !important; pointer-events:all; padding:40px 24px; min-height:100vh; }
+    .slide.exit { display:none; }
+    #dots,#btn-prev,#btn-next,#progress { display:none; }
+    #brand { position:relative; top:0; left:0; margin-bottom:20px; }
+    .cover h1 { font-size:42px; }
+    .slide-title { font-size:29px; }
+    .cards-2,.cards-3,.cards-4,.cards-5 { grid-template-columns:1fr; }
+    .two-col { grid-template-columns:1fr; }
+    .stat-row { flex-direction:column; }
+    .tl, .jornada { flex-direction:column; }
+    .close-slide h2 { font-size:38px; }
+    .inv-table thead { display:none; }
+    .inv-table td { display:block; border:none; padding:6px 0; }
+    .inv-table tr { display:block; padding:16px 0; border-bottom:1px solid var(--border2); }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="brand"><img src="logo-ng.png" alt="Grupo NG"><span>Grupo NG</span></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+
+<div id="slides">
+
+  <!-- 1. CAPA -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo">
+      <div class="badge">Proposta Comercial</div>
+      <h1>De 20 para<br><span>40 mil</span></h1>
+      <p class="subtitle">O plano para dobrar o faturamento da clínica sem virar 24h, sem contratar antes da hora e sem depender de você postar todo dia.</p>
+      <div class="cover-tags">
+        <span class="ctag">&#128205; Bacacheri, Curitiba &middot; PR</span>
+        <span class="ctag">&#128197; 28/08/2026</span>
+        <span class="ctag">&#129701; Dr. Diogo Pawtel</span>
+        <span class="ctag">&#9889; Implementação + Comercial</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ONDE VOCÊ ESTÁ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Onde a clínica está hoje</div>
+      <div class="slide-title">O ponto de <span>partida</span></div>
+      <div class="divider"></div>
+      <div class="stat-row" style="margin-bottom:24px;">
+        <div class="big-stat"><div class="number">R$20k</div><div class="label">Faturamento atual</div></div>
+        <div class="big-stat"><div class="number">R$40k</div><div class="label">Meta declarada</div></div>
+        <div class="big-stat"><div class="number">R$500</div><div class="label">Já investido no Google</div></div>
+        <div class="big-stat warn"><div class="number">2</div><div class="label">Ligações em 15 dias</div></div>
+        <div class="big-stat warn"><div class="number">0</div><div class="label">Conversas rastreadas</div></div>
+      </div>
+      <p class="slide-desc" style="margin-bottom:0;">
+        Um veterinário, uma clínica, e todas as funções na mesma pessoa. A limpeza de tártaro é o carro-chefe
+        e traz o cliente para dentro. O que trava não é a clínica, é tudo que acontece antes dela: como o
+        paciente encontra você, e o que acontece com quem entrou em contato e não voltou.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. O DIAGNÓSTICO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">O que a gente achou na reunião</div>
+      <div class="slide-title">O Google está<br>gastando <span>no escuro</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        A gente rodou o teste ao vivo com você na tela. O site não tem Tag Manager, não tem Analytics
+        configurado e não tem evento de conversão instalado. Na prática: quando alguém clica no botão do
+        WhatsApp, o Google não fica sabendo. Nunca.
+      </p>
+      <div class="two-col">
+        <div class="alert-box">
+          <div class="alert-title">O que o Google enxerga hoje</div>
+          <p>
+            Cliques. Só isso. Ele não sabe quem chamou no WhatsApp, quem agendou, quem apareceu na clínica nem
+            quem fez a limpeza de tártaro. Sem essa informação voltando, ele otimiza pelo que consegue ver:
+            o clique mais barato. E clique barato quase nunca é paciente.
+          </p>
+        </div>
+        <div class="alert-box">
+          <div class="alert-title">O efeito prático nos R$ 500</div>
+          <p>
+            Pode ser que já tenha entrado gente pelo anúncio sem você saber, porque não existe registro
+            nenhum. E pode ser que a campanha esteja aprendendo a atrair exatamente o público errado, já que
+            é o único sinal que ela recebeu até agora.
+          </p>
+        </div>
+      </div>
+      <p class="note">
+        Isso não é erro de quem montou a campanha. É a etapa que o Google Ads não pede e quase ninguém sabe
+        que existe: montar a estrutura de medição antes de anunciar.
+      </p>
+    </div>
+  </div>
+
+  <!-- 4. O CONSELHO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Antes de qualquer proposta</div>
+      <div class="slide-title">Pausa a campanha<br>até <span>resolver isso</span></div>
+      <div class="divider"></div>
+      <div class="oport-card" style="margin-bottom:18px;">
+        <div class="titulo">Vale fechando com a gente ou não</div>
+        <h4>Cada dia rodando sem medição é dinheiro que não volta</h4>
+        <p>
+          Não é estratégia de venda, é o que a gente faria no lugar do senhor. Anúncio sem rastreamento não
+          só desperdiça a verba do dia: ele ensina o algoritmo a procurar a pessoa errada, e esse aprendizado
+          fica na conta. Melhor ficar duas semanas parado e voltar medindo do que seguir gastando às cegas.
+        </p>
+      </div>
+      <div class="cards cards-3">
+        <div class="card">
+          <span class="card-icon">&#128295;</span>
+          <h3>Tag Manager e Analytics</h3>
+          <p>A base. É por onde toda informação de comportamento no site sai para o Google.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128241;</span>
+          <h3>Evento no botão do WhatsApp</h3>
+          <p>Cada clique no botão vira uma conversão registrada. É o dado que faltava e o que muda o jogo.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128225;</span>
+          <h3>Servidor de medição (Stape)</h3>
+          <p>Desde o iOS 14, o navegador do visitante bloqueia boa parte do envio. O Stape manda pelo servidor, que ninguém bloqueia.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. A JORNADA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Nossa metodologia</div>
+      <div class="slide-title">A jornada<br>do <span>tutor</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Todo cliente que entra na clínica passou por cinco etapas antes. A maioria das clínicas trabalha só
+        a primeira e reclama do resultado. A gente monta as cinco.
+      </p>
+      <div class="jornada">
+        <div class="jor-step">
+          <div class="jn">Etapa 1</div>
+          <h4>Descoberta</h4>
+          <p>O tutor descobre que a clínica existe. Google Meu Negócio, Google Ads e Meta.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 2</div>
+          <h4>Atenção</h4>
+          <p>O anúncio precisa ser escolhido entre os outros que aparecem junto. Estrutura, headline e teste.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 3</div>
+          <h4>Consideração</h4>
+          <p>Ele não te conhece e vai confiar um animal a você. Prova social no Instagram, no site e no Google.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 4</div>
+          <h4>Ação</h4>
+          <p>O atendimento. É onde mais se perde dinheiro e onde mais rápido se recupera.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 5</div>
+          <h4>Apologia</h4>
+          <p>Quem já foi cliente e sumiu. Vacina atrasada, cirurgia pendente, quem não vem há seis meses.</p>
+        </div>
+      </div>
+      <p class="note">
+        As etapas 4 e 5 não custam mídia. Elas custam processo. É por isso que a gente começa por elas quando
+        o orçamento de anúncio é enxuto.
+      </p>
+    </div>
+  </div>
+
+  <!-- 6. DESCOBERTA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">01</div>
+        <h2>Descoberta: ser encontrado</h2>
+        <p>Dois canais, com papéis diferentes. O Google captura quem já está procurando. A Meta cria vontade em quem ainda não procurou.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="oport-card" style="margin-bottom:14px;">
+            <div class="titulo">Google</div>
+            <h4>Meu Negócio primeiro, Ads depois</h4>
+            <p style="margin-bottom:10px;">
+              O perfil no Google Meu Negócio é o ativo mais subestimado que existe, e é de graça. Pedir avaliação,
+              responder todas, atualizar foto toda semana e acompanhar no Search Console quais buscas trazem você.
+            </p>
+            <p>
+              No Ads, campanha separada por grupo para saber de onde vem cada paciente: consultas e vacinas,
+              odontologia, cirurgias e especialidades, e concorrentes.
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="oport-card">
+            <div class="titulo">Meta</div>
+            <h4>O senhor já provou que funciona</h4>
+            <p style="margin-bottom:10px;">
+              A campanha de profilaxia dentária no WhatsApp trouxe mais cliente que o Google, no seu próprio
+              relato. Isso não é acaso: tártaro é um problema que o tutor vê no animal e ignora até alguém
+              mostrar que tem solução. É exatamente o que a Meta faz bem.
+            </p>
+            <p>
+              O que faltou foi estrutura em volta: rastreamento, campanha separada por procedimento e
+              acompanhamento do que virou consulta de verdade.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="pills">
+        <span class="pill teal">Google Meu Negócio</span>
+        <span class="pill teal">Search Console</span>
+        <span class="pill blue">Google Ads por grupo</span>
+        <span class="pill amber">Meta para odontologia</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. ATENÇÃO E CONSIDERAÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">02 &middot; 03</div>
+        <h2>Atenção e Consideração</h2>
+        <p>Curitiba tem muita clínica anunciando. Seu anúncio aparece ao lado de outros, e o tutor escolhe em segundos quem parece mais confiável.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="steps">
+            <div class="step">
+              <div class="step-num">A</div>
+              <div class="step-content">
+                <h4>O anúncio precisa ganhar a comparação</h4>
+                <p>Estrutura de headline, sitelinks, extensões e teste A/B. O Google dá nota para o anúncio, e nota melhor significa aparecer mais pagando menos pelo mesmo clique.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">B</div>
+              <div class="step-content">
+                <h4>Barra fixa de contato no site</h4>
+                <p>WhatsApp, localização e telefone fixos no rodapé, acompanhando a rolagem até o fim da página. Detalhe simples que aumentou conversão em outros clientes nossos.</p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-num">C</div>
+              <div class="step-content">
+                <h4>Ligação também precisa existir</h4>
+                <p>Mesmo que atender no meio da consulta seja ruim, quem tem urgência liga. E no começo o Google precisa de todo sinal de conversão possível para aprender a otimizar.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="oport-card">
+            <div class="titulo">Setup de prova social</div>
+            <h4>Três vídeos e o Instagram para de ser um problema</h4>
+            <p style="margin-bottom:10px;">
+              O senhor não vai viver de criar conteúdo, e não precisa. A gente estrutura a bio e produz três
+              vídeos fixados no topo do perfil, editados por nós, gravados por você com o celular:
+            </p>
+            <div class="checklist" style="margin-top:12px;">
+              <div class="check-item">Quem é o Dr. Diogo</div>
+              <div class="check-item">O que a clínica faz e para quem</div>
+              <div class="check-item">Um caso real, com depoimento de tutor</div>
+            </div>
+            <p style="margin-top:12px;">
+              Quem clica no anúncio e vai olhar seu perfil antes de chamar encontra resposta em vez de silêncio.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. AÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">04</div>
+        <h2>Ação: o atendimento é onde o dinheiro vaza</h2>
+        <p>Imagine a clínica como um galpão. A porta da frente é o tráfego e a indicação. A porta de trás é o atendimento. Se a de trás está aberta, tudo que entra pela frente atravessa e sai.</p>
+      </div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card">
+          <span class="card-icon">&#128100;</span>
+          <h3>Pessoas</h3>
+          <p>Hoje é o senhor, entre uma consulta e outra. O processo precisa ser desenhado para caber nessa realidade, não numa equipe que ainda não existe.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128221;</span>
+          <h3>Processo</h3>
+          <p>Script de atendimento, fluxo, cadência de follow-up e as sete regras. Entre elas a mais importante: nunca responder um "não fazemos" seco. Hoje o tutor chega com diagnóstico do ChatGPT na mão e um "não" fecha a porta antes da consulta.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128202;</span>
+          <h3>Tecnologia</h3>
+          <p>CRM para enxergar quem está pendente. Entrada, primeiro contato, consulta agendada, consulta realizada, orçamento enviado. Vamos avaliar o CRM do LoopVet antes de sugerir qualquer outra ferramenta.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">A métrica que mais dói</div>
+        <h4>Tempo de resposta</h4>
+        <p>
+          Se a mensagem chega no meio de uma consulta e é respondida 60 minutos depois, boa parte desses tutores
+          já falou com outra clínica. Não dá para o senhor largar o animal na mesa, então a saída é processo:
+          resposta automática de primeiro contato, horário fixo de retorno e cadência de acompanhamento.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. APOLOGIA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">05</div>
+        <h2>Apologia: o faturamento que já é seu</h2>
+        <p>Essa é a única frente que não precisa de um real a mais em anúncio.</p>
+      </div>
+      <p class="slide-desc" style="margin-bottom:22px;">
+        O senhor mesmo disse: de cada 50 pessoas que entraram em contato, voltou a falar com umas duas. Isso não
+        é descaso, é rotina de quem faz tudo sozinho. Mas é dinheiro parado, e é o mais barato de recuperar.
+      </p>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card">
+          <span class="card-icon">&#128137;</span>
+          <h3>Vacina atrasada</h3>
+          <p>Lista puxada do LoopVet por data de vencimento. Motivo real de contato, sem cara de venda.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#129701;</span>
+          <h3>Procedimento pendente</h3>
+          <p>Quem recebeu orçamento de tartarectomia ou cirurgia e não voltou. Já quis, já sabe o preço, só não decidiu.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128336;</span>
+          <h3>Sumidos há 6 meses</h3>
+          <p>Contato personalizado perguntando pelo animal pelo nome. Não é para vender, é para lembrar que você existe.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">Como a conta costuma fechar</div>
+        <h4>Números pé no chão são suficientes</h4>
+        <p>
+          Numa base pequena, com metade dos contatos válidos, 10% de resposta e 2% fechando um ticket médio
+          modesto, o resultado já aparece. Foi assim que a gente montou o plano de um cliente nosso em Cuiabá com
+          19 mil pacientes na base e nenhuma recuperação sendo feita. A sua base é menor, mas a lógica é a mesma
+          e o custo continua sendo zero de mídia.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. RESULTADOS -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Prova de que funciona</div>
+      <div class="slide-title">Clínicas do<br>mesmo <span>tamanho</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Nenhuma delas é 24h. Nenhuma tinha orçamento grande de mídia. Todas cresceram ajustando as cinco etapas.
+      </p>
+      <div class="cards cards-3" style="margin-bottom:18px;">
+        <div class="card highlight">
+          <span class="card-icon">&#128200;</span>
+          <h3>Pouso Alegre, MG</h3>
+          <p style="margin-bottom:8px;">Cidade de 120 mil habitantes. Contrato assinado em abril.</p>
+          <div style="font-size:22px; font-weight:900; background:linear-gradient(135deg,var(--teal),var(--teal2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">R$ 40k &rarr; R$ 82k</div>
+          <p style="margin-top:6px;">Recorde histórico da empresa em julho. Crescimento de 82% contra o mesmo período do ano anterior.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128062;</span>
+          <h3>Vita Pata</h3>
+          <p style="margin-bottom:8px;">Clínica sem atendimento 24h, estrutura enxuta.</p>
+          <div style="font-size:22px; font-weight:900; background:linear-gradient(135deg,var(--teal),var(--teal2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">R$ 30k &rarr; R$ 65k</div>
+          <p style="margin-top:6px;">Crescimento construído com investimento baixo em mídia e ajuste pesado no comercial.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#127919;</span>
+          <h3>O que o tracking faz</h3>
+          <p style="margin-bottom:8px;">Mesma conta, mesmo orçamento, 45 dias depois da estrutura de medição entrar:</p>
+          <div class="checklist" style="margin-top:10px;">
+            <div class="check-item">Conversões: +120%</div>
+            <div class="check-item">Custo por conversão: &minus;44%</div>
+            <div class="check-item">Taxa de clique: +173%</div>
+          </div>
+          <p style="margin-top:10px;">Sem aumentar um real de investimento.</p>
+        </div>
+      </div>
+      <p class="note">
+        Esses números são de contas reais e podem ser mostrados na tela, ao vivo, na próxima conversa.
+      </p>
+    </div>
+  </div>
+
+  <!-- 11. CRONOGRAMA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Como roda</div>
+      <div class="slide-title">Os <span>90 dias</span><br>da implementação</div>
+      <div class="divider"></div>
+      <div class="tl">
+        <div class="tl-col">
+          <div class="tl-when">Mês 1 &middot; Fundação</div>
+          <h4>Parar de gastar à toa</h4>
+          <ul>
+            <li>Tag Manager, Analytics e eventos instalados</li>
+            <li>Servidor de medição Stape configurado</li>
+            <li>Ajustes de SEO e velocidade no site</li>
+            <li>Barra fixa de contato no rodapé</li>
+            <li>Google Meu Negócio otimizado e no Search Console</li>
+            <li>Campanhas reestruturadas por grupo</li>
+          </ul>
+        </div>
+        <div class="tl-col">
+          <div class="tl-when">Mês 2 &middot; Comercial</div>
+          <h4>Fechar a porta dos fundos</h4>
+          <ul>
+            <li>Script de atendimento construído e treinado com você</li>
+            <li>Fluxo de follow-up e cadência de contato</li>
+            <li>CRM configurado e rodando</li>
+            <li>Setup do Instagram com os três vídeos publicados</li>
+            <li>Primeira ação de recuperação de base</li>
+          </ul>
+        </div>
+        <div class="tl-col">
+          <div class="tl-when">Mês 3 &middot; Autonomia</div>
+          <h4>Passar o volante</h4>
+          <ul>
+            <li>Treinamento de operação da campanha</li>
+            <li>Como ler os números e o que ajustar em cada situação</li>
+            <li>Painel de acompanhamento entregue</li>
+            <li>Overview de precificação, margem e quando contratar</li>
+            <li>Plano de escala para os meses seguintes</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">
+        A ideia da implementação é entregar a casa funcionando e ensinar o senhor a operar a máquina. Depois
+        disso, seguir com assessoria é escolha sua, não obrigação.
+      </p>
+    </div>
+  </div>
+
+  <!-- 12. O QUE PRECISAMOS -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Para começar</div>
+      <div class="slide-title">O que a gente<br>precisa de <span>você</span></div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div>
+          <div class="checklist">
+            <div class="check-item">Acesso à conta do Google Ads e ao site, para instalar a estrutura de medição</div>
+            <div class="check-item">Acesso ao perfil do Google Meu Negócio</div>
+            <div class="check-item">Acesso ao LoopVet, para avaliar o CRM e montar as listas de recuperação</div>
+            <div class="check-item">Acesso ao Instagram e ao Gerenciador de Negócios da Meta, ou criação de um</div>
+            <div class="check-item">Cerca de duas horas por semana do seu tempo nas primeiras semanas, para o treinamento comercial</div>
+            <div class="check-item">Gravar os três vídeos do setup com o celular. A gente manda o roteiro e cuida da edição</div>
+          </div>
+        </div>
+        <div>
+          <div class="oport-card">
+            <div class="titulo">Sobre a verba de anúncio</div>
+            <h4>Mínimo de R$ 500 a R$ 600 por mês</h4>
+            <p style="margin-bottom:12px;">
+              É pago diretamente por você ao Google, sem passar pela gente e sem comissão nossa. Com esse valor
+              dá para ter resultado consistente, e foi mais ou menos com esse patamar que o cliente de Pouso
+              Alegre começou.
+            </p>
+            <p>
+              Escalar vem depois, quando o rastreamento estiver mostrando quanto custa cada paciente novo. Aí
+              a decisão de investir mais deixa de ser fé e vira conta.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 13. INVESTIMENTO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Investimento</div>
+      <div class="slide-title">Quanto <span>custa</span></div>
+      <div class="divider"></div>
+
+      <div id="reveal-area">
+        <div class="reveal-btn" onclick="revelarInvestimento()">
+          <div class="icon-lock">&#128274;</div>
+          <p>Clique para ver os valores</p>
+          <button class="btn-reveal">Revelar investimento</button>
+        </div>
+      </div>
+
+      <div class="inv-content" id="inv-content">
+        <div class="two-col" style="gap:16px; margin-bottom:18px;">
+          <div class="card highlight">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--teal2); margin-bottom:10px;">Recomendado para agora</div>
+            <h3 style="font-size:19px; margin-bottom:10px;">Implementação</h3>
+            <p style="margin-bottom:14px;">
+              Duração de 90 dias. A gente monta tudo, treina o senhor e entrega funcionando: medição, site,
+              Google Meu Negócio, campanhas, script comercial, CRM, setup do Instagram e recuperação de base.
+            </p>
+            <div style="font-size:30px; font-weight:900; background:linear-gradient(135deg,var(--teal),var(--teal2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+              R$ 4.500
+            </div>
+            <p style="margin-top:8px; font-size:13px; color:var(--text);">
+              Pagamento único, em até <strong>12x no cartão</strong>. Parcela de <strong>R$ 375 por mês</strong>.
+            </p>
+          </div>
+          <div class="card">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:10px;">Quando o faturamento comportar</div>
+            <h3 style="font-size:19px; margin-bottom:10px;">Assessoria mensal</h3>
+            <p style="margin-bottom:14px;">
+              A gente assume a operação inteira e faz o acompanhamento mensal: campanhas, otimização,
+              acompanhamento comercial e reunião de resultado. O senhor volta a cuidar só da clínica.
+            </p>
+            <div style="font-size:30px; font-weight:900; color:var(--text);">
+              R$ 2.800<span style="font-size:15px; font-weight:600;">/mês</span>
+            </div>
+            <p style="margin-top:8px; font-size:13px; color:var(--muted);">
+              Com condição de rampagem nos primeiros meses. Detalhe abaixo.
+            </p>
+          </div>
+        </div>
+
+        <div class="oport-card">
+          <div class="titulo">Condição de rampagem</div>
+          <h4>Você não precisa acreditar na gente antes de ver resultado</h4>
+          <p>
+            No faturamento de hoje, R$ 2.800 come uma fatia grande da margem, e a gente sabe disso. Por isso,
+            se optar por seguir com assessoria, os dois primeiros meses saem por <strong style="color:var(--text);">R$ 1.400</strong>,
+            com uma meta de faturamento acordada entre nós. Batida a meta, o valor sobe para R$ 2.800. Se não
+            bater, a gente senta e conversa antes de cobrar cheio.
+          </p>
+        </div>
+
+        <p class="note">
+          A verba de anúncio (mínimo de R$ 500 a R$ 600 por mês) é paga por você diretamente ao Google e não
+          entra nesses valores. Proposta válida por 15 dias.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14. FECHAMENTO -->
+  <div class="slide">
+    <div class="slide-inner close-slide">
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo" style="margin:0 auto 26px;">
+      <h2>Dobrar é<br><span>conta</span>, não sorte</h2>
+      <p>
+        Sair de 20 para 40 mil não depende de virar 24h nem de contratar equipe antes da hora. Depende de
+        medir o que já está sendo gasto, fechar a porta dos fundos e falar com quem já foi seu cliente.
+      </p>
+      <div class="cover-tags" style="justify-content:center;">
+        <span class="ctag">&#128231; Proposta válida por 15 dias</span>
+        <span class="ctag">&#9989; Início em até 5 dias úteis após aprovação</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const progress = document.getElementById('progress');
+  const total = slides.length;
+  let cur = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' active':'');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    slides[cur].addEventListener('transitionend', () => slides[cur].classList.remove('exit'), {once:true});
+    cur = n;
+    slides[cur].classList.add('active');
+    slides[cur].classList.remove('exit');
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===cur));
+    progress.style.width = ((cur+1)/total*100) + '%';
+  }
+
+  function revelarInvestimento() {
+    document.getElementById('reveal-area').style.display = 'none';
+    document.getElementById('inv-content').style.display = 'block';
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => goTo(cur+1));
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(cur-1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight'||e.key==='ArrowDown') goTo(cur+1);
+    if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(cur-1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50) goTo(dx > 0 ? cur+1 : cur-1);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>
