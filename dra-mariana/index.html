@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Proposta Dra. Mariana · Grupo NG</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --coral:   #EE7169;
+    --coral2:  #F59189;
+    --navy:    #0D1022;
+    --navy2:   #151935;
+    --navy3:   #1D2242;
+    --border:  #2B3160;
+    --border2: rgba(43,49,96,0.55);
+    --text:    #ECEEF7;
+    --muted:   #8B90B4;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  #progress {
+    position: fixed; top:0; left:0; height:3px;
+    background: linear-gradient(90deg, var(--coral), var(--coral2));
+    transition: width 0.4s ease; z-index:100;
+  }
+
+  #brand {
+    position:fixed; top:26px; left:32px; z-index:100;
+    display:flex; align-items:center; gap:10px;
+    opacity:0.55; transition:opacity 0.3s;
+  }
+  #brand:hover { opacity:1; }
+  #brand img { width:26px; height:26px; object-fit:contain; }
+  #brand span {
+    font-size:10px; font-weight:800; letter-spacing:2.5px;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .cover-logo { width:64px; height:64px; object-fit:contain; margin-bottom:26px; display:block; }
+
+  .nav-btn {
+    position: fixed; bottom:20px;
+    background: var(--navy3); border:1px solid var(--border);
+    color: var(--text); width:44px; height:44px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:18px; transition:all 0.2s; z-index:100;
+  }
+  .nav-btn:hover { background:var(--coral); border-color:var(--coral); color:#FFFFFF; }
+  #btn-prev { right:76px; }
+  #btn-next { right:24px; }
+
+  #dots {
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+    display:flex; gap:6px; z-index:100;
+  }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:all 0.3s; cursor:pointer; }
+  .dot.active { background:var(--coral); width:20px; border-radius:3px; }
+
+  #slides { width:100%; height:100vh; position:relative; }
+  .slide {
+    position:absolute; width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:translateX(60px);
+    transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events:none; padding:60px 80px;
+  }
+  .slide.active { opacity:1; transform:translateX(0); pointer-events:all; }
+  .slide.exit   { opacity:0; transform:translateX(-60px); }
+  .slide-inner  { max-width:1100px; width:100%; }
+
+  .cover { background: radial-gradient(ellipse at 25% 50%, #1A1F42 0%, var(--navy) 65%); }
+  .cover::before {
+    content:''; position:absolute; top:-180px; right:-180px;
+    width:560px; height:560px;
+    background:radial-gradient(circle, rgba(238,113,105,0.12) 0%, transparent 70%);
+    border-radius:50%;
+  }
+  .cover::after {
+    content:''; position:absolute; bottom:-100px; left:-100px;
+    width:360px; height:360px;
+    background:radial-gradient(circle, rgba(238,113,105,0.05) 0%, transparent 70%);
+    border-radius:50%;
+  }
+
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(238,113,105,0.15); border:1px solid rgba(238,113,105,0.4);
+    color:var(--coral2); padding:6px 16px; border-radius:100px;
+    font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:32px;
+  }
+  .cover h1 { font-size:76px; font-weight:900; line-height:0.95; letter-spacing:-3px; margin-bottom:24px; }
+  .cover h1 span {
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .cover .subtitle { font-size:19px; color:var(--muted); font-weight:400; max-width:540px; line-height:1.6; margin-bottom:48px; }
+  .cover-tags { display:flex; gap:12px; flex-wrap:wrap; }
+  .ctag {
+    background:var(--navy3); border:1px solid var(--border);
+    padding:8px 16px; border-radius:8px; font-size:13px; color:var(--muted); font-weight:500;
+  }
+
+  .section-label { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--coral2); margin-bottom:16px; }
+  .slide-title { font-size:46px; font-weight:800; line-height:1.1; letter-spacing:-1.5px; margin-bottom:16px; }
+  .slide-title span {
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .slide-desc { font-size:17px; color:var(--muted); line-height:1.7; margin-bottom:32px; max-width:760px; }
+  .divider { width:48px; height:4px; background:linear-gradient(90deg, var(--coral), var(--coral2)); border-radius:2px; margin:20px 0; }
+
+  .cards { display:grid; gap:16px; }
+  .cards-2 { grid-template-columns:repeat(2,1fr); }
+  .cards-3 { grid-template-columns:repeat(3,1fr); }
+  .cards-4 { grid-template-columns:repeat(4,1fr); }
+  .cards-5 { grid-template-columns:repeat(5,1fr); }
+  .card { background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:24px 26px; transition:border-color 0.2s; }
+  .card:hover { border-color:rgba(238,113,105,0.45); }
+  .card.highlight {
+    background:linear-gradient(135deg, rgba(238,113,105,0.12), rgba(245,145,137,0.04));
+    border-color:rgba(238,113,105,0.35);
+  }
+  .card-icon { font-size:30px; margin-bottom:14px; display:block; }
+  .card h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+  .card p { font-size:13px; color:var(--muted); line-height:1.6; }
+  .card .card-num {
+    font-size:44px; font-weight:900; line-height:1; margin-bottom:8px;
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+
+  .list { display:flex; flex-direction:column; gap:14px; }
+  .list-item {
+    display:flex; align-items:flex-start; gap:16px;
+    background:var(--navy2); border:1px solid var(--border);
+    border-radius:12px; padding:18px 22px; transition:border-color 0.2s;
+  }
+  .list-item:hover { border-color:rgba(238,113,105,0.3); }
+  .li-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; margin-top:2px; }
+  .li-icon.coral  { background:rgba(238,113,105,0.15); }
+  .li-icon.blue  { background:rgba(100,120,220,0.2); }
+  .li-icon.amber { background:rgba(245,158,11,0.14); }
+  .li-icon.red   { background:rgba(239,68,68,0.14); }
+  .list-item h4 { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .list-item p  { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+
+  .steps { display:flex; flex-direction:column; gap:14px; }
+  .step  { display:flex; align-items:flex-start; gap:16px; }
+  .step-num {
+    width:36px; height:36px; border-radius:50%;
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:800; flex-shrink:0; color:#FFFFFF;
+  }
+  .step-content h4 { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .step-content p  { font-size:13px; color:var(--muted); line-height:1.5; }
+
+  .pills { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .pill { padding:5px 13px; border-radius:100px; font-size:12px; font-weight:600; }
+  .pill.coral  { background:rgba(238,113,105,0.13); color:var(--coral2); border:1px solid rgba(238,113,105,0.35); }
+  .pill.blue  { background:rgba(100,120,220,0.15); color:#8899EE; border:1px solid rgba(100,120,220,0.3); }
+  .pill.amber { background:rgba(245,158,11,0.13); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+
+  .stat-row { display:flex; gap:16px; margin-top:4px; }
+  .big-stat { flex:1; text-align:center; padding:26px 18px; background:var(--navy2); border:1px solid var(--border); border-radius:16px; }
+  .big-stat .number {
+    font-size:42px; font-weight:900; line-height:1;
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .big-stat.warn .number {
+    background:linear-gradient(135deg,#ef4444,#f87171);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .big-stat .label { font-size:13px; color:var(--muted); margin-top:6px; }
+
+  .pilar-hero {
+    background:linear-gradient(135deg, rgba(238,113,105,0.12), rgba(38,51,113,0.28));
+    border:1px solid rgba(238,113,105,0.3); border-radius:20px;
+    padding:26px 32px; margin-bottom:20px;
+  }
+  .pilar-hero .num {
+    font-size:58px; font-weight:900; line-height:1;
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    margin-bottom:4px;
+  }
+  .pilar-hero h2 { font-size:26px; font-weight:800; letter-spacing:-0.5px; margin-bottom:8px; }
+  .pilar-hero p  { font-size:15px; color:var(--muted); line-height:1.6; max-width:720px; }
+
+  .checklist { display:flex; flex-direction:column; gap:10px; }
+  .check-item { display:flex; gap:12px; align-items:flex-start; font-size:14px; color:var(--text); line-height:1.5; }
+  .check-item::before { content:"\2713"; color:var(--coral2); font-weight:800; flex-shrink:0; margin-top:1px; }
+
+  .alert-box { background:rgba(239,68,68,0.07); border:1px solid rgba(239,68,68,0.22); border-radius:14px; padding:20px 24px; }
+  .alert-box .alert-title { font-size:12px; font-weight:700; color:#ef4444; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  .alert-box p { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .oport-card {
+    background:linear-gradient(135deg, rgba(238,113,105,0.1), rgba(38,51,113,0.2));
+    border:1px solid rgba(238,113,105,0.3); border-radius:16px; padding:22px 26px;
+  }
+  .oport-card .titulo { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--coral2); margin-bottom:8px; }
+  .oport-card h4 { font-size:16px; font-weight:700; margin-bottom:8px; }
+  .oport-card p  { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .inv-table { width:100%; border-collapse:collapse; }
+  .inv-table th {
+    text-align:left; font-size:11px; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; color:var(--muted);
+    padding:10px 16px; border-bottom:1px solid var(--border);
+  }
+  .inv-table td { padding:15px 16px; font-size:14px; border-bottom:1px solid var(--border2); vertical-align:middle; }
+  .inv-table tr:last-child td { border-bottom:none; }
+  .service-name { font-weight:700; color:var(--text); }
+  .service-type { font-size:12px; color:var(--muted); margin-top:3px; }
+  .price {
+    font-size:20px; font-weight:900; white-space:nowrap;
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .badge-type { display:inline-block; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+  .badge-unico  { background:rgba(245,158,11,0.13); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+  .badge-mensal { background:rgba(238,113,105,0.13); color:var(--coral2); border:1px solid rgba(238,113,105,0.3); }
+
+  .reveal-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:48px 0; cursor:pointer; }
+  .reveal-btn .icon-lock {
+    width:72px; height:72px; border-radius:50%;
+    background:linear-gradient(135deg, rgba(238,113,105,0.2), rgba(38,51,113,0.4));
+    border:2px solid rgba(238,113,105,0.4);
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px; transition:all 0.3s;
+  }
+  .reveal-btn:hover .icon-lock {
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    border-color:var(--coral); transform:scale(1.08);
+  }
+  .reveal-btn p { font-size:15px; color:var(--muted); }
+  .btn-reveal {
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    color:#FFFFFF; padding:14px 36px; border-radius:12px;
+    font-size:15px; font-weight:800; border:none; cursor:pointer;
+    transition:opacity 0.2s; letter-spacing:0.3px;
+  }
+  .btn-reveal:hover { opacity:0.88; }
+
+  .inv-content { display:none; animation:fadeUp 0.5s ease forwards; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  .close-slide { text-align:center; }
+  .close-slide h2 { font-size:64px; font-weight:900; line-height:1; letter-spacing:-2px; margin-bottom:24px; }
+  .close-slide h2 span {
+    background:linear-gradient(135deg, var(--coral), var(--coral2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .close-slide p { font-size:20px; color:var(--muted); max-width:560px; margin:0 auto 40px; line-height:1.6; }
+
+  .tl { display:flex; gap:14px; }
+  .tl-col { flex:1; background:var(--navy2); border:1px solid var(--border); border-radius:14px; padding:20px 22px; }
+  .tl-col .tl-when { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--coral2); margin-bottom:12px; }
+  .tl-col h4 { font-size:15px; font-weight:700; margin-bottom:10px; }
+  .tl-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .tl-col li { font-size:12.5px; color:var(--muted); line-height:1.5; padding-left:14px; position:relative; }
+  .tl-col li::before { content:"\2022"; position:absolute; left:0; color:var(--coral); }
+
+  .note { font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:14px; }
+
+  .jornada { display:flex; gap:10px; align-items:stretch; }
+  .jor-step {
+    flex:1; background:var(--navy2); border:1px solid var(--border);
+    border-radius:14px; padding:20px 18px; position:relative;
+  }
+  .jor-step .jn {
+    font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase;
+    color:var(--coral2); margin-bottom:10px;
+  }
+  .jor-step h4 { font-size:15px; font-weight:800; margin-bottom:8px; }
+  .jor-step p { font-size:12px; color:var(--muted); line-height:1.55; }
+
+  @media (max-width: 768px) {
+    body { overflow-y:auto; height:auto; }
+    #slides { height:auto; }
+    .slide { position:relative; opacity:1 !important; transform:none !important; pointer-events:all; padding:40px 24px; min-height:100vh; }
+    .slide.exit { display:none; }
+    #dots,#btn-prev,#btn-next,#progress { display:none; }
+    #brand { position:relative; top:0; left:0; margin-bottom:20px; }
+    .cover h1 { font-size:42px; }
+    .slide-title { font-size:29px; }
+    .cards-2,.cards-3,.cards-4,.cards-5 { grid-template-columns:1fr; }
+    .two-col { grid-template-columns:1fr; }
+    .stat-row { flex-direction:column; }
+    .tl, .jornada { flex-direction:column; }
+    .close-slide h2 { font-size:38px; }
+    .inv-table thead { display:none; }
+    .inv-table td { display:block; border:none; padding:6px 0; }
+    .inv-table tr { display:block; padding:16px 0; border-bottom:1px solid var(--border2); }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="brand"><img src="logo-ng.png" alt="Grupo NG"><span>Grupo NG</span></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev">&#8592;</button>
+<button class="nav-btn" id="btn-next">&#8594;</button>
+
+<div id="slides">
+
+  <!-- 1. CAPA -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo">
+      <div class="badge">Proposta Comercial</div>
+      <h1>Agenda cheia<br>de <span>cirurgia</span></h1>
+      <p class="subtitle">O plano de 90 dias para preencher a capacidade que a senhora já tem, sem depender de clínica te chamar e sem virar produtora de conteúdo.</p>
+      <div class="cover-tags">
+        <span class="ctag">&#128205; Umuarama &middot; PR</span>
+        <span class="ctag">&#128197; 01/09/2026</span>
+        <span class="ctag">&#129701; Dra. Mariana Neves</span>
+        <span class="ctag">&#129470; Ortopedia Veterinária</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ONDE ESTÁ -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">O ponto de partida</div>
+      <div class="slide-title">O problema não é<br>capacidade, é <span>demanda</span></div>
+      <div class="divider"></div>
+      <div class="stat-row" style="margin-bottom:24px;">
+        <div class="big-stat"><div class="number">10</div><div class="label">Anos de formada</div></div>
+        <div class="big-stat"><div class="number">1 a 4</div><div class="label">Cirurgias por semana</div></div>
+        <div class="big-stat warn"><div class="number">1</div><div class="label">Consulta por mês</div></div>
+        <div class="big-stat"><div class="number">R$6k</div><div class="label">Faturamento mensal</div></div>
+        <div class="big-stat"><div class="number">+10</div><div class="label">Consultas que caberiam</div></div>
+      </div>
+      <p class="slide-desc" style="margin-bottom:0;">
+        A senhora mesma disse que aguentaria mais dez consultas por semana. Isso quer dizer que a agenda tem
+        espaço, a formação está pronta e a especialidade existe. O que falta é gente chegando até a senhora.
+        E, hoje, quem chega vem quase todo por indicação de clínica, ou seja, depende de terceiro lembrar do
+        seu nome.
+      </p>
+    </div>
+  </div>
+
+  <!-- 3. O QUE ACONTECEU ANTES -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Sobre a experiência anterior</div>
+      <div class="slide-title">Não foi marketing<br>que <span>não funcionou</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Foi o canal errado para o tamanho do investimento. E isso tem explicação técnica, não é opinião.
+      </p>
+      <div class="cards cards-3" style="margin-bottom:18px;">
+        <div class="card">
+          <div class="card-num">15</div>
+          <h3>Mensagens recebidas</h3>
+          <p>Volume até apareceu. O problema nunca foi quantidade de contato.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">2</div>
+          <h3>Consultas fechadas</h3>
+          <p>De cada dez pessoas que chamaram, mais de oito eram curiosidade, não intenção.</p>
+        </div>
+        <div class="card">
+          <div class="card-num">0</div>
+          <h3>Google rodando</h3>
+          <p>Todo o investimento foi para a Meta, que é justamente o canal errado para quem investe pouco.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">O que isso significa</div>
+        <h4>O dinheiro foi para onde a demanda ainda não existe</h4>
+        <p>
+          Na Meta, ninguém está procurando ortopedista naquele momento. O anúncio interrompe alguém que estava
+          vendo outra coisa, e por isso quem responde costuma estar curioso. Criar demanda funciona, mas custa
+          caro e leva tempo. Com R$ 200 por vez, não tem como.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. META VS GOOGLE -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">A decisão que muda tudo</div>
+      <div class="slide-title">Com verba baixa,<br>é <span>Google</span>. Ponto.</div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="card highlight">
+          <span class="card-icon">&#128269;</span>
+          <h3>Google: a demanda já existe</h3>
+          <p style="margin-bottom:10px;">
+            A pessoa digita "ortopedista veterinário perto de mim" porque o cachorro dela está mancando agora.
+            Ela já sabe o que quer, já está decidida a resolver, e está escolhendo com quem.
+          </p>
+          <p>
+            Cada real vai para alguém que levantou a mão. É por isso que funciona mesmo com R$ 500 ou R$ 600
+            por mês.
+          </p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128241;</span>
+          <h3>Meta: a demanda precisa ser criada</h3>
+          <p style="margin-bottom:10px;">
+            Funciona bem, mas para quem tem verba para insistir. Precisa de volume, de criativo novo toda semana
+            e de tempo até o público amadurecer.
+          </p>
+          <p>
+            Faz sentido quando o investimento passa de uns R$ 2.000 por mês. Antes disso, é dinheiro
+            pulverizado.
+          </p>
+        </div>
+      </div>
+      <p class="note">
+        Não é que a Meta seja ruim. É que ela é o segundo passo, e a senhora foi colocada nela como se fosse o
+        primeiro.
+      </p>
+    </div>
+  </div>
+
+  <!-- 5. JORNADA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Nossa metodologia</div>
+      <div class="slide-title">A jornada<br>do <span>tutor</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Todo paciente passa por cinco etapas antes de virar cirurgia. A agência anterior trabalhou pedaços da
+        primeira. A gente monta as cinco.
+      </p>
+      <div class="jornada">
+        <div class="jor-step">
+          <div class="jn">Etapa 1</div>
+          <h4>Descoberta</h4>
+          <p>O tutor precisa achar a senhora. Google Ads e Google Meu Negócio.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 2</div>
+          <h4>Atenção</h4>
+          <p>Site próprio e rastreamento. Sem isso o Google anuncia no escuro.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 3</div>
+          <h4>Consideração</h4>
+          <p>Ele vai pesquisar seu nome antes de confiar o animal. Precisa achar prova.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 4</div>
+          <h4>Ação</h4>
+          <p>O atendimento no WhatsApp. Onde mais se perde paciente hoje.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 5</div>
+          <h4>Apologia</h4>
+          <p>Os pacientes que já passaram pela senhora e sumiram.</p>
+        </div>
+      </div>
+      <p class="note">
+        As etapas 4 e 5 não custam mídia nenhuma. Custam processo. Para quem investe pouco, é onde o resultado
+        aparece mais rápido.
+      </p>
+    </div>
+  </div>
+
+  <!-- 6. DESCOBERTA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">01</div>
+        <h2>Descoberta: aparecer em Umuarama</h2>
+        <p>Duas frentes dentro do Google, e uma delas não custa mídia.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="oport-card" style="margin-bottom:14px;">
+            <div class="titulo">Google Meu Negócio</div>
+            <h4>O canal de graça que ninguém trabalha direito</h4>
+            <p style="margin-bottom:10px;">
+              A gente pesquisou ao vivo na reunião. Quem aparece no topo em Umuarama tem centenas de avaliações
+              acumuladas, e recebe demanda todo dia sem gastar um real com anúncio.
+            </p>
+            <p>
+              É trabalho de formiguinha: pedir avaliação depois de cada atendimento, responder todas, publicar
+              atualização toda semana e amarrar a semântica de dados. Leva tempo, mas depois roda sozinho.
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="oport-card">
+            <div class="titulo">Google Ads</div>
+            <h4>Dois grupos de anúncio, não quatro</h4>
+            <p style="margin-bottom:10px;">
+              Com verba enxuta, concentrar é obrigatório. Vamos rodar <strong style="color:var(--text);">consultas</strong>
+              (veterinário perto de mim, consulta em domicílio) e <strong style="color:var(--text);">ortopedia</strong>
+              (cirurgia ortopédica, cachorro mancando, fratura, luxação de patela).
+            </p>
+            <p>
+              Emergência e concorrentes ficam de fora agora. São grupos que consomem verba e não cabem no seu
+              orçamento atual. Entram depois, quando o investimento comportar.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="pills">
+        <span class="pill coral">Google Meu Negócio</span>
+        <span class="pill coral">Avaliações</span>
+        <span class="pill blue">Grupo: consultas</span>
+        <span class="pill blue">Grupo: ortopedia</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. ATENÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">02</div>
+        <h2>Atenção: site próprio e rastreamento</h2>
+        <p>Não existe anunciar com resultado sem site. É a primeira coisa que a gente constrói.</p>
+      </div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card">
+          <span class="card-icon">&#128187;</span>
+          <h3>Site em 5 a 6 dias</h3>
+          <p>Construído por nós, com a sua cara: quem é a Dra. Mariana, ortopedia, casos atendidos e contato direto. A velocidade depende só de quanto tempo a senhora leva para mandar fotos e responder o questionário.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128225;</span>
+          <h3>Rastreamento com Stape</h3>
+          <p>Depois do iOS 14, o navegador do visitante bloqueia boa parte do envio de informação para o Google. O Stape é um servidor que força esse envio. É o motivo técnico de a gente conseguir resultado com investimento baixo.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#127909;</span>
+          <h3>Gravação de sessão</h3>
+          <p>Com o Clarity instalado, a gente assiste ao que a pessoa fez no site: onde clicou, onde parou, onde desistiu. É assim que se descobre o que ajustar, em vez de chutar.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">Por que isso importa mais que o anúncio</div>
+        <h4>O Google otimiza com a informação que recebe</h4>
+        <p>
+          Se ele não sabe quem virou consulta, ele persegue o clique mais barato, que quase nunca é paciente.
+          Quando a informação chega certa, ele passa a procurar gente parecida com quem já fechou. Não existe
+          palavra secreta nem anúncio mágico: o que separa quem tem resultado de quem não tem é o dado que volta
+          para a plataforma.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. CONSIDERAÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">03</div>
+        <h2>Consideração: a senhora é a marca</h2>
+        <p>Quem contrata cirurgia ortopédica não contrata uma empresa, contrata um profissional. E vai pesquisar seu nome antes de decidir.</p>
+      </div>
+      <div class="two-col">
+        <div>
+          <div class="oport-card">
+            <div class="titulo">Setup de Instagram</div>
+            <h4>Três vídeos fixados, e acabou</h4>
+            <p style="margin-bottom:12px;">
+              A senhora não vai viver de criar conteúdo, e não precisa. Nada de dia do folclore, nada de post
+              diário. A gente estrutura a bio e produz três vídeos que ficam fixados no topo do perfil:
+            </p>
+            <div class="checklist">
+              <div class="check-item">Quem é a Dra. Mariana</div>
+              <div class="check-item">O que a senhora faz e em que é especialista</div>
+              <div class="check-item">Casos reais, com depoimento de tutor</div>
+            </div>
+            <p style="margin-top:12px;">
+              Roteiro e edição por nossa conta. Gravação com o celular, na sua rotina.
+            </p>
+          </div>
+        </div>
+        <div>
+          <div class="alert-box" style="border-color:rgba(238,113,105,0.25); background:rgba(238,113,105,0.05); margin-bottom:14px;">
+            <div class="alert-title" style="color:var(--coral2);">Precisamos de você</div>
+            <p>
+              Três ou quatro depoimentos de pacientes, em texto ou vídeo. Isso alimenta site, Instagram e Google
+              por uns três a quatro meses. A senhora disse que consegue sem dificuldade, e é o insumo mais
+              importante desta etapa.
+            </p>
+          </div>
+          <div class="card">
+            <span class="card-icon">&#11088;</span>
+            <h3>Controle de crise</h3>
+            <p>Já aconteceu de uma tutora reclamar publicamente por não ter sido respondida. Comentário no Instagram até dá para tratar. Avaliação no Google é bem mais difícil de tirar. Entra no processo: como responder, em quanto tempo, e como reverter.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. AÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">04</div>
+        <h2>Ação: fechar a porta dos fundos</h2>
+        <p>Imagine um galpão com duas portas. A da frente é a demanda que a gente vai gerar. A de trás é o atendimento. Se a de trás está aberta, tudo que entra atravessa e sai.</p>
+      </div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card">
+          <span class="card-icon">&#9201;</span>
+          <h3>Tempo de resposta</h3>
+          <p>Hoje é na hora se o celular está na mão, e horas se a senhora está operando. Não dá para largar o animal na mesa, então a saída é processo: resposta de primeiro contato, horário fixo de retorno e acompanhamento.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128221;</span>
+          <h3>Documento de processo</h3>
+          <p>Perguntas de qualificação, o que responder quando perguntam preço logo de cara, e as sete regras de atendimento. O documento é vivo: cada objeção nova que aparecer, a senhora anota e a gente constrói a resposta.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128202;</span>
+          <h3>CRM incluído</h3>
+          <p>Ferramenta nossa, fornecida sem custo. Qualificação, consulta agendada, consulta realizada, orçamento enviado. É o que mostra quanto dinheiro está parado esperando um retorno seu.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">Sobre preço no WhatsApp</div>
+        <h4>A regra que a gente usa</h4>
+        <p>
+          Muita gente ensina a nunca falar preço. Só que existe o tutor que só quer saber o valor e não vai
+          conversar sobre outra coisa. A regra prática é outra: preço nunca vai sozinho. Vai junto com o
+          argumento e com uma sugestão de horário para avaliar o animal.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. APOLOGIA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num">05</div>
+        <h2>Apologia: dez anos de pacientes no WhatsApp</h2>
+        <p>Essa é a frente que não custa um real de anúncio, e é a primeira que a gente executa.</p>
+      </div>
+      <p class="slide-desc" style="margin-bottom:20px;">
+        A senhora não usa sistema, então tudo que já passou pelas suas mãos está no WhatsApp. O primeiro passo é
+        transformar isso em lista: quem é o tutor, qual o animal, o que foi feito e quando foi a última vez.
+      </p>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card highlight">
+          <span class="card-icon">&#128293;</span>
+          <h3>Chance alta</h3>
+          <p>Orçamento enviado e não fechado, e vacina atrasada. Já quis, já sabe o preço, só não decidiu. É por aqui que a gente começa.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128260;</span>
+          <h3>Chance média</h3>
+          <p>Quem não aparece há três ou seis meses. Contato personalizado, perguntando pelo animal pelo nome. Não é para vender, é para lembrar.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128337;</span>
+          <h3>Chance baixa</h3>
+          <p>Mais de um ano sem contato. Converte menos, mas converte. Entra por último, quando as duas listas acima já estiverem trabalhadas.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">Por que isso vem primeiro</div>
+        <h4>É resultado sem tirar dinheiro do bolso</h4>
+        <p>
+          A senhora tem tempo ocioso na agenda e uma base de dez anos que nunca foi trabalhada. Enquanto o
+          Google aquece e o site sobe, essa frente já pode estar gerando consulta. É a parte do plano que
+          depende só de organização e constância.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. O IRMÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">O ponto que muda o jogo</div>
+      <div class="slide-title">Seu irmão sai daqui<br>sabendo <span>tocar</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        A senhora comentou que ele está estudando tráfego e ainda não tem experiência. Perfeito. Em vez de a
+        senhora trocar uma agência por outra para sempre, a gente ensina ele durante a construção.
+      </p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Ele acompanha a montagem, não recebe um manual</h4>
+            <p>Cerca de dois encontros dedicados, fazendo junto com a gente enquanto as campanhas são criadas. Ver sendo feito ensina muito mais rápido que estudar sozinho no YouTube.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Google é mais chato que Meta, e é justamente por isso que vale</h4>
+            <p>A Meta é intuitiva, qualquer um monta uma campanha em dez minutos. O Google tem curva de aprendizado maior, e é por isso que quase ninguém faz direito. Aprendendo com estrutura pronta, ele pula a parte cara do aprendizado.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Depois dos 90 dias, a decisão é sua</h4>
+            <p>Se ele assumir e der conta, ótimo, a senhora não paga mensalidade nenhuma. Se preferir que a gente continue cuidando, a gente conversa sobre assessoria no fim do período, com os números dos 90 dias na mesa. A senhora escolhe sabendo, não no escuro.</p>
+          </div>
+        </div>
+      </div>
+      <p class="note">
+        Se a senhora quiser participar dos treinamentos junto com ele, sem problema nenhum. Quanto mais entender
+        o que está acontecendo, menos refém fica de qualquer fornecedor, inclusive da gente.
+      </p>
+    </div>
+  </div>
+
+  <!-- 12. CRONOGRAMA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Como roda</div>
+      <div class="slide-title">Campanha no ar<br>em <span>10 dias</span></div>
+      <div class="divider"></div>
+      <div class="tl">
+        <div class="tl-col">
+          <div class="tl-when">Dias 1 a 10 &middot; Go live</div>
+          <h4>Colocar de pé</h4>
+          <ul>
+            <li>Reunião de integração: preço, especialidades, raio de atendimento</li>
+            <li>Site construído e publicado</li>
+            <li>Rastreamento e Stape instalados</li>
+            <li>Google Meu Negócio estruturado</li>
+            <li>Campanhas de consultas e ortopedia rodando</li>
+          </ul>
+        </div>
+        <div class="tl-col">
+          <div class="tl-when">Mês 2 &middot; Estrutura</div>
+          <h4>Fechar as brechas</h4>
+          <ul>
+            <li>Treinamento comercial e documento de processo</li>
+            <li>CRM configurado e em uso</li>
+            <li>Setup do Instagram com os três vídeos no ar</li>
+            <li>Lista de pacientes montada e primeira ação de recuperação</li>
+            <li>Primeiros encontros de treinamento com seu irmão</li>
+          </ul>
+        </div>
+        <div class="tl-col">
+          <div class="tl-when">Mês 3 &middot; Autonomia</div>
+          <h4>Passar o volante</h4>
+          <ul>
+            <li>Otimização das campanhas com os dados já acumulados</li>
+            <li>Métricas fechadas: custo por consulta e ciclo de venda</li>
+            <li>Treinamento final de operação do Google</li>
+            <li>Recomendação de quanto investir para chegar na próxima meta</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">
+        A contagem começa na reunião de integração, não na assinatura. Quanto mais rápido a senhora mandar
+        fotos, informações e depoimentos, mais rápido tudo entra no ar.
+      </p>
+    </div>
+  </div>
+
+  <!-- 13. GARANTIA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Sendo direto</div>
+      <div class="slide-title">O que eu garanto<br>e o que <span>não garanto</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        A senhora contratou antes, não teve retorno, e está com receio de repetir. Justo. Então vale deixar por
+        escrito onde começa e onde termina a minha responsabilidade.
+      </p>
+      <div class="two-col">
+        <div class="card highlight">
+          <span class="card-icon">&#9989;</span>
+          <h3>Garanto a execução</h3>
+          <div class="checklist" style="margin-top:12px;">
+            <div class="check-item">Site construído e no ar</div>
+            <div class="check-item">Campanhas rodando em até 10 dias da reunião de integração</div>
+            <div class="check-item">Rastreamento instalado e funcionando</div>
+            <div class="check-item">Google Meu Negócio estruturado</div>
+            <div class="check-item">Setup de Instagram entregue</div>
+            <div class="check-item">Treinamento comercial e documento de processo</div>
+            <div class="check-item">Treinamento de Google para seu irmão</div>
+            <div class="check-item">Todas as métricas apresentadas, sem maquiagem</div>
+          </div>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#10060;</span>
+          <h3>Não garanto faturamento</h3>
+          <p style="margin-bottom:10px;">
+            Quem promete número fechado está mentindo ou não entende do assunto. O resultado depende de coisas
+            que não estão só na minha mão: o seu tempo de resposta, o seu preço, a sua agenda e o quanto a
+            senhora vai seguir o processo.
+          </p>
+          <p>
+            O que dá para dizer com honestidade é que a Cães e Cia cresceu 40% no primeiro mês e hoje está no
+            recorde histórico dela. Não é regra, é referência do que acontece quando as cinco etapas rodam
+            juntas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14. INVESTIMENTO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Investimento</div>
+      <div class="slide-title">Quanto <span>custa</span></div>
+      <div class="divider"></div>
+
+      <div id="reveal-area">
+        <div class="reveal-btn" onclick="revelarInvestimento()">
+          <div class="icon-lock">&#128274;</div>
+          <p>Clique para ver os valores</p>
+          <button class="btn-reveal">Revelar investimento</button>
+        </div>
+      </div>
+
+      <div class="inv-content" id="inv-content">
+        <div class="two-col" style="gap:16px; margin-bottom:18px;">
+          <div class="card highlight">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--coral2); margin-bottom:10px;">Implementação &middot; 90 dias</div>
+            <h3 style="font-size:19px; margin-bottom:10px;">Tudo que está nesta proposta</h3>
+            <p style="margin-bottom:14px;">
+              Site, rastreamento, Google Meu Negócio, campanhas, setup de Instagram, treinamento comercial,
+              documento de processo, CRM, estratégia de base e treinamento do seu irmão.
+            </p>
+            <div style="font-size:32px; font-weight:900; background:linear-gradient(135deg,var(--coral),var(--coral2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+              R$ 4.500
+            </div>
+            <p style="margin-top:8px; font-size:14px; color:var(--text);">
+              À vista, ou <strong>12x de R$ 435</strong> no cartão.
+            </p>
+            <p style="margin-top:6px; font-size:12.5px; color:var(--muted);">
+              Valor único. Não é mensalidade, não renova, não tem fidelidade depois dos 90 dias.
+            </p>
+          </div>
+          <div class="card">
+            <div style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--muted); margin-bottom:10px;">À parte</div>
+            <h3 style="font-size:19px; margin-bottom:10px;">Verba de anúncio</h3>
+            <p style="margin-bottom:14px;">
+              Paga por você diretamente ao Google, sem passar pela gente e sem comissão nossa. Com esse patamar
+              a Cães e Cia saiu de R$ 40 mil para R$ 82 mil de faturamento.
+            </p>
+            <div style="font-size:32px; font-weight:900; color:var(--text);">
+              R$ 500 a 600<span style="font-size:15px; font-weight:600;">/mês</span>
+            </div>
+            <p style="margin-top:8px; font-size:12.5px; color:var(--muted);">
+              Quanto subir depois disso vira decisão de conta, não de fé, porque a senhora vai ter o custo por
+              consulta na mão.
+            </p>
+          </div>
+        </div>
+
+        <div class="oport-card">
+          <div class="titulo">Uma conta que vale fazer</div>
+          <h4>A senhora já investiu exatamente esse valor</h4>
+          <p>
+            Nos últimos três meses foram R$ 1.500 por mês de mensalidade, R$ 4.500 no total, e o retorno foram
+            duas consultas. A diferença é que aquilo era mensalidade e continuaria correndo todo mês, enquanto
+            isto aqui acaba em 90 dias e o que for construído fica com a senhora: o site é seu, a conta é sua,
+            o processo é seu e o treinamento é do seu irmão.
+          </p>
+        </div>
+
+        <p class="note">
+          Proposta válida por 15 dias.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15. FECHAMENTO -->
+  <div class="slide">
+    <div class="slide-inner close-slide">
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo" style="margin:0 auto 26px;">
+      <h2>A demanda existe<br>em <span>Umuarama</span></h2>
+      <p>
+        Ela só não está na Meta, e não está esperando clínica te indicar. Está no Google, sendo pesquisada
+        todo dia por gente com o animal machucado agora.
+      </p>
+      <div class="cover-tags" style="justify-content:center;">
+        <span class="ctag">&#128231; Proposta válida por 15 dias</span>
+        <span class="ctag">&#9989; Campanhas no ar em 10 dias após a integração</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const progress = document.getElementById('progress');
+  const total = slides.length;
+  let cur = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' active':'');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    if (n < 0 || n >= total) return;
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('exit');
+    slides[cur].addEventListener('transitionend', () => slides[cur].classList.remove('exit'), {once:true});
+    cur = n;
+    slides[cur].classList.add('active');
+    slides[cur].classList.remove('exit');
+    document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active', i===cur));
+    progress.style.width = ((cur+1)/total*100) + '%';
+  }
+
+  function revelarInvestimento() {
+    document.getElementById('reveal-area').style.display = 'none';
+    document.getElementById('inv-content').style.display = 'block';
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => goTo(cur+1));
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(cur-1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight'||e.key==='ArrowDown') goTo(cur+1);
+    if (e.key==='ArrowLeft' ||e.key==='ArrowUp')   goTo(cur-1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+  document.addEventListener('touchend',   e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50) goTo(dx > 0 ? cur+1 : cur-1);
+  });
+
+  goTo(0);
+</script>
+</body>
+</html>
