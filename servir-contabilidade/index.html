@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Proposta Servir Contabilidade · Grupo NG</title>
+<meta property="og:title" content="Proposta Servir Contabilidade · Grupo NG">
+<meta property="og:description" content="O plano para ligar a captação da Servir no ramo alimentício de BH.">
+<meta property="og:image" content="https://grupo-ng-propostas.vercel.app/servir-contabilidade/logo-ng.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --gold:    #E8A317;
+    --gold2:   #F6CB62;
+    --blue:    #123498;
+    --blue2:   #6E8BEA;
+    --navy:    #040A2A;
+    --navy2:   #0A1547;
+    --navy3:   #101E5C;
+    --border:  #1F3079;
+    --border2: rgba(31,48,121,0.55);
+    --text:    #EEF1FA;
+    --muted:   #9AA5CF;
+    --wpp:     #25D366;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--navy);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  strong { color: var(--text); font-weight:700; }
+
+  #progress {
+    position: fixed; top:0; left:0; height:3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    transition: width 0.4s ease; z-index:100;
+  }
+
+  #brand {
+    position:fixed; top:26px; left:32px; z-index:100;
+    display:flex; align-items:center; gap:10px;
+    opacity:0.55; transition:opacity 0.3s;
+  }
+  #brand:hover { opacity:1; }
+  #brand img { width:26px; height:26px; object-fit:contain; }
+  #brand span {
+    font-size:10px; font-weight:800; letter-spacing:2.5px;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .cover-logo { width:64px; height:64px; object-fit:contain; margin-bottom:26px; display:block; }
+
+  .nav-btn {
+    position: fixed; bottom:20px;
+    background: var(--navy3); border:1px solid var(--border);
+    color: var(--text); width:44px; height:44px;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:18px; transition:all 0.2s; z-index:100;
+  }
+  .nav-btn:hover { background:var(--gold); border-color:var(--gold); color:var(--navy); }
+  #btn-prev { right:76px; }
+  #btn-next { right:24px; }
+
+  #dots {
+    position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+    display:flex; gap:6px; z-index:100;
+  }
+  .dot { width:6px; height:6px; border-radius:50%; background:var(--border); transition:all 0.3s; cursor:pointer; }
+  .dot.active { background:var(--gold); width:20px; border-radius:3px; }
+
+  #slides { width:100%; height:100vh; position:relative; }
+  .slide {
+    position:absolute; width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; transform:translateX(60px);
+    transition:all 0.5s cubic-bezier(0.4,0,0.2,1);
+    pointer-events:none; padding:60px 80px;
+  }
+  .slide.active { opacity:1; transform:translateX(0); pointer-events:all; }
+  .slide.exit   { opacity:0; transform:translateX(-60px); }
+  .slide-inner  { max-width:1100px; width:100%; }
+
+  .cover { background: radial-gradient(ellipse at 25% 50%, #0E1D66 0%, var(--navy) 65%); }
+  .cover::before {
+    content:''; position:absolute; top:-180px; right:-180px;
+    width:560px; height:560px;
+    background:radial-gradient(circle, rgba(232,163,23,0.13) 0%, transparent 70%);
+    border-radius:50%;
+  }
+  .cover::after {
+    content:''; position:absolute; bottom:-100px; left:-100px;
+    width:360px; height:360px;
+    background:radial-gradient(circle, rgba(18,52,152,0.35) 0%, transparent 70%);
+    border-radius:50%;
+  }
+  .cover .slide-inner, .close-bg .slide-inner { position:relative; z-index:1; }
+
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(232,163,23,0.13); border:1px solid rgba(232,163,23,0.4);
+    color:var(--gold2); padding:6px 16px; border-radius:100px;
+    font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:32px;
+  }
+  .cover h1 { font-size:80px; font-weight:900; line-height:0.95; letter-spacing:-3px; margin-bottom:24px; }
+  .grad {
+    background:linear-gradient(135deg, var(--gold), var(--gold2));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .cover .subtitle { font-size:19px; color:var(--muted); font-weight:400; max-width:580px; line-height:1.6; margin-bottom:48px; }
+  .cover-tags { display:flex; gap:12px; flex-wrap:wrap; }
+  .ctag {
+    background:var(--navy3); border:1px solid var(--border);
+    padding:8px 16px; border-radius:8px; font-size:13px; color:var(--muted); font-weight:500;
+  }
+
+  .section-label { font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:var(--gold2); margin-bottom:16px; }
+  .slide-title { font-size:46px; font-weight:800; line-height:1.1; letter-spacing:-1.5px; margin-bottom:16px; }
+  .slide-desc { font-size:17px; color:var(--muted); line-height:1.7; margin-bottom:28px; max-width:800px; }
+  .divider { width:48px; height:4px; background:linear-gradient(90deg, var(--gold), var(--gold2)); border-radius:2px; margin:18px 0; }
+
+  .cards { display:grid; gap:16px; }
+  .cards-2 { grid-template-columns:repeat(2,1fr); }
+  .cards-3 { grid-template-columns:repeat(3,1fr); }
+  .card { background:var(--navy2); border:1px solid var(--border); border-radius:16px; padding:22px 24px; transition:border-color 0.2s; }
+  .card:hover { border-color:rgba(232,163,23,0.45); }
+  .card.highlight {
+    background:linear-gradient(135deg, rgba(232,163,23,0.11), rgba(18,52,152,0.18));
+    border-color:rgba(232,163,23,0.35);
+  }
+  .card-icon { font-size:28px; margin-bottom:12px; display:block; }
+  .card h3 { font-size:15px; font-weight:700; margin-bottom:8px; }
+  .card p { font-size:13px; color:var(--muted); line-height:1.6; }
+  .card .card-num { font-size:48px; font-weight:900; line-height:1; margin-bottom:10px; }
+
+  .list { display:flex; flex-direction:column; gap:12px; }
+  .list-item {
+    display:flex; align-items:flex-start; gap:16px;
+    background:var(--navy2); border:1px solid var(--border);
+    border-radius:12px; padding:16px 20px; transition:border-color 0.2s;
+  }
+  .list-item:hover { border-color:rgba(232,163,23,0.3); }
+  .li-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; margin-top:2px; background:rgba(232,163,23,0.13); }
+  .list-item h4 { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .list-item p  { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+
+  .pills { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+  .pill { padding:5px 13px; border-radius:100px; font-size:12px; font-weight:600; }
+  .pill.gold { background:rgba(232,163,23,0.12); color:var(--gold2); border:1px solid rgba(232,163,23,0.35); }
+  .pill.blue { background:rgba(110,139,234,0.13); color:var(--blue2); border:1px solid rgba(110,139,234,0.32); }
+
+  .stat-row { display:flex; gap:14px; }
+  .big-stat { flex:1; text-align:center; padding:22px 14px; background:var(--navy2); border:1px solid var(--border); border-radius:16px; }
+  .big-stat .number { font-size:40px; font-weight:900; line-height:1; }
+  .big-stat .label { font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.4; }
+
+  .funnel { display:flex; align-items:stretch; gap:10px; }
+  .f-step { flex:1; text-align:center; padding:22px 12px; background:var(--navy2); border:1px solid var(--border); border-radius:16px; display:flex; flex-direction:column; justify-content:center; }
+  .f-step.end { background:linear-gradient(135deg, rgba(232,163,23,0.14), rgba(18,52,152,0.2)); border-color:rgba(232,163,23,0.4); }
+  .f-step .number { font-size:38px; font-weight:900; line-height:1; }
+  .f-step .label { font-size:12.5px; color:var(--muted); margin-top:8px; line-height:1.4; }
+  .f-arrow { display:flex; align-items:center; color:var(--gold); font-size:20px; font-weight:800; }
+
+  .pilar-hero {
+    background:linear-gradient(135deg, rgba(232,163,23,0.11), rgba(18,52,152,0.3));
+    border:1px solid rgba(232,163,23,0.3); border-radius:20px;
+    padding:24px 30px; margin-bottom:20px;
+  }
+  .pilar-hero .num { font-size:54px; font-weight:900; line-height:1; margin-bottom:4px; }
+  .pilar-hero h2 { font-size:26px; font-weight:800; letter-spacing:-0.5px; margin-bottom:8px; }
+  .pilar-hero p  { font-size:15px; color:var(--muted); line-height:1.6; max-width:780px; }
+
+  .checklist { display:flex; flex-direction:column; gap:9px; }
+  .check-item { display:flex; gap:12px; align-items:flex-start; font-size:14px; color:var(--text); line-height:1.5; }
+  .check-item::before { content:"\2713"; color:var(--gold2); font-weight:800; flex-shrink:0; margin-top:1px; }
+
+  .ask-box { background:rgba(232,163,23,0.06); border:1px solid rgba(232,163,23,0.28); border-radius:14px; padding:18px 22px; }
+  .ask-box .ask-title { font-size:12px; font-weight:700; color:var(--gold2); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  .ask-box p { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .oport-card {
+    background:linear-gradient(135deg, rgba(232,163,23,0.09), rgba(18,52,152,0.22));
+    border:1px solid rgba(232,163,23,0.3); border-radius:16px; padding:20px 24px;
+  }
+  .oport-card .titulo { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:var(--gold2); margin-bottom:8px; }
+  .oport-card h4 { font-size:16px; font-weight:700; margin-bottom:8px; }
+  .oport-card p  { font-size:13px; color:var(--muted); line-height:1.6; }
+
+  .reveal-btn { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:48px 0; cursor:pointer; }
+  .reveal-btn .icon-lock {
+    width:72px; height:72px; border-radius:50%;
+    background:linear-gradient(135deg, rgba(232,163,23,0.2), rgba(18,52,152,0.4));
+    border:2px solid rgba(232,163,23,0.4);
+    display:flex; align-items:center; justify-content:center;
+    font-size:30px; transition:all 0.3s;
+  }
+  .reveal-btn:hover .icon-lock {
+    background:linear-gradient(135deg, var(--gold), var(--gold2));
+    border-color:var(--gold); transform:scale(1.08);
+  }
+  .reveal-btn p { font-size:15px; color:var(--muted); }
+  .btn-reveal {
+    background:linear-gradient(135deg, var(--gold), var(--gold2));
+    color:var(--navy); padding:14px 36px; border-radius:12px;
+    font-size:15px; font-weight:800; border:none; cursor:pointer;
+    transition:opacity 0.2s; letter-spacing:0.3px; font-family:inherit;
+  }
+  .btn-reveal:hover { opacity:0.88; }
+
+  .inv-content { display:none; animation:fadeUp 0.5s ease forwards; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+  .inv-kicker { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:2px; margin-bottom:10px; }
+  .inv-price { font-size:38px; font-weight:900; line-height:1.05; }
+  .inv-price small { font-size:16px; font-weight:600; }
+  .old-price { font-size:15px; color:var(--muted); text-decoration:line-through; margin-right:8px; font-weight:600; }
+  .off-tag { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:800; background:rgba(37,211,102,0.13); color:#4ADE80; border:1px solid rgba(37,211,102,0.3); vertical-align:middle; }
+
+  .close-slide { text-align:center; }
+  .close-slide h2 { font-size:62px; font-weight:900; line-height:1.02; letter-spacing:-2px; margin-bottom:24px; }
+  .close-slide p { font-size:19px; color:var(--muted); max-width:600px; margin:0 auto 40px; line-height:1.6; }
+  .close-bg { background: radial-gradient(ellipse at 50% 40%, #0E1D66 0%, var(--navy) 65%); }
+
+  .tl { display:flex; gap:14px; }
+  .tl-col { flex:1; background:var(--navy2); border:1px solid var(--border); border-radius:14px; padding:20px 22px; }
+  .tl-col .tl-when { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--gold2); margin-bottom:12px; }
+  .tl-col h4 { font-size:15px; font-weight:700; margin-bottom:10px; }
+  .tl-col ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .tl-col li { font-size:12.5px; color:var(--muted); line-height:1.5; padding-left:14px; position:relative; }
+  .tl-col li::before { content:"\2022"; position:absolute; left:0; color:var(--gold); }
+
+  .note { font-size:12.5px; color:var(--muted); line-height:1.6; margin-top:14px; }
+
+  .jornada { display:flex; gap:10px; align-items:stretch; }
+  .jor-step { flex:1; background:var(--navy2); border:1px solid var(--border); border-radius:14px; padding:20px 18px; }
+  .jor-step.hot { border-color:rgba(232,163,23,0.4); }
+  .jor-step .jn { font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--gold2); margin-bottom:10px; }
+  .jor-step h4 { font-size:15px; font-weight:800; margin-bottom:8px; }
+  .jor-step p { font-size:12px; color:var(--muted); line-height:1.55; }
+
+  .split-bar { display:flex; height:12px; border-radius:6px; overflow:hidden; margin:14px 0 8px; }
+  .split-bar div:first-child { flex:3; background:var(--blue2); }
+  .split-bar div:last-child  { flex:7; background:linear-gradient(90deg, var(--gold), var(--gold2)); }
+  .split-legend { display:flex; justify-content:space-between; font-size:12px; color:var(--muted); }
+
+  @media (max-width: 768px) {
+    html, body { overflow-x:hidden; }
+    body { overflow-y:auto; height:auto; width:100%; }
+    #slides { height:auto; }
+    .slide { position:relative; overflow:hidden; opacity:1 !important; transform:none !important; pointer-events:all !important; padding:44px 20px; min-height:100svh; height:auto; display:flex !important; }
+    #dots,#btn-prev,#btn-next,#progress { display:none; }
+    #brand { display:none; }
+    .cover h1 { font-size:46px; letter-spacing:-1.5px; }
+    .cover .subtitle { font-size:15px; margin-bottom:32px; }
+    .ctag { font-size:12px; padding:6px 12px; }
+    .slide-title { font-size:30px; letter-spacing:-0.5px; }
+    .slide-desc { font-size:15px; }
+    .cards-2,.cards-3 { grid-template-columns:1fr; }
+    .two-col { grid-template-columns:1fr; gap:16px; }
+    .stat-row { flex-wrap:wrap; }
+    .stat-row .big-stat { flex:1 1 40%; }
+    .big-stat .number { font-size:34px; }
+    .funnel { flex-direction:column; }
+    .f-arrow { justify-content:center; transform:rotate(90deg); }
+    .tl, .jornada { flex-direction:column; }
+    .pilar-hero { padding:20px; }
+    .pilar-hero .num { font-size:44px; }
+    .pilar-hero h2 { font-size:21px; }
+    .pilar-hero p { font-size:14px; }
+    .card { padding:18px 20px; }
+    .close-slide h2 { font-size:38px; }
+    .close-slide p { font-size:16px; }
+    .inv-price { font-size:32px; }
+  }
+  @media (max-width: 400px) {
+    .cover h1 { font-size:38px; }
+    .slide-title { font-size:26px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<div id="brand"><img src="logo-ng.png" alt="Grupo NG"><span>Grupo NG</span></div>
+<div id="dots"></div>
+<button class="nav-btn" id="btn-prev" aria-label="Anterior">&#8592;</button>
+<button class="nav-btn" id="btn-next" aria-label="Próximo">&#8594;</button>
+
+<div id="slides">
+
+  <!-- 1. CAPA -->
+  <div class="slide cover active">
+    <div class="slide-inner">
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo">
+      <div class="badge">Proposta Comercial</div>
+      <h1>De 25 para<br><span class="grad">40 clientes</span></h1>
+      <p class="subtitle">O plano para ligar a captação da Servir no ramo alimentício de BH e ocupar a capacidade que o escritório já tem, sem precisar contratar ninguém.</p>
+      <div class="cover-tags">
+        <span class="ctag">&#128205; Belo Horizonte &middot; MG</span>
+        <span class="ctag">&#128197; 25/11/2026</span>
+        <span class="ctag">&#128100; Dr. Hilder &middot; Servir Contabilidade</span>
+        <span class="ctag">&#127869;&#65039; Restaurantes e lanchonetes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. PONTO DE PARTIDA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">O ponto de partida</div>
+      <div class="slide-title">Onde a Servir<br><span class="grad">está hoje</span></div>
+      <div class="divider"></div>
+      <div class="stat-row" style="margin-bottom:22px;">
+        <div class="big-stat"><div class="number grad">5</div><div class="label">Anos de escritório</div></div>
+        <div class="big-stat"><div class="number grad">25</div><div class="label">Clientes na base</div></div>
+        <div class="big-stat"><div class="number grad">R$500</div><div class="label">Ticket médio</div></div>
+        <div class="big-stat"><div class="number grad">102</div><div class="label">Avaliações nota 5 no Google</div></div>
+        <div class="big-stat"><div class="number grad">40</div><div class="label">Clientes que cabem sem contratar</div></div>
+      </div>
+      <p class="slide-desc" style="margin-bottom:20px;">
+        Olhando de fora, a Servir já tem o que muita contabilidade de BH não tem: site bem feito, avaliação alta
+        no Google, postagem frequente no Google Meu Negócio e um nicho definido. O cliente novo chega pelo site e
+        por indicação, no ritmo do orgânico, que é de médio e longo prazo.
+      </p>
+      <div class="oport-card">
+        <div class="titulo">A conta que você mesmo fez</div>
+        <h4>15 contratos a mais são R$ 7.500 por mês</h4>
+        <p>
+          Você disse que o escritório aguenta chegar em 40 clientes com a estrutura de hoje, os mesmos parceiros
+          no pessoal e no fiscal. São 15 clientes de R$ 500, ou R$ 7.500 a mais todo mês. Em um ano, R$ 90 mil de
+          receita recorrente sem aumentar a equipe. É esse o número que esta proposta persegue.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. O ANÚNCIO ANTERIOR -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Sobre o anúncio que você rodou</div>
+      <div class="slide-title">Por que veio<br><span class="grad">tanto curioso</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Foram por volta de R$ 1.500 na Meta, em campanha para o WhatsApp. Chegou MEI, gente querendo abertura
+        gratuita e contato que nem empresa tinha. Pausar foi a decisão certa, e o que aconteceu tem explicação técnica.
+      </p>
+      <div class="cards cards-3">
+        <div class="card">
+          <span class="card-icon">&#128172;</span>
+          <h3>Mensagem é o clique mais fácil</h3>
+          <p>Na campanha de WhatsApp a pessoa toca no botão sem dizer regime, faturamento ou segmento. A Meta entrega o anúncio para quem clica mais, e quem clica mais costuma ser quem está só perguntando.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#127919;</span>
+          <h3>Nenhum filtro na entrada</h3>
+          <p>Sem pergunta de qualificação, o MEI e o dono de restaurante que fatura R$ 80 mil chegam do mesmo jeito. Quem acaba filtrando é você, no WhatsApp, gastando o seu tempo.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128225;</span>
+          <h3>Rastreamento pela metade</h3>
+          <p>No teste que fizemos, o site registra os cliques no botão do WhatsApp, mas o formulário não avisa o Google Ads. Sem esse retorno, a plataforma não aprende quem vale a pena.</p>
+        </div>
+      </div>
+      <p class="note">
+        Com o mesmo dinheiro, mudando para onde o anúncio leva e o que ele fala, o perfil de quem chega muda bastante.
+        É o que mostramos nas próximas páginas.
+      </p>
+    </div>
+  </div>
+
+  <!-- 4. JORNADA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Nossa metodologia</div>
+      <div class="slide-title">Cinco etapas até<br>o <span class="grad">contrato assinado</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Todo dono de restaurante passa por elas antes de trocar de contador. O anúncio cobre só a primeira e a segunda.
+      </p>
+      <div class="jornada">
+        <div class="jor-step">
+          <div class="jn">Etapa 1</div>
+          <h4>Descoberta</h4>
+          <p>Onde ele encontra a Servir: Meta e Google.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 2</div>
+          <h4>Atenção</h4>
+          <p>O que faz ele parar no anúncio e deixar o contato.</p>
+        </div>
+        <div class="jor-step">
+          <div class="jn">Etapa 3</div>
+          <h4>Consideração</h4>
+          <p>O que ele encontra quando pesquisa o seu nome. Já é o ponto forte de vocês.</p>
+        </div>
+        <div class="jor-step hot">
+          <div class="jn">Etapa 4</div>
+          <h4>Ação</h4>
+          <p>O atendimento, a reunião e o follow-up. É aqui que a venda acontece.</p>
+        </div>
+        <div class="jor-step hot">
+          <div class="jn">Etapa 5</div>
+          <h4>Apologia</h4>
+          <p>Os clientes de hoje e os contatos de cinco anos de escritório.</p>
+        </div>
+      </div>
+      <div style="max-width:620px; margin-top:22px;">
+        <div class="split-bar"><div></div><div></div></div>
+        <div class="split-legend"><span>Marketing &middot; 30%</span><span>Comercial &middot; 70%</span></div>
+      </div>
+      <p class="note">
+        Em contabilidade, o marketing responde por uns 30% do resultado. Os outros 70% estão no comercial: atendimento,
+        follow-up e a reunião de apresentação. Por isso a proposta cobre as cinco etapas.
+      </p>
+    </div>
+  </div>
+
+  <!-- 5. DESCOBERTA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num grad">01</div>
+        <h2>Descoberta: Meta e Google, cada um com seu papel</h2>
+        <p>No primeiro mês, R$ 500 em cada plataforma. Com os números na mão, a verba vai para onde o cliente estiver chegando mais barato e mais qualificado.</p>
+      </div>
+      <div class="two-col">
+        <div class="oport-card">
+          <div class="titulo">Meta &middot; Instagram e Facebook</div>
+          <h4>Formulário no lugar do WhatsApp</h4>
+          <p style="margin-bottom:10px;">
+            O anúncio leva para o formulário da própria Meta, que sai mais barato do que mandar para o site. Antes
+            de chegar até você, a pessoa informa o nome da empresa, o regime tributário e a faixa de faturamento.
+          </p>
+          <p>
+            Quem marcar MEI ainda pode ser atendido, mas a Meta recebe o aviso de que aquele contato está fora do
+            perfil. Com o tempo, ela passa a procurar gente parecida com quem é Simples Nacional.
+          </p>
+        </div>
+        <div class="oport-card">
+          <div class="titulo">Google Ads</div>
+          <h4>Quem já está procurando contador</h4>
+          <p style="margin-bottom:10px;">
+            Palavras amplas, como <strong>escritório de contabilidade</strong> e <strong>contabilidade em BH</strong>,
+            junto com as do nicho, como <strong>contabilidade para restaurante</strong>. Entra também
+            <strong>desenquadramento de MEI</strong>: quem estourou o limite paga a alteração do contrato social e
+            tende a virar cliente mensal.
+          </p>
+          <p>
+            Buscas como abrir MEI e abrir CNPJ grátis ficam de fora, como palavra negativa. O Google traz menos volume
+            que a Meta, e o contato chega mais decidido.
+          </p>
+        </div>
+      </div>
+      <div class="pills">
+        <span class="pill gold">Formulário nativo</span>
+        <span class="pill gold">Perguntas de qualificação</span>
+        <span class="pill blue">Palavras do nicho</span>
+        <span class="pill blue">Palavras negativas</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ATENÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num grad">02</div>
+        <h2>Atenção: anúncio com cara de conteúdo</h2>
+        <p>Anúncio do tipo "troque de contabilidade em dezembro" já não para ninguém no feed. O que funciona hoje é tratar de um problema que o dono de restaurante tem e só depois apresentar a Servir.</p>
+      </div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card">
+          <span class="card-icon">&#127916;</span>
+          <h3>Roteiro, gravação e edição</h3>
+          <p>Escrevemos os roteiros, mandamos referência de formato, como tela dividida e react, orientamos a gravação e editamos tudo. Você grava no celular.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#127828;</span>
+          <h3>Assunto do ramo alimentício</h3>
+          <p>O que muda para restaurante com a CBS e o IBS, o imposto de bebida monofásica que muito restaurante acaba pagando de novo, a hora certa de sair do MEI. Assunto que o dono reconhece e para para ver.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128196;</span>
+          <h3>Página só para restaurante</h3>
+          <p>Uma landing page com a identidade da Servir falando só com o ramo alimentício: título específico, formulário logo no topo, o diferencial do escritório, a sua apresentação e depoimentos. O site atual continua no ar.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">No site que já existe</div>
+        <h4>Ajustes pequenos que mexem na conversão</h4>
+        <p>
+          O botão do WhatsApp vai para o verde, porque hoje ele some no azul da página. O formulário passa a enviar a
+          conversão para o Google Ads. E instalamos o Microsoft Clarity, que grava a navegação de quem entra e mostra
+          onde cada visitante desiste. Assim os ajustes seguem o que aconteceu de verdade.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. CONSIDERAÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num grad">03</div>
+        <h2>Consideração: o ponto forte da Servir</h2>
+        <p>Quem vê o anúncio pesquisa o nome do escritório antes de responder. Hoje ele já encontra 102 avaliações e um site bem feito. Vamos completar o que falta.</p>
+      </div>
+      <div class="two-col">
+        <div class="oport-card">
+          <div class="titulo">Setup do Instagram</div>
+          <h4>Bio arrumada e três vídeos fixados</h4>
+          <p style="margin-bottom:12px;">
+            Quem chegar no perfil, pelo anúncio ou por indicação, vê primeiro:
+          </p>
+          <div class="checklist">
+            <div class="check-item">Quem é a Servir e quem é o Dr. Hilder</div>
+            <div class="check-item">O que o escritório faz e para quem</div>
+            <div class="check-item">Depoimento de cliente</div>
+          </div>
+          <p style="margin-top:12px;">
+            Esses vídeos ficam no topo do perfil por uns seis meses, então merecem capricho. Gravação no celular,
+            roteiro e edição por nossa conta.
+          </p>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:14px;">
+            <span class="card-icon">&#11088;</span>
+            <h3>Depoimento em vídeo no site</h3>
+            <p>Hoje a prova social está nas avaliações do Google. Levar clientes falando em vídeo para o site e para a página do ramo alimentício pesa muito na hora da reunião.</p>
+          </div>
+          <div class="ask-box">
+            <div class="ask-title">Precisamos de você</div>
+            <p>
+              Indicar dois ou três clientes, de preferência restaurantes, que topem gravar um depoimento curto. Esse
+              material alimenta site, Instagram e anúncio ao mesmo tempo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. AÇÃO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num grad">04</div>
+        <h2>Ação: onde a venda acontece</h2>
+        <p>Gerar contato é metade do trabalho. A outra metade é atender rápido, insistir do jeito certo e não deixar orçamento esfriar.</p>
+      </div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card">
+          <span class="card-icon">&#128100;</span>
+          <h3>Pessoa</h3>
+          <p>Hoje quem atende é você, e isso é vantagem: o dono do escritório converte mais que qualquer funcionário. Quando chegar a hora de contratar um pré-vendedor, o processo já vai estar escrito.</p>
+        </div>
+        <div class="card highlight">
+          <span class="card-icon">&#128197;</span>
+          <h3>Processo</h3>
+          <p>Cadência para quem não respondeu, porque quem preencheu o formulário às oito da noite está no mercado ou no preparo do almoço às nove da manhã. E follow-up dos orçamentos em aberto, retomando a conversa com assunto novo em vez de cobrar resposta.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128202;</span>
+          <h3>Ferramenta</h3>
+          <p>CRM incluso no projeto. Cada contato entra no funil e você enxerga quanto dinheiro está em negociação e em que etapa ele parou.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">Treinamento comercial</div>
+        <h4>Dois encontros por mês com você</h4>
+        <p>
+          Começa com uma reunião de integração para entendermos o seu comercial do jeito que você entende. O calendário
+          segue a sua dificuldade: se o que trava é a objeção de preço, começamos por ela. Tudo fica documentado.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. MATEMÁTICA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Vendas é matemática</div>
+      <div class="slide-title">O caminho até<br><span class="grad">15 contratos</span></div>
+      <div class="divider"></div>
+      <p class="slide-desc">
+        Hoje, de cada 10 pessoas que chegam até você, 2 ou 3 fecham contrato recorrente. É uma taxa dentro da média do
+        mercado. Mantendo essa taxa, a meta fica assim:
+      </p>
+      <div class="funnel">
+        <div class="f-step"><div class="number grad">20</div><div class="label">Contatos qualificados por mês</div></div>
+        <div class="f-arrow">&#8594;</div>
+        <div class="f-step"><div class="number grad">25%</div><div class="label">A sua taxa de fechamento</div></div>
+        <div class="f-arrow">&#8594;</div>
+        <div class="f-step"><div class="number grad">5</div><div class="label">Contratos novos por mês</div></div>
+        <div class="f-arrow">&#8594;</div>
+        <div class="f-step"><div class="number grad">15</div><div class="label">Contratos em três meses</div></div>
+        <div class="f-arrow">&#8594;</div>
+        <div class="f-step end"><div class="number grad" style="font-size:30px;">R$ 7.500</div><div class="label">A mais todo mês</div></div>
+      </div>
+      <p class="note" style="margin-top:20px;">
+        Contato que vem de anúncio costuma fechar menos que indicação no começo. Por isso cadência e follow-up entram
+        no primeiro dia. O CRM mostra mês a mês se o gargalo está na quantidade de contatos ou na conversão, e a decisão
+        de aumentar verba passa a ser tomada com número.
+      </p>
+    </div>
+  </div>
+
+  <!-- 10. APOLOGIA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="pilar-hero">
+        <div class="num grad">05</div>
+        <h2>Apologia: cinco anos de contatos parados</h2>
+        <p>Essa frente não gasta um real de anúncio. Gasta organização e constância, e costuma dar resultado antes da mídia.</p>
+      </div>
+      <div class="cards cards-3" style="margin-bottom:16px;">
+        <div class="card highlight">
+          <span class="card-icon">&#128293;</span>
+          <h3>Orçamentos que não fecharam</h3>
+          <p>Quem pediu proposta e sumiu. Já conhece a Servir e já sabe o preço. Começamos por aqui.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#128260;</span>
+          <h3>Quem chamou e não virou cliente</h3>
+          <p>Inclusive os contatos do anúncio que você rodou. Parte deles era curiosidade, parte só não estava no momento de trocar de contador.</p>
+        </div>
+        <div class="card">
+          <span class="card-icon">&#129309;</span>
+          <h3>Clientes e ex-clientes</h3>
+          <p>Indicação pedida do jeito certo, serviços que o cliente atual ainda não compra de você e uma abordagem própria para quem saiu.</p>
+        </div>
+      </div>
+      <div class="oport-card">
+        <div class="titulo">Por que vale</div>
+        <h4>Converter de 5% a 10% dessa base já muda o mês</h4>
+        <p>
+          Você não paga mídia para falar com quem já conhece o escritório. Em outros clientes nossos, o resultado da base
+          ajudou a pagar o aumento da verba de anúncio.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. CASES -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">O que já fizemos em contabilidade</div>
+      <div class="slide-title">Números de quem<br>já <span class="grad">passou pelo processo</span></div>
+      <div class="divider"></div>
+      <div class="cards cards-2">
+        <div class="card highlight">
+          <div class="card-num grad">R$ 11</div>
+          <h3>Por lead de empresa do ramo alimentício</h3>
+          <p>Escritório de contabilidade em Araguari, no interior de Minas. Campanha na Meta com formulário de qualificação, trazendo empresas já faturando, em crescimento e com condição de pagar contabilidade todo mês.</p>
+        </div>
+        <div class="card highlight">
+          <div class="card-num grad">+41%</div>
+          <h3>De faturamento em três meses</h3>
+          <p>Escritório de contabilidade que começou as campanhas em maio. Saiu de R$ 39 mil para R$ 55 mil por mês só com Google, formulário e rastreamento bem feito. Começou com R$ 500 de verba.</p>
+        </div>
+      </div>
+      <p class="note">
+        Cada escritório tem o seu ritmo, e esses números servem de referência do que acontece quando captação e comercial
+        andam juntos.
+      </p>
+    </div>
+  </div>
+
+  <!-- 12. CRONOGRAMA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Como roda</div>
+      <div class="slide-title">Os primeiros<br><span class="grad">90 dias</span></div>
+      <div class="divider"></div>
+      <div class="tl">
+        <div class="tl-col">
+          <div class="tl-when">Mês 1 &middot; Colocar de pé</div>
+          <h4>Tudo no ar</h4>
+          <ul>
+            <li>Reunião de integração</li>
+            <li>Rastreamento corrigido e Clarity instalado</li>
+            <li>Ajustes no site e página do ramo alimentício</li>
+            <li>Roteiro, gravação e edição dos primeiros anúncios</li>
+            <li>Meta e Google rodando, R$ 500 em cada</li>
+            <li>CRM configurado</li>
+          </ul>
+        </div>
+        <div class="tl-col">
+          <div class="tl-when">Mês 2 &middot; Ajustar</div>
+          <h4>Seguir o que funcionou</h4>
+          <ul>
+            <li>Verba movida para o canal com o melhor contato</li>
+            <li>Novos anúncios a partir dos que performaram</li>
+            <li>Cadência e follow-up documentados</li>
+            <li>Setup do Instagram com os três vídeos</li>
+            <li>Lista da base montada e primeira ação de reativação</li>
+          </ul>
+        </div>
+        <div class="tl-col">
+          <div class="tl-when">Mês 3 &middot; Medir</div>
+          <h4>Conferir a meta</h4>
+          <ul>
+            <li>Otimização com os dados acumulados</li>
+            <li>Custo por contato e taxa de fechamento na mesa</li>
+            <li>Conferência da meta de 15 contratos</li>
+            <li>Plano de verba para o trimestre seguinte</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">
+        Os dois treinamentos mensais acontecem desde o primeiro mês. Quanto antes chegarem acessos, informações e
+        gravações, antes as campanhas entram no ar.
+      </p>
+    </div>
+  </div>
+
+  <!-- 13. ESCOPO E PARCERIA -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Sendo transparente</div>
+      <div class="slide-title">O que está incluso<br>e como <span class="grad">trabalhamos</span></div>
+      <div class="divider"></div>
+      <div class="two-col">
+        <div class="card highlight">
+          <h3 style="font-size:16px; margin-bottom:14px;">Incluso no projeto</h3>
+          <div class="checklist">
+            <div class="check-item">Estratégia e gestão das campanhas na Meta e no Google</div>
+            <div class="check-item">Roteiro, direção de gravação e edição dos anúncios</div>
+            <div class="check-item">Formulário com perguntas de qualificação</div>
+            <div class="check-item">Página do ramo alimentício</div>
+            <div class="check-item">Ajustes no site e correção do rastreamento</div>
+            <div class="check-item">Microsoft Clarity instalado e analisado</div>
+            <div class="check-item">Setup do Instagram com três vídeos fixados</div>
+            <div class="check-item">CRM incluso</div>
+            <div class="check-item">Dois treinamentos comerciais por mês</div>
+            <div class="check-item">Cadência, follow-up e reativação da base documentados</div>
+          </div>
+        </div>
+        <div class="list">
+          <div class="list-item">
+            <div class="li-icon">&#128275;</div>
+            <div>
+              <h4>Sem fidelidade</h4>
+              <p>Não faz sentido prender você por seis meses se o resultado não vier. O contrato tem aviso prévio de 30 dias: avisou, em 30 dias está encerrado.</p>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="li-icon">&#128179;</div>
+            <div>
+              <h4>A verba é sua</h4>
+              <p>O dinheiro do anúncio é pago por você direto à Meta e ao Google, no seu cartão. Não passa por nós.</p>
+            </div>
+          </div>
+          <div class="list-item">
+            <div class="li-icon">&#128200;</div>
+            <div>
+              <h4>Números abertos</h4>
+              <p>Contatos, custo por contato, reuniões e contratos fechados ficam no CRM e são revistos nos treinamentos, estejam bons ou ruins.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14. INVESTIMENTO -->
+  <div class="slide">
+    <div class="slide-inner">
+      <div class="section-label">Investimento</div>
+      <div class="slide-title">Quanto <span class="grad">custa</span></div>
+      <div class="divider"></div>
+
+      <div id="reveal-area">
+        <div class="reveal-btn" onclick="revelarInvestimento()">
+          <div class="icon-lock">&#128274;</div>
+          <p>Clique para ver os valores</p>
+          <button class="btn-reveal">Revelar investimento</button>
+        </div>
+      </div>
+
+      <div class="inv-content" id="inv-content">
+        <div class="two-col" style="gap:16px; margin-bottom:16px;">
+          <div class="card highlight">
+            <div class="inv-kicker" style="color:var(--gold2);">Condição de entrada &middot; 3 primeiros meses</div>
+            <h3 style="font-size:18px; margin-bottom:10px;">Serviço completo</h3>
+            <div style="margin-bottom:6px;"><span class="old-price">R$ 2.500</span><span class="off-tag">40% OFF</span></div>
+            <div class="inv-price grad">R$ 1.500<small>/mês</small></div>
+            <p style="margin-top:10px;">
+              Tudo que está nesta proposta. O desconto vale nos três meses em que as campanhas aprendem e o resultado
+              se estabiliza.
+            </p>
+          </div>
+          <div class="card">
+            <div class="inv-kicker" style="color:var(--muted);">À parte &middot; Verba de anúncio</div>
+            <h3 style="font-size:18px; margin-bottom:10px;">Pago direto às plataformas</h3>
+            <div style="margin-bottom:6px; height:22px;"></div>
+            <div class="inv-price">R$ 1.000<small>/mês</small></div>
+            <p style="margin-top:10px;">
+              R$ 500 na Meta e R$ 500 no Google no primeiro mês. Depois, a divisão segue os números de cada canal.
+            </p>
+          </div>
+        </div>
+
+        <div class="cards cards-2">
+          <div class="oport-card">
+            <div class="titulo">A meta do terceiro mês</div>
+            <h4>15 novos contratos recorrentes</h4>
+            <p>
+              É o número que você disse que o escritório comporta sem contratar. Batendo a meta, o serviço passa para o
+              valor cheio de R$ 2.500 a partir do quarto mês, com R$ 7.500 a mais entrando todo mês.
+            </p>
+          </div>
+          <div class="oport-card">
+            <div class="titulo">A conta</div>
+            <h4>Três contratos pagam o serviço</h4>
+            <p>
+              Três clientes novos de R$ 500 cobrem o serviço do mês. Cinco cobrem serviço e verba. E cada contrato
+              fechado continua pagando nos meses seguintes.
+            </p>
+          </div>
+        </div>
+
+        <p class="note">
+          Sem fidelidade, com aviso prévio de 30 dias. Proposta válida por 15 dias.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 15. FECHAMENTO -->
+  <div class="slide close-bg">
+    <div class="slide-inner close-slide">
+      <img src="logo-ng.png" alt="Grupo NG" class="cover-logo" style="margin:0 auto 26px;">
+      <h2>A estrutura está pronta.<br>Falta <span class="grad">abrir a torneira</span></h2>
+      <p>
+        Site, avaliações e nicho a Servir já tem. O próximo passo é colocar o dono de restaurante de BH na frente do
+        escritório todo mês e não deixar nenhum contato esfriar.
+      </p>
+      <div class="cover-tags" style="justify-content:center;">
+        <span class="ctag">&#128197; Conversamos sexta, 27/11, às 10h</span>
+        <span class="ctag">&#9989; Proposta válida por 15 dias</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsEl = document.getElementById('dots');
+  const progress = document.getElementById('progress');
+  const total = slides.length;
+  const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+  let cur = 0;
+
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n) {
+    if (n < 0 || n >= total || isMobile()) return;
+    const prev = slides[cur];
+    if (n !== cur) {
+      prev.classList.remove('active');
+      prev.classList.add('exit');
+      setTimeout(() => prev.classList.remove('exit'), 520);
+    }
+    cur = n;
+    slides[cur].classList.add('active');
+    slides[cur].classList.remove('exit');
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+    progress.style.width = ((cur + 1) / total * 100) + '%';
+  }
+
+  function revelarInvestimento() {
+    document.getElementById('reveal-area').style.display = 'none';
+    document.getElementById('inv-content').style.display = 'block';
+  }
+
+  document.getElementById('btn-next').addEventListener('click', () => goTo(cur + 1));
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(cur - 1));
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') goTo(cur + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp'   || e.key === 'PageUp')   goTo(cur - 1);
+  });
+
+  let tx = 0;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX, { passive: true });
+  document.addEventListener('touchend', e => {
+    if (isMobile()) return;
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50) goTo(dx > 0 ? cur + 1 : cur - 1);
+  });
+
+  const start = parseInt((location.hash || '').replace('#', ''), 10);
+  goTo(start >= 1 && start <= total ? start - 1 : 0);
+</script>
+</body>
+</html>
